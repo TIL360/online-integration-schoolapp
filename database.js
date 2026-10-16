@@ -1,422 +1,311 @@
 const Database = require('better-sqlite3');
 const path = require('path');
-const { app } = require('electron');
 const fs = require('fs');
-const { error } = require('console');
 
-
-const userDataPath = app.getPath('userData');
-//this line would create db insie appdata
-const dbPath = path.join(userDataPath, 'school.db');
-
-// this would create db file inside the root area of the app
-// const dbPath = path.join(__dirname, 'school.db');
-
-if (!fs.existsSync(userDataPath)) {
-    fs.mkdirSync(userDataPath, { recursive: true });
+// --- PATH - will be taken from main.js global ---
+// main.js me aapne already ye kiya hua hai:
+// const userDataPath = app.getPath('userData');
+let dbPath;
+if (global.userDataPath) {
+  // Path from main.js
+  dbPath = path.join(global.userDataPath, 'school.db');
+} else {
+  // Fallback for safety
+  dbPath = path.join(__dirname, 'school.db');
 }
 
-const db = new Database(dbPath, { verbose: console.log });
+console.log("DB Path in database.js:", dbPath);
 
-// --- INITIALIZATION ---
+// Ensure folder exists
+const dir = path.dirname(dbPath);
+if (!fs.existsSync(dir)) {
+  fs.mkdirSync(dir, { recursive: true });
+}
+
+const db = new Database(dbPath);
+
+// --- INITIALIZATION - SINGLE TIME ONLY ---
 const initializeDB = () => {
-    try {
-        // 1. Users
+  try {
+    // 1. Users
     db.exec(`CREATE TABLE IF NOT EXISTS users (
-  id INTEGER PRIMARY KEY AUTOINCREMENT, 
-  username TEXT UNIQUE, 
-  password TEXT, 
-  usertype TEXT CHECK(usertype IN ('Admin', 'User')) DEFAULT 'User',
-  permissions TEXT DEFAULT '[]' -- Stores feature classes as a JSON string
-)`);
-        
-        // 2. Classes
-        db.exec(`CREATE TABLE IF NOT EXISTS classes (id INTEGER PRIMARY KEY AUTOINCREMENT, class_name TEXT UNIQUE)`);
-        
-        // 3. Students
- db.exec(`CREATE TABLE IF NOT EXISTS students (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    registration_no TEXT UNIQUE, 
-    roll_no TEXT, 
-    student_name TEXT, 
-    student_name_urdu TEXT, -- Matches "Name in Urdu"
-    father_name TEXT, 
-    father_name_urdu TEXT,  -- Added: Father Name in Urdu
-    dob DATE,               -- Matches "DoB in Figures"
-    dob_in_words TEXT,      -- Added: Date of Birth in Words
-    cnic_bform TEXT, 
-    picture_path TEXT, 
-    mobile TEXT, 
-    whatsapp TEXT, 
-    address TEXT, 
-    monthly_fee REAL, 
-    dues_paid_up_to TEXT,   -- Added: Dues Paid Up to
-    character_remarks TEXT, 
-    remarks TEXT,           -- Added: Remarks
-    admission_class TEXT, 
-    current_class TEXT, 
-    leaving_class TEXT,     -- Added: To support "Class at the time of leaving" from your image
-    promoted_to_class TEXT, -- Added: Promoted to Class
-    section TEXT, 
-    admission_date DATE, 
-    leaving_date DATE,      -- Added: Date of Leaving
-    status TEXT DEFAULT 'active',
-    certificate_serial TEXT,-- Added: Certificate Serial
-    cert_issuance_date DATE,-- Added: Certificate Issuance Date
-    attendance TEXT
-)`);
-
-db.exec(`CREATE TABLE IF NOT EXISTS student_attendance (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    student_id INTEGER,
-    class_id INTEGER,
-    date TEXT,
-    status TEXT CHECK(status IN ('Present', 'Absent', 'Leave')),
-    FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE,
-    FOREIGN KEY (class_id) REFERENCES classes(id) ON DELETE SET NULL,
-    UNIQUE(student_id, date)
-)`);
-db.exec(`CREATE TABLE IF NOT EXISTS school_timetable (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        class_id INTEGER NOT NULL,
-        day_name TEXT NOT NULL,       -- Monday, Tuesday, etc.
-        period_name TEXT NOT NULL,    -- Period 1, Period 2, etc.
-        subject_name TEXT,            -- Dynamic matching string
-        start_time TEXT,              -- e.g., '08:00 AM'
-        end_time TEXT,                -- e.g., '08:45 AM'
-        UNIQUE(class_id, day_name, period_name) ON CONFLICT REPLACE
+      id INTEGER PRIMARY KEY AUTOINCREMENT, 
+      username TEXT UNIQUE, 
+      password TEXT, 
+      usertype TEXT CHECK(usertype IN ('Admin', 'User')) DEFAULT 'User',
+      permissions TEXT DEFAULT '[]',
+      assigned_class TEXT DEFAULT NULL
     )`);
-db.exec(`CREATE INDEX IF NOT EXISTS idx_attendance_class ON student_attendance(class_id)`);
 
-// Staff Attendance Table
-db.exec(`CREATE TABLE IF NOT EXISTS grading_rules (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    grade_name TEXT NOT NULL,         -- e.g., 'A+', 'A', 'B', 'F'
-    min_percentage REAL NOT NULL,     -- e.g., 90.0
-    max_percentage REAL NOT NULL,     -- e.g., 100.0
-    remarks TEXT                      -- e.g., 'Excellent'
-)`);
-db.exec(`CREATE TABLE IF NOT EXISTS academy_subjects (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    subject_code TEXT UNIQUE NOT NULL, -- e.g., 'urdu', 'eng', 'pak_studies'
-    subject_display_name TEXT NOT NULL  -- e.g., 'Urdu', 'English', 'Pak Studies'
-)`);
-// --- DYNAMIC SUBJECT SYSTEM ---
+    // 2. Classes
+    db.exec(`CREATE TABLE IF NOT EXISTS classes (id INTEGER PRIMARY KEY AUTOINCREMENT, class_name TEXT UNIQUE)`);
+        
 
-// 1. Stores total marks per exam + class + subject (your Step 3)
-db.exec(`
-CREATE TABLE IF NOT EXISTS exam_subject_settings (
-    exam_id INTEGER,
-    class TEXT,
-    subject_code TEXT,
-    total_marks REAL DEFAULT 0,
-    PRIMARY KEY (exam_id, class, subject_code)
-)`);
-
-db.exec(`CREATE TABLE IF NOT EXISTS staff_attendance (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    staff_id INTEGER,
-    date TEXT, -- Format: YYYY-MM-DD
-    status TEXT CHECK(status IN ('Present', 'Absent', 'Leave')),
-    FOREIGN KEY (staff_id) REFERENCES staff_tbl(id) ON DELETE CASCADE,
-    UNIQUE(staff_id, date)
-)`);
-// 2. Stores obtained marks per student per subject
-db.exec(`
-CREATE TABLE IF NOT EXISTS student_subject_marks (
-    result_id INTEGER,
-    exam_id INTEGER,
-    student_id INTEGER,
-    class TEXT,
-    subject_code TEXT,
-    marks_set REAL DEFAULT 100,
-    marks_obtained REAL DEFAULT 0,
-    PRIMARY KEY(result_id, subject_code)
-)`);
-
-// Migration for old database - add columns if they don't exist
-try { db.exec("ALTER TABLE student_subject_marks ADD COLUMN exam_id INTEGER"); } catch(e){}
-try { db.exec("ALTER TABLE student_subject_marks ADD COLUMN student_id INTEGER"); } catch(e){}
-try { db.exec("ALTER TABLE student_subject_marks ADD COLUMN class TEXT"); } catch(e){}
-try { db.exec("ALTER TABLE student_subject_marks ADD COLUMN marks_set REAL DEFAULT 100"); } catch(e){}
-try { db.exec("ALTER TABLE student_subject_marks ADD COLUMN marks_obtained REAL DEFAULT 0"); } catch(e){}
-// Clean old wrong columns if you created them
-try { db.exec("ALTER TABLE student_subject_marks ADD COLUMN setmarks REAL DEFAULT 0"); } catch(e){}
-try { db.exec("ALTER TABLE student_subject_marks ADD COLUMN obt REAL DEFAULT 0"); } catch(e){}
-db.exec(`CREATE TABLE IF NOT EXISTS exam_passing_criteria (
-    exam_id INTEGER PRIMARY KEY,
-    subject_pass_percentage REAL DEFAULT 40.0, -- Default subject pass line
-    overall_pass_percentage REAL DEFAULT 33.0, -- Default grand total pass line
-    max_failed_subjects_allowed INTEGER DEFAULT 1, -- Threshold before getting 'Detained'
-    FOREIGN KEY(exam_id) REFERENCES exams(exam_id) ON DELETE CASCADE
-)`);
-
-
-db.exec(`
-CREATE TABLE IF NOT EXISTS staff (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT,
-    cnic TEXT,
-    contact TEXT,
-    designation TEXT,
-    doj TEXT,
-    salary REAL,
-    allowance REAL,
-    status TEXT,
-    documents_held TEXT,
-    photo TEXT
-)`);
-
-// For old data - add column if not exists
-try { db.exec("ALTER TABLE staff ADD COLUMN photo TEXT"); } catch(e) {}
-try { db.exec("ALTER TABLE staff ADD COLUMN documents_held TEXT"); } catch(e) {}
-// 1. Run this at the top of database.js setup to ensure the table exists
-// Ensure the new exam configuration settings table exists
-// Find this block in Database.js and update it:
-db.exec(`
-  CREATE TABLE IF NOT EXISTS exam_papers (
-    exam_type TEXT,
-    paper_name TEXT,
-    class_id INTEGER,
-    total_marks REAL,
-    passing_marks REAL,
-    exam_date TEXT DEFAULT '', /* 🌟 NEW COLUMN ADDED HERE */
-    note_objective TEXT,
-    note_subjective TEXT,
-    obj_marks REAL,
-    subj_marks REAL,
-    PRIMARY KEY (exam_type, paper_name, class_id)
-  );
-`);
-
-
-//q bank
-db.exec(`CREATE TABLE IF NOT EXISTS question_bank (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  class_id INTEGER,
-  subject TEXT,
-  lesson_no INTEGER,
-  question_type TEXT,
-  question_text TEXT,
-  diagram_path TEXT, -- 🆕 NEW COLUMN ADDED HERE FOR DIAGRAMS
-  opt1 TEXT, opt2 TEXT, opt3 TEXT, opt4 TEXT,
-  correct_answer TEXT,
-  FOREIGN KEY (class_id) REFERENCES classes(id) ON DELETE CASCADE
-)`);
-
-// Single Table for All Exam Papers
-db.exec(`CREATE TABLE IF NOT EXISTS paper_questions (
-id INTEGER PRIMARY KEY AUTOINCREMENT,
-exam_type TEXT, -- New Column: e.g., 'Midterm', 'Final Exam', 'Monthly Test'
-paper_name TEXT, -- e.g., 'English', 'Maths', 'Urdu'
-class_id INTEGER,
-question_id INTEGER,
-marks_assigned REAL DEFAULT 1,
-FOREIGN KEY (class_id) REFERENCES classes(id) ON DELETE CASCADE,
-FOREIGN KEY (question_id) REFERENCES question_bank(id) ON DELETE CASCADE
-)`);
-
-        // 4. Fee Table
-        db.exec(`CREATE TABLE IF NOT EXISTS fee_tbl (
-    id INTEGER PRIMARY KEY AUTOINCREMENT, 
-    student_id INTEGER, 
-    registration_no TEXT, 
-    current_class TEXT, 
-    section TEXT,
-    monthly_fee REAL DEFAULT 0, 
-    adm_fee REAL DEFAULT 0, 
-    exam_fee REAL DEFAULT 0, 
-    lab_fee REAL DEFAULT 0, 
-    reg_fee REAL DEFAULT 0,
-    annual_fund REAL DEFAULT 0,
-    stationary_fund REAL DEFAULT 0,
-    bus_charges REAL DEFAULT 0,
-    security REAL DEFAULT 0, 
-    misc_fee REAL DEFAULT 0,
-    misc_remarks TEXT,
-    collection_date TEXT,
-    total_fee REAL GENERATED ALWAYS AS (
-        monthly_fee + adm_fee + exam_fee + lab_fee + reg_fee + annual_fund + stationary_fund + bus_charges + security + misc_fee
-    ) VIRTUAL,
-    collection REAL DEFAULT 0,
-    balance REAL GENERATED ALWAYS AS (total_fee - collection) VIRTUAL,
-    arrears REAL DEFAULT 0,
-    invoice_month TEXT, 
-    invoice_year TEXT, 
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE(registration_no, invoice_month, invoice_year) 
-)`);
-
-        // 5. Exams & Results (Fixed better-sqlite3 implementation)
-       db.exec(`CREATE TABLE IF NOT EXISTS exams (
-    exam_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    exam_name TEXT UNIQUE,
-    exp_amount REAL DEFAULT 0,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    exp_month TEXT,
-    exp_year TEXT
-)`);
-
-//expense table
-  db.exec(`CREATE TABLE IF NOT EXISTS exp_tbl (
-        exp_id INTEGER PRIMARY KEY AUTOINCREMENT,
-        expence TEXT,
-        exp_amount REAL,
-        exp_year INTEGER,
-        exp_month TEXT,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+// db.exec(`
+//   INSERT OR IGNORE INTO classes (class_name) VALUES
+//   ('Junior Nursery-A'),
+//   ('Junior Nursery-B'),
+//   ('Prep-A'),
+//   ('Prep-B'),
+//   ('One-A'),
+//   ('One-B'),
+//   ('2nd-A'),
+//   ('2nd-B'),
+//   ('3rd-A'),
+//   ('3rd-B'),
+//   ('4th-A'),
+//   ('4th-B'),
+//   ('5th-A'),
+//   ('5th-B'),
+//   ('6th-A'),
+//   ('6th-B'),
+//   ('7th-A'),
+//   ('7th-B'),
+//   ('Pre 9th-A (Bio)'),
+//   ('Pre 9th-B (Bio)'),
+//   ('Pre 9th-A (Com)'),
+//   ('Pre 9th-B (Com)'),
+//   ('9th-A (Bio)'),
+//   ('9th-B (Bio)'),
+//   ('9th-A (Comp)'),
+//   ('9th-B (Comp)'),
+//   ('10th-A (Bio)'),
+//   ('10th-B (Bio)'),
+//   ('10th-A (Comp)'),
+//   ('10th-B (Comp)');
+// // `);
+// db.exec(`
+//   INSERT OR IGNORE INTO classes (class_name) VALUES
+//   ('Pre 9th-A (Arts)'),
+//   ('Pre 9th-B (Arts)'),
+//   ('9th-A (Arts)'),
+//   ('9th-B (Arts)'),
+//   ('10th-A (Arts)'),
+//   ('10th-B (Arts)');
+// `);
+    // 3. Students
+   db.exec(`CREATE TABLE IF NOT EXISTS students (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      registration_no TEXT UNIQUE, 
+      roll_no TEXT, 
+      student_name TEXT, 
+      student_name_urdu TEXT,
+      father_name TEXT, 
+      father_name_urdu TEXT,
+      dob DATE,
+      dob_in_words TEXT,
+      cnic_bform TEXT,
+      gender TEXT,
+      picture_path TEXT, 
+      mobile TEXT, 
+      whatsapp TEXT, 
+      address TEXT, 
+      monthly_fee REAL, 
+      dues_paid_up_to TEXT,
+      character_remarks TEXT, 
+      remarks TEXT,
+      admission_class TEXT, 
+      current_class TEXT, 
+      leaving_class TEXT,
+      promoted_to_class TEXT,
+      section TEXT, 
+      admission_date DATE, 
+      leaving_date DATE,
+      status TEXT DEFAULT 'Active',
+      certificate_serial TEXT,
+      cert_issuance_date DATE,
+      attendance TEXT
     )`);
-// Add this to your initializeDB function in database.js
-// Inside initializeDB function in database.js
-db.exec(`CREATE TABLE IF NOT EXISTS datesheet (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    subject TEXT,
-    exam_date DATE,
-    exam_year TEXT,
-    exam_id INTEGER,
-    class_id INTEGER,
-    sec TEXT,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (class_id) REFERENCES classes(id) ON DELETE CASCADE,
-    FOREIGN KEY (exam_id) REFERENCES exams(exam_id) ON DELETE CASCADE
-)`);
 
+// ALTER for existing database - so old users get gender column
+try { 
+  db.exec(`ALTER TABLE students ADD COLUMN gender TEXT`); 
+} catch(e) {
+  // column already exists - ignore
+}
+    db.exec(`CREATE TABLE IF NOT EXISTS student_attendance (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      student_id INTEGER, class_id INTEGER, date TEXT,
+      status TEXT CHECK(status IN ('Present', 'Absent', 'Leave')),
+      FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE,
+      FOREIGN KEY (class_id) REFERENCES classes(id) ON DELETE SET NULL,
+      UNIQUE(student_id, date)
+    )`);
 
-// FIND your table creation string for the "result" table and update it to include the new columns:
-db.prepare(`
-  CREATE TABLE IF NOT EXISTS result (
-    result_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    exam_id INTEGER,
-    student_id INTEGER,
-    class TEXT,
-    
+    db.exec(`CREATE TABLE IF NOT EXISTS school_timetable (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      class_id INTEGER NOT NULL, day_name TEXT NOT NULL, period_name TEXT NOT NULL,
+      subject_name TEXT, start_time TEXT, end_time TEXT,
+      UNIQUE(class_id, day_name, period_name) ON CONFLICT REPLACE
+    )`);
 
-    total_setmarks INTEGER DEFAULT 2200,
-    total_obt REAL DEFAULT 0,
-    percentage REAL DEFAULT 0,
-    grade TEXT,
-    position INTEGER,
-    result_status TEXT,
-    remarks TEXT
-  )
-`).run();
+    db.exec(`CREATE INDEX IF NOT EXISTS idx_attendance_class ON student_attendance(class_id)`);
 
-        // Views
-        db.exec(`CREATE VIEW IF NOT EXISTS student_arrears AS SELECT registration_no, SUM(balance) AS total_arrears FROM fee_tbl GROUP BY registration_no`);
-        db.exec(`CREATE VIEW IF NOT EXISTS fee_report AS SELECT f.*, (SELECT SUM(balance) FROM fee_tbl WHERE registration_no = f.registration_no AND id < f.id) AS previous_arrears, (f.balance + COALESCE((SELECT SUM(balance) FROM fee_tbl WHERE registration_no = f.registration_no AND id < f.id), 0)) AS net_payable FROM fee_tbl f`);
+    db.exec(`CREATE TABLE IF NOT EXISTS grading_rules (
+      id INTEGER PRIMARY KEY AUTOINCREMENT, grade_name TEXT NOT NULL,
+      min_percentage REAL NOT NULL, max_percentage REAL NOT NULL, remarks TEXT
+    )`);
 
-        // Staff & Salary
-        // 1. Staff Table: Added auth_leaves to store the allowed limit per staff member
-db.exec(`CREATE TABLE IF NOT EXISTS staff_tbl (
-  id INTEGER PRIMARY KEY AUTOINCREMENT, 
-  name TEXT, 
-  cnic TEXT, 
-  contact TEXT, 
-  designation TEXT, 
-  doj TEXT, 
-  salary REAL, 
-  auth_leaves REAL DEFAULT 0, 
-  allowance REAL, 
-  status TEXT DEFAULT 'Active',
-  documents_held TEXT
-)`);
+    db.exec(`CREATE TABLE IF NOT EXISTS academy_subjects (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      subject_code TEXT UNIQUE NOT NULL, subject_display_name TEXT NOT NULL
+    )`);
 
-// 2. Salary Table: Added auth_leaves (the limit) and availed_leaves (actual taken)
-// Note: 'leaves' column is renamed/replaced by these for clarity
-db.exec(`CREATE TABLE IF NOT EXISTS salary_tbl (
-  id INTEGER PRIMARY KEY AUTOINCREMENT, 
-  staff_id INTEGER, 
-  name TEXT, 
-  salary REAL, 
-  allowance REAL, 
-  auth_leaves REAL DEFAULT 0, 
-  availed_leaves REAL DEFAULT 0, 
-  salary_deduction REAL DEFAULT 0,
-  deduction_remarks TEXT,
-  award REAL DEFAULT 0,
-  award_remarks TEXT,
-  fund_cutting REAL DEFAULT 0,
-  security_cutting REAL DEFAULT 0,
-  salary_month TEXT, 
-  salary_year TEXT, 
-  status TEXT DEFAULT 'Unpaid', 
-  UNIQUE(staff_id, salary_month, salary_year)
-)`);
+    db.exec(`CREATE TABLE IF NOT EXISTS exam_subject_settings (
+      exam_id INTEGER, class TEXT, subject_code TEXT,
+      total_marks REAL DEFAULT 0,
+      PRIMARY KEY (exam_id, class, subject_code)
+    )`);
 
-// Execute this block inside your database configuration initialization
-db.exec(`
-    CREATE TABLE IF NOT EXISTS worksheet_questions (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        class_id INTEGER NOT NULL,
-        subject TEXT NOT NULL,
-        activity_type TEXT NOT NULL,
-        question_text TEXT NOT NULL,
-        answer_text TEXT,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (class_id) REFERENCES classes(id) ON DELETE CASCADE
-    );
+    db.exec(`CREATE TABLE IF NOT EXISTS staff_attendance (
+      id INTEGER PRIMARY KEY AUTOINCREMENT, staff_id INTEGER, date TEXT,
+      status TEXT CHECK(status IN ('Present', 'Absent', 'Leave')),
+      FOREIGN KEY (staff_id) REFERENCES staff_tbl(id) ON DELETE CASCADE,
+      UNIQUE(staff_id, date)
+    )`);
 
-   
-`);
-// 1. Initialize the selection table
-db.exec(`
-    CREATE TABLE IF NOT EXISTS worksheet_selected_paper (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        question_id INTEGER NOT NULL,
-        exam_name TEXT NOT NULL,
-        class_id INTEGER NOT NULL,
-        subject TEXT NOT NULL,
-        FOREIGN KEY (question_id) REFERENCES worksheet_questions(id) ON DELETE CASCADE
-    );
-`);
+    db.exec(`CREATE TABLE IF NOT EXISTS student_subject_marks (
+      result_id INTEGER, exam_id INTEGER, student_id INTEGER, class TEXT,
+      subject_code TEXT, marks_set REAL DEFAULT 100,
+      marks_obtained REAL DEFAULT 0, marks_obtained_online REAL DEFAULT NULL,
+      PRIMARY KEY(result_id, subject_code)
+    )`);
 
-        // Default Admin
-        const userCount = db.prepare('SELECT count(*) as count FROM users').get();
-        if (userCount.count === 0) {
-            db.prepare('INSERT INTO users (username, password, usertype) VALUES (?, ?, ?)').run('Admin', 'admin123', 'Admin');
+    db.exec(`CREATE TABLE IF NOT EXISTS exam_passing_criteria (
+      exam_id INTEGER PRIMARY KEY, subject_pass_percentage REAL DEFAULT 40.0,
+      overall_pass_percentage REAL DEFAULT 33.0, max_failed_subjects_allowed INTEGER DEFAULT 1,
+      FOREIGN KEY(exam_id) REFERENCES exams(exam_id) ON DELETE CASCADE
+    )`);
+
+    db.exec(`CREATE TABLE IF NOT EXISTS staff (
+      id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, cnic TEXT, contact TEXT,
+      designation TEXT, doj TEXT, salary REAL, allowance REAL, status TEXT,
+      documents_held TEXT, photo TEXT
+    )`);
+
+    db.exec(`CREATE TABLE IF NOT EXISTS exam_papers (
+      exam_type TEXT, paper_name TEXT, class_id INTEGER, total_marks REAL,
+      passing_marks REAL, exam_date TEXT DEFAULT '', note_objective TEXT,
+      note_subjective TEXT, obj_marks REAL, subj_marks REAL,
+      PRIMARY KEY (exam_type, paper_name, class_id)
+    )`);
+
+    db.exec(`CREATE TABLE IF NOT EXISTS question_bank (
+      id INTEGER PRIMARY KEY AUTOINCREMENT, class_id INTEGER, subject TEXT,
+      lesson_no INTEGER, question_type TEXT, question_text TEXT, diagram_path TEXT,
+      opt1 TEXT, opt2 TEXT, opt3 TEXT, opt4 TEXT, correct_answer TEXT,
+      FOREIGN KEY (class_id) REFERENCES classes(id) ON DELETE CASCADE
+    )`);
+
+    db.exec(`CREATE TABLE IF NOT EXISTS paper_questions (
+      id INTEGER PRIMARY KEY AUTOINCREMENT, exam_type TEXT, paper_name TEXT,
+      class_id INTEGER, question_id INTEGER, marks_assigned REAL DEFAULT 1,
+      FOREIGN KEY (class_id) REFERENCES classes(id) ON DELETE CASCADE,
+      FOREIGN KEY (question_id) REFERENCES question_bank(id) ON DELETE CASCADE
+    )`);
+
+    db.exec(`CREATE TABLE IF NOT EXISTS fee_tbl (
+      id INTEGER PRIMARY KEY AUTOINCREMENT, student_id INTEGER, registration_no TEXT,
+      current_class TEXT, section TEXT, monthly_fee REAL DEFAULT 0, adm_fee REAL DEFAULT 0,
+      exam_fee REAL DEFAULT 0, lab_fee REAL DEFAULT 0, reg_fee REAL DEFAULT 0,
+      annual_fund REAL DEFAULT 0, stationary_fund REAL DEFAULT 0, bus_charges REAL DEFAULT 0,
+      security REAL DEFAULT 0, misc_fee REAL DEFAULT 0, misc_remarks TEXT, collection_date TEXT,
+      total_fee REAL GENERATED ALWAYS AS (monthly_fee + adm_fee + exam_fee + lab_fee + reg_fee + annual_fund + stationary_fund + bus_charges + security + misc_fee) VIRTUAL,
+      collection REAL DEFAULT 0, balance REAL GENERATED ALWAYS AS (total_fee - collection) VIRTUAL,
+      arrears REAL DEFAULT 0, invoice_month TEXT, invoice_year TEXT, 
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      UNIQUE(registration_no, invoice_month, invoice_year) 
+    )`);
+
+    db.exec(`CREATE TABLE IF NOT EXISTS exams (
+      exam_id INTEGER PRIMARY KEY AUTOINCREMENT, exam_name TEXT UNIQUE,
+      exp_amount REAL DEFAULT 0, created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      exp_month TEXT, exp_year TEXT
+    )`);
+
+    db.exec(`CREATE TABLE IF NOT EXISTS exp_tbl (
+      exp_id INTEGER PRIMARY KEY AUTOINCREMENT, expence TEXT, exp_amount REAL,
+      exp_year INTEGER, exp_month TEXT, created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )`);
+
+    db.exec(`CREATE TABLE IF NOT EXISTS datesheet (
+      id INTEGER PRIMARY KEY AUTOINCREMENT, subject TEXT, exam_date DATE,
+      exam_year TEXT, exam_id INTEGER, class_id INTEGER, sec TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (class_id) REFERENCES classes(id) ON DELETE CASCADE,
+      FOREIGN KEY (exam_id) REFERENCES exams(exam_id) ON DELETE CASCADE
+    )`);
+
+    db.exec(`CREATE TABLE IF NOT EXISTS result (
+      result_id INTEGER PRIMARY KEY AUTOINCREMENT, exam_id INTEGER, student_id INTEGER, class TEXT,
+      total_setmarks INTEGER DEFAULT 2200, total_obt REAL DEFAULT 0, percentage REAL DEFAULT 0,
+      grade TEXT, position INTEGER, result_status TEXT, remarks TEXT
+    )`);
+
+    db.exec(`CREATE VIEW IF NOT EXISTS student_arrears AS SELECT registration_no, SUM(balance) AS total_arrears FROM fee_tbl GROUP BY registration_no`);
+    db.exec(`CREATE VIEW IF NOT EXISTS fee_report AS SELECT f.*, (SELECT SUM(balance) FROM fee_tbl WHERE registration_no = f.registration_no AND id < f.id) AS previous_arrears, (f.balance + COALESCE((SELECT SUM(balance) FROM fee_tbl WHERE registration_no = f.registration_no AND id < f.id), 0)) AS net_payable FROM fee_tbl f`);
+
+    db.exec(`CREATE TABLE IF NOT EXISTS staff_tbl (
+      id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, cnic TEXT, contact TEXT,
+      designation TEXT, doj TEXT, salary REAL, auth_leaves REAL DEFAULT 0,
+      allowance REAL, status TEXT DEFAULT 'Active', documents_held TEXT
+    )`);
+
+    db.exec(`CREATE TABLE IF NOT EXISTS salary_tbl (
+      id INTEGER PRIMARY KEY AUTOINCREMENT, staff_id INTEGER, name TEXT, salary REAL,
+      allowance REAL, auth_leaves REAL DEFAULT 0, availed_leaves REAL DEFAULT 0, 
+      salary_deduction REAL DEFAULT 0, deduction_remarks TEXT, award REAL DEFAULT 0,
+      award_remarks TEXT, fund_cutting REAL DEFAULT 0, security_cutting REAL DEFAULT 0,
+      salary_month TEXT, salary_year TEXT, status TEXT DEFAULT 'Unpaid',
+      UNIQUE(staff_id, salary_month, salary_year)
+    )`);
+
+    db.exec(`CREATE TABLE IF NOT EXISTS worksheet_questions (
+      id INTEGER PRIMARY KEY AUTOINCREMENT, class_id INTEGER NOT NULL, subject TEXT NOT NULL,
+      activity_type TEXT NOT NULL, question_text TEXT NOT NULL, answer_text TEXT,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (class_id) REFERENCES classes(id) ON DELETE CASCADE
+    )`);
+
+    db.exec(`CREATE TABLE IF NOT EXISTS worksheet_selected_paper (
+      id INTEGER PRIMARY KEY AUTOINCREMENT, question_id INTEGER NOT NULL,
+      exam_name TEXT NOT NULL, class_id INTEGER NOT NULL, subject TEXT NOT NULL,
+      FOREIGN KEY (question_id) REFERENCES worksheet_questions(id) ON DELETE CASCADE
+    )`);
+
+    // --- MIGRATIONS ---
+    try { db.exec("ALTER TABLE users ADD COLUMN assigned_class TEXT DEFAULT NULL"); } catch(e) {}
+    try { db.exec("ALTER TABLE users ADD COLUMN permissions TEXT DEFAULT '[]'"); } catch(e) {}
+    try { db.exec("ALTER TABLE student_subject_marks ADD COLUMN marks_obtained_online REAL DEFAULT NULL"); } catch(e) {}
+
+    // Default Admin
+    const userCount = db.prepare('SELECT count(*) as count FROM users').get();
+    if (userCount.count === 0) {
+      db.prepare('INSERT INTO users (username, password, usertype) VALUES (?, ?, ?)').run('Admin', 'admin123', 'Admin');
+      console.log("Default Admin created");
+    }
+
+    // Dynamic columns for result
+    try {
+      const existingCols = db.prepare("PRAGMA table_info(result)").all().map(c => c.name);
+      const subjects = db.prepare("SELECT subject_code FROM academy_subjects").all();
+      subjects.forEach(sub => {
+        const code = String(sub.subject_code).toLowerCase().trim();
+        if (!existingCols.includes(`${code}_setmarks`)) {
+          db.exec(`ALTER TABLE result ADD COLUMN ${code}_setmarks INTEGER DEFAULT 0`);
+          db.exec(`ALTER TABLE result ADD COLUMN ${code}_obt REAL DEFAULT 0`);
         }
+      });
+    } catch(e){}
 
-            // --- AUTO ADD NEW SUBJECT COLUMNS DYNAMICALLY ---
-        const ensureResultColumns = () => {
-            try {
-                const existingCols = db.prepare("PRAGMA table_info(result)").all().map(c => c.name);
-                const subjects = db.prepare("SELECT subject_code FROM academy_subjects").all();
-                subjects.forEach(sub => {
-                    const code = String(sub.subject_code).toLowerCase().trim();
-                    const setCol = `${code}_setmarks`;
-                    const obtCol = `${code}_obt`;
-                    if (!existingCols.includes(setCol)) {
-                        db.exec(`ALTER TABLE result ADD COLUMN ${setCol} INTEGER DEFAULT 0`);
-                        console.log(`Added column: ${setCol}`);
-                    }
-                    if (!existingCols.includes(obtCol)) {
-                        db.exec(`ALTER TABLE result ADD COLUMN ${obtCol} REAL DEFAULT 0`);
-                        console.log(`Added column: ${obtCol}`);
-                    }
-                });
-            } catch(e){ console.log("Dynamic column check:", e.message); }
-        };
-        ensureResultColumns();
+    console.log("DB Initialized OK");
 
-    } catch (err) { console.error("DB Init Error:", err); }
+  } catch (err) { console.error("DB Init Error:", err); }
 };
 
-// ALSO RUN IT ON APP START AFTER init
 initializeDB();
-try {
-    // Re-run to catch subjects added later
-    const cols = db.prepare("PRAGMA table_info(result)").all().map(c=>c.name);
-    const subs = db.prepare("SELECT subject_code FROM academy_subjects").all();
-    subs.forEach(sub=>{
-        const code = String(sub.subject_code).toLowerCase().trim();
-        if(!cols.includes(`${code}_setmarks`)){
-            db.exec(`ALTER TABLE result ADD COLUMN ${code}_setmarks INTEGER DEFAULT 0`);
-            db.exec(`ALTER TABLE result ADD COLUMN ${code}_obt REAL DEFAULT 0`);
-        }
-    });
-} catch(e){};
 
-initializeDB();
+module.exports = db;
 
 
 // --- EXAM & RESULT FUNCTIONS ---
@@ -427,16 +316,21 @@ initializeDB();
 // --- EXISTING FUNCTIONS ---
 function checkUser(username, password) { return db.prepare('SELECT * FROM users WHERE username = ? AND password = ?').get(username, password); }
 function addUser(userData) { 
-  return db.prepare(`INSERT INTO users (username, password, usertype, permissions) 
-                    VALUES (?, ?, ?, ?)`).run(
+  return db.prepare(`INSERT INTO users (username, password, usertype, permissions, assigned_class) 
+                    VALUES (?, ?, ?, ?, ?)`).run(
                       userData.username, 
                       userData.password, 
                       userData.usertype,
-                      userData.permissions // Expecting stringified JSON array
+                      userData.permissions,
+                      userData.assigned_class || null
                     ); 
 }
-function getAllUsers() { return db.prepare('SELECT id, username, usertype, permissions FROM users').all(); }
+function getAllUsers() { 
+  return db.prepare('SELECT id, username, usertype, permissions, assigned_class FROM users').all(); 
+}
 
+module.exports = { addUser, getAllUsers } // agar use kar rahe ho to
+function getAllUsers() { return db.prepare('SELECT id, username, usertype, permissions, assigned_class FROM users').all(); }
 const addClass = (name) => db.prepare('INSERT INTO classes (class_name) VALUES (?)').run(name);
 const getClasses = () => db.prepare('SELECT * FROM classes ORDER BY id ASC').all();
 const deleteClass = (id) => db.prepare('DELETE FROM classes WHERE id = ?').run(id);
@@ -640,8 +534,16 @@ const updateStaff = (id, data) =>
     WHERE id=?
   `).run(data.name, data.cnic, data.contact, data.designation, data.doj, data.salary, data.allowance, data.status, data.documents_held, data.photo || null, id);
 
-  const deleteStaff = (id) => db.prepare("DELETE FROM staff_tbl WHERE id = ?").run(id);
-
+  const deleteStaff = (id) => {
+  const trx = db.transaction(() => {
+    // 1. Delete all salary records for this staff first
+    db.prepare("DELETE FROM salary_tbl WHERE staff_id = ?").run(id);
+    // 2. Then delete staff
+    const res = db.prepare("DELETE FROM staff_tbl WHERE id = ?").run(id);
+    return res;
+  });
+  return trx();
+};
 /**
  * Initiates salary records for all 'Active' staff members for a specific month/year.
  * It pulls the current Basic Salary, Allowance, and Authorized Leaves from staff_tbl.

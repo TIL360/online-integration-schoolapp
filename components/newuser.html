@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Add System User | POS CORE</title>
 <style>
-:root { --sidebar-dark:#102a43; --accent-orange:#ea580c; --bg-page:#f0f4f8; --card-white:#fff; --text-main:#1e293b; --text-muted:#64748b; --danger-red:#ef4444; }
+:root { --sidebar-dark:#102a43; --accent-orange:#ea580c; --bg-page:#f0f4f8; --card-white:#fff; --text-main:#1e293b; --danger-red:#ef4444; }
 body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg-page);margin:0;padding:20px;color:var(--text-main);}
 .container{background:var(--card-white);padding:30px;border-radius:12px;box-shadow:0 4px 15px rgba(0,0,0,.05);max-width:650px;margin:auto;}
 h2,h3{color:var(--sidebar-dark);margin-top:0;border-bottom:2px solid var(--bg-page);padding-bottom:10px;text-transform:uppercase;font-weight:800;}
@@ -16,7 +16,7 @@ input:focus,select:focus{outline:none;border-color:#3b82f6;box-shadow:0 0 0 3px 
 .permissions-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px;}
 .perm-label{font-weight:500;color:#475569;display:flex;align-items:center;gap:8px;cursor:pointer;} .perm-label input{width:auto;}
 button.save-btn{background:var(--accent-orange);color:#fff;border:none;padding:14px;width:100%;border-radius:6px;cursor:pointer;font-weight:bold;text-transform:uppercase;margin-top:15px;}
-button.save-btn:hover{background:#c2410c;} button.cancel-btn{background:#64748b;color:#fff;border:none;padding:14px;width:100%;border-radius:6px;cursor:pointer;font-weight:bold;text-transform:uppercase;margin-top:10px;display:none;}
+button.cancel-btn{background:#64748b;color:#fff;border:none;padding:14px;width:100%;border-radius:6px;cursor:pointer;font-weight:bold;text-transform:uppercase;margin-top:10px;display:none;}
 table{width:100%;border-collapse:collapse;margin-top:20px;} th{background:var(--sidebar-dark);color:#fff;padding:12px;text-align:left;font-size:.8rem;text-transform:uppercase;}
 td{padding:12px;border-bottom:1px solid #e2e8f0;font-size:.9rem;} tr:hover td{background:#f8fafc;}
 .del-btn{background:var(--danger-red);color:#fff;border:none;padding:6px 12px;border-radius:4px;cursor:pointer;margin-left:5px;}
@@ -25,28 +25,27 @@ td{padding:12px;border-bottom:1px solid #e2e8f0;font-size:.9rem;} tr:hover td{ba
 .badge{background:#e2e8f0;padding:4px 10px;border-radius:4px;font-size:.75rem;font-weight:bold;color:var(--sidebar-dark);}
 .perm-badge{background:#dbeafe;color:#1e40af;padding:2px 6px;border-radius:4px;font-size:.7rem;display:inline-block;margin:1px;}
 .class-badge{background:#fef3c7;color:#92400e;padding:4px 10px;border-radius:4px;font-size:.75rem;font-weight:bold;}
+/* Custom modal - avoids alert/confirm lock */
+#customModal{display:none;position:fixed;z-index:9999;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,0.4);align-items:center;justify-content:center;}
+#customBox{background:#fff;padding:20px;border-radius:8px;min-width:350px;max-width:450px;box-shadow:0 10px 25px rgba(0,0,0,.2);}
+#customBox p{font-size:13px;color:#334155;margin:0 0 15px 0;}
+#customBtns{text-align:right;}
+#customBtns button{width:auto;padding:6px 16px;margin-left:8px;}
 </style>
 </head>
 <body>
 <a href="dashboard.html" class="btn-back">Back to Dashboard</a>
-<div style="display:flex;gap:30px;max-width:1400px;margin:auto;align-items:flex-start;">
+<div style="display:flex;gap:30px;max-width:1400px;margin:auto;align-items:flex-start;flex-wrap:wrap;">
   <div class="container" style="flex:1;min-width:450px;margin:0;">
     <h2 id="formTitle">Add System User</h2>
     <form id="userForm">
       <input type="hidden" id="userId" value="" />
-      <div class="form-group"><label>Username</label><input type="text" id="username" required placeholder="Enter username" /></div>
+      <div class="form-group"><label>Username</label><input type="text" id="username" required placeholder="Enter username" autocomplete="off" /></div>
       <div class="form-group"><label id="passwordLabel">Password</label><input type="password" id="password" required placeholder="Enter password" /></div>
       <div class="form-group"><label>User Type / Role</label>
-        <select id="usertype" onchange="togglePermissionsGrid()">
-          <option value="User">User (Restricted Features)</option>
-          <option value="Admin">Admin (All Features Allowed)</option>
-        </select>
+        <select id="usertype"><option value="User">User (Restricted Features)</option><option value="Admin">Admin (All Features Allowed)</option></select>
       </div>
-      <!-- CLASS ASSIGN - THIS WAS MISSING IN YOUR SCREENSHOT -->
-      <div class="form-group" id="classAssignDiv">
-        <label>Assign Class (for Class Teacher)</label>
-        <select id="assignedClass"><option value="">-- All Classes (No Restriction) --</option></select>
-      </div>
+      <div class="form-group" id="classAssignDiv"><label>Assign Class (for Class Teacher)</label><select id="assignedClass"><option value="">-- All Classes (No Restriction) --</option></select></div>
       <div class="permissions-box" id="permissionsGroup">
         <label>Feature Level Accessibility Allowed</label>
         <div class="permissions-grid">
@@ -70,24 +69,66 @@ td{padding:12px;border-bottom:1px solid #e2e8f0;font-size:.9rem;} tr:hover td{ba
   </div>
   <div class="container" style="flex:1.5;margin:0;">
     <h3>Existing Application Profiles</h3>
-    <table><thead><tr><th>ID</th><th>Username</th><th>Role</th><th>Assigned Permissions</th><th>Class</th><th style="text-align:right;">Action</th></tr></thead><tbody id="userTableBody"></tbody></table>
+    <table><thead><tr><th>ID</th><th>Username</th><th>Role</th><th>Permissions</th><th>Class</th><th style="text-align:right;">Action</th></tr></thead><tbody id="userTableBody"></tbody></table>
   </div>
 </div>
+
+<div id="customModal"><div id="customBox"><p id="customMsg">Message</p><div id="customBtns"><button id="customCancel" style="background:#64748b;color:#fff;">Cancel</button><button id="customOk" style="background:#102a43;color:#fff;">OK</button></div></div></div>
+
 <script>
 let globalUsersList=[];
+
+function releaseFocusLock(){
+  try{
+    if(window.authAPI && typeof window.authAPI.send==='function') window.authAPI.send('fix-focus');
+    if(window.api && typeof window.api.send==='function') window.api.send('fix-focus');
+  }catch(e){}
+}
+function restoreFocus(){
+  releaseFocusLock();
+  setTimeout(()=>{ 
+    const inp = document.getElementById('username');
+    if(inp){ inp.focus(); inp.select?.(); }
+  }, 80);
+}
+
+// Custom alert/confirm that doesn't lock
+function showAlert(msg){
+  document.getElementById('customMsg').innerText = msg;
+  document.getElementById('customCancel').style.display='none';
+  document.getElementById('customModal').style.display='flex';
+}
+function showConfirm(msg){
+  return new Promise(resolve=>{
+    document.getElementById('customMsg').innerText = msg;
+    document.getElementById('customCancel').style.display='inline-block';
+    document.getElementById('customModal').style.display='flex';
+    const okBtn=document.getElementById('customOk');
+    const cancelBtn=document.getElementById('customCancel');
+    const clean = (val)=>{ okBtn.removeEventListener('click', onOk); cancelBtn.removeEventListener('click', onCancel); document.getElementById('customModal').style.display='none'; releaseFocusLock(); resolve(val); setTimeout(restoreFocus,100); };
+    const onOk=()=>clean(true); const onCancel=()=>clean(false);
+    okBtn.addEventListener('click', onOk); cancelBtn.addEventListener('click', onCancel);
+  });
+}
+document.getElementById('customOk').addEventListener('click', ()=>{ /* handled in promise */ });
+document.getElementById('customCancel').addEventListener('click', ()=>{ /* handled in promise */ });
+document.getElementById('customModal').addEventListener('click', (e)=>{ if(e.target.id==='customModal'){ document.getElementById('customModal').style.display='none'; releaseFocusLock(); restoreFocus(); } });
+
 document.addEventListener('DOMContentLoaded',()=>{
   loadUsers(); loadClassDropdown(); togglePermissionsGrid();
-  function releaseFocusLock(){ if(window.authAPI&&typeof window.authAPI.send==='function'){ window.authAPI.send('fix-focus'); } }
   document.body.addEventListener('change',(e)=>{ if(e.target.tagName==='SELECT'){ e.target.blur(); releaseFocusLock(); } });
+  document.getElementById('usertype').addEventListener('change', togglePermissionsGrid);
 });
+
 function safeParsePermissions(raw){if(!raw)return[];let arr=[];try{let p=JSON.parse(raw);if(typeof p==='string')p=JSON.parse(p);arr=Array.isArray(p)?p:[]}catch(e){if(typeof raw==='string')arr=raw.replace(/[\[\]"']/g,'').split(',').map(s=>s.trim()).filter(Boolean);}return arr.map(i=>String(i).toLowerCase());}
+
 async function loadClassDropdown(){
   try{
     const classes = await window.api.getClasses();
     const sel=document.getElementById('assignedClass');
     sel.innerHTML='<option value="">-- All Classes (No Restriction) --</option>';
     if(classes&&classes.length){ classes.forEach(c=>{ sel.innerHTML+=`<option value="${c.class_name}">${c.class_name}</option>`; }); }
-  }catch(e){ console.error("Class load failed",e); }
+  }catch(e){}
 }
 function togglePermissionsGrid(){
   const role=document.getElementById('usertype').value;
@@ -98,7 +139,9 @@ function togglePermissionsGrid(){
   else{ block.style.opacity='1'; block.style.pointerEvents='auto'; classDiv.style.display='block'; }
 }
 async function loadUsers(){
+  
   try{
+    console.log("Calling getAllUsers...");
     const users=await window.authAPI.getAllUsers();
     globalUsersList=users||[];
     const rows=globalUsersList.map(u=>{
@@ -123,11 +166,13 @@ function startEditUser(id){
   document.getElementById('formTitle').innerText="Edit System User"; document.getElementById('submitBtn').innerText="Update User Account"; document.getElementById('cancelBtn').style.display="block";
   togglePermissionsGrid();
   const arr=safeParsePermissions(u.permissions); document.querySelectorAll('#permissionsGroup input').forEach(cb=>{ cb.checked=arr.includes(cb.value.toLowerCase()); });
+  restoreFocus();
 }
 function resetFormState(){
   document.getElementById('userId').value=""; document.getElementById('userForm').reset();
   document.getElementById('password').setAttribute('required','required'); document.getElementById('password').placeholder="Enter password"; document.getElementById('passwordLabel').innerText="Password";
   document.getElementById('formTitle').innerText="Add System User"; document.getElementById('submitBtn').innerText="Save User Account"; document.getElementById('cancelBtn').style.display="none"; togglePermissionsGrid();
+  restoreFocus();
 }
 document.getElementById('userForm').onsubmit=async(e)=>{
   e.preventDefault();
@@ -143,11 +188,29 @@ document.getElementById('userForm').onsubmit=async(e)=>{
     const id=document.getElementById('userId').value;
     let res; if(id){ userData.id=parseInt(id); res=await window.authAPI.updateUser(userData); }
     else{ res=await window.authAPI.addUser(userData); }
-    if(res&&res.success){ alert(id?"User Updated Successfully!":"User Added Successfully!"); resetFormState(); loadUsers(); }
-    else{ alert("Failed: "+(res?res.error:"unknown")); }
-  }catch(err){ console.error(err); alert(err.message); }
+    if(res&&res.success){ showAlert(id?"User Updated Successfully!":"User Added Successfully!"); resetFormState(); loadUsers(); }
+    else{ showAlert("Failed: "+(res?res.error:"unknown")); }
+    setTimeout(()=>{ document.getElementById('customModal').style.display='none'; restoreFocus(); }, 1200);
+  }catch(err){ console.error(err); showAlert(err.message); restoreFocus(); }
 };
-async function deleteUser(id){ if(confirm("Are you sure you want to delete?")){ const res=await window.authAPI.deleteUser(id); if(res.success)loadUsers(); } }
+async function deleteUser(id){
+  const ok = await showConfirm("Are you sure you want to delete this user? This cannot be undone.");
+  if(!ok) return;
+  try{
+    const res=await window.authAPI.deleteUser(id);
+    if(res && res.success){
+      showAlert("User deleted");
+      setTimeout(()=>{ document.getElementById('customModal').style.display='none'; }, 800);
+      loadUsers();
+    } else {
+      showAlert("Delete failed: "+(res?res.error:"unknown"));
+    }
+  }catch(err){
+    showAlert(err.message);
+  } finally {
+    restoreFocus();
+  }
+}
 </script>
 </body>
 </html>

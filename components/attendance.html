@@ -279,7 +279,10 @@
     <a href="./dashboard.html" class="nav-btn">📊 Dashboard</a>
     <a href="./attendance-report.html" class="nav-btn">📋 Attendance Report</a>
     <a href="./attendance-report2.html" class="nav-btn">📈 Attendance Grid Report</a>
+    <button id="pull-cloud-btn" onclick="pullOnlineAttendance()" class="nav-btn" style="background:#059669; color:white; border-color:#059669; margin-left:auto;">⬇️ Pull Online Attendance</button>
 </div>
+
+<div id="pull-status" style="max-width:1040px; width:100%; margin:0 auto 15px auto; display:none; background:#ecfdf5; border:1px solid #a7f3d0; color:#065f46; padding:12px 16px; border-radius:8px; font-size:13px; font-weight:600;"></div>
 
 <div class="container">
     <h2> Attendance Dashboard</h2>
@@ -514,6 +517,51 @@
             if (res && res.success) { showPopup('All', `${records.length} Records`, date, 'success'); loadAttendanceList(); }
         } catch (e) { console.error(e); }
     }
+    async function pullOnlineAttendance(){
+  const date = document.getElementById('attendance-date').value;
+  if(!date){ alert("Select DATE first"); return; }
+  const btn = document.getElementById('pull-cloud-btn');
+  const statusBox = document.getElementById('pull-status');
+  
+  btn.disabled = true;
+  btn.textContent = '⏳ Pulling...';
+  statusBox.style.display = 'block';
+  statusBox.textContent = `Pulling attendance for ${date} from Cloud Database...`;
+
+  try {
+    // Works with both preload styles
+    let res;
+    if(window.api && window.api.pullAttendanceCloud){
+        res = await window.api.pullAttendanceCloud(date);
+    }else if(window.electronAPI){
+        res = await window.electronAPI.invoke('pull-attendance-cloud', date);
+    }else{
+        res = await window.api.invoke('pull-attendance-cloud', date);
+    }
+
+    console.log("Pull result", res);
+    if(res && res.success){
+        statusBox.style.background = '#ecfdf5';
+        statusBox.innerHTML = `✅ Pulled Successfully! ${res.student_count || 0} Students + ${res.staff_count || 0} Staff for ${date} from online. Now click Load Records.`;
+        showPopup('Cloud', `${res.student_count} records synced`, date, 'success');
+        // auto reload list if class selected
+        const className = document.getElementById('class-dropdown').value;
+        if(className) loadAttendanceList();
+    }else{
+        statusBox.style.background = '#fef2f2';
+        statusBox.style.borderColor = '#fecaca';
+        statusBox.style.color = '#991b1b';
+        statusBox.textContent = `❌ Failed: ${res?.error || 'Unknown error'}`;
+    }
+  } catch(e){
+    console.error(e);
+    statusBox.textContent = `❌ Error: ${e.message}`;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '⬇️ Pull Online Attendance';
+    setTimeout(()=>{ statusBox.style.display='none'; }, 8000);
+  }
+}
 </script>
 </body>
 </html>

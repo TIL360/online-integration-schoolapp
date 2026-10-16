@@ -7,29 +7,21 @@
     <style>
         :root { --primary: #28a745; --bg: #f4f4f4; --text: #333; --accent: #4f46e5; }
         body { font-family: 'Segoe UI', sans-serif; margin: 5px; background-color: var(--bg); color: var(--text); overflow: hidden; }
-       .container { max-width: 99%; margin: auto; background: #fff; padding: 10px 20px; border-radius: 8px; height: 97vh; box-sizing: border-box; display: flex; flex-direction: column; overflow-y: auto; }
+     .container { max-width: 99%; margin: auto; background: #fff; padding: 10px 20px; border-radius: 8px; height: 97vh; box-sizing: border-box; display: flex; flex-direction: column; overflow-y: auto; }
         h2 { margin: 0 0 5px 0; color: #444; border-bottom: 2px solid #eee; padding-bottom: 2px; font-size: 1.1rem; display: flex; justify-content: space-between; align-items: center; }
-       .section-title { background: #f8f9fa; padding: 3px 8px; display: block; font-weight: bold; color: var(--accent); border-left: 3px solid var(--accent); margin: 8px 0 5px 0; font-size: 0.75rem; text-transform: uppercase; }
-       .form-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px 12px; }
-       .form-group { margin-bottom: 2px; }
-       .span-2 { grid-column: span 2; }
+     .section-title { background: #f8f9fa; padding: 3px 8px; display: block; font-weight: bold; color: var(--accent); border-left: 3px solid var(--accent); margin: 8px 0 5px 0; font-size: 0.75rem; text-transform: uppercase; }
+     .form-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px 12px; }
+     .form-group { margin-bottom: 2px; }
+     .span-2 { grid-column: span 2; }
         label { display: block; margin-bottom: 1px; font-weight: bold; font-size: 0.7rem; color: #555; }
-        input, select, textarea {
-          width: 100%; padding: 4px 8px; border: 1px solid #ccc; border-radius: 4px;
-          box-sizing: border-box; font-size: 0.75rem;
-          -webkit-app-region: no-drag!important;
-          pointer-events: auto!important;
-          user-select: text!important;
-        }
+        input, select, textarea { width: 100%; padding: 4px 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 0.75rem; -webkit-app-region: no-drag!important; pointer-events: auto!important; user-select: text!important; }
         input:focus, select:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 3px rgba(79, 70, 229, 0.2); }
-       .submit-btn { width: 250px; padding: 8px; background: var(--primary); color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.9rem; font-weight: bold; margin: 10px 0 0 auto; transition: 0.3s; }
-       .btn-back { background: #6c757d; color: white; padding: 4px 10px; border: none; border-radius: 4px; cursor: pointer; font-size: 0.75rem; }
-
-        /* CUSTOM ALERT - NO FOCUS LOSS */
+     .submit-btn { width: 250px; padding: 8px; background: var(--primary); color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.9rem; font-weight: bold; margin: 10px 0 0 auto; transition: 0.3s; }
+     .btn-back { background: #6c757d; color: white; padding: 4px 10px; border: none; border-radius: 4px; cursor: pointer; font-size: 0.75rem; }
         #customAlert { display:none; position:fixed; z-index:99999; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.45); align-items:center; justify-content:center; }
-       .alert-box { background:white; padding:20px 25px; border-radius:10px; min-width:350px; box-shadow:0 15px 30px rgba(0,0,0,0.25); }
-       .alert-box p { margin:0 0 15px 0; font-size:0.85rem; color:#333; }
-       .alert-box button { background:#003049; color:white; border:none; padding:6px 16px; border-radius:5px; cursor:pointer; font-weight:bold; float:right; }
+     .alert-box { background:white; padding:20px 25px; border-radius:10px; min-width:350px; box-shadow:0 15px 30px rgba(0,0,0,0.25); }
+     .alert-box p { margin:0 0 15px 0; font-size:0.85rem; color:#333; }
+     .alert-box button { background:#003049; color:white; border:none; padding:6px 16px; border-radius:5px; cursor:pointer; font-weight:bold; float:right; }
     </style>
 </head>
 <body>
@@ -45,7 +37,7 @@
             <div class="form-group"><label>Father's Name</label><input type="text" id="fatherName" autocomplete="off"></div>
             <div class="form-group"><label>Father Name in Urdu</label><input type="text" id="fatherNameUrdu" autocomplete="off"></div>
             <div class="form-group"><label>DoB (Figures)</label><input type="date" id="dob"></div>
-            <div class="form-group"><label>DoB in Words</label><input type="text" id="dobWords" autocomplete="off"></div>
+            <div class="form-group"><label>DoB in Words</label><input type="text" id="dobWords" autocomplete="off" placeholder="Auto fills on date select"></div>
             <div class="form-group"><label>B-Form / CNIC</label><input type="text" id="bForm" autocomplete="off"></div>
             <div class="form-group"><label>Student Picture</label><input type="file" id="picture" accept="image/*"></div>
         </div>
@@ -79,11 +71,8 @@
         <button type="submit" class="submit-btn" id="submitBtn">Save Student Record</button>
     </form>
 </div>
-
 <div id="customAlert"><div class="alert-box"><p id="alertMsg">Message</p><button id="alertOk">OK</button><div style="clear:both"></div></div></div>
-
 <script>
-// === NO MORE NATIVE ALERT ===
 let lastFocusId = null;
 function showAlert(msg, focusId=null){
   lastFocusId = focusId;
@@ -98,45 +87,91 @@ document.getElementById('alertOk').addEventListener('click', ()=>{
   }
   forceFixFocus();
 });
-
 function forceFixFocus(){
   if(window.authAPI && window.authAPI.send) window.authAPI.send('fix-focus');
   document.querySelectorAll('input, select, textarea').forEach(el=>{
-    el.disabled = false;
-    el.readOnly = false;
-    el.style.pointerEvents = 'auto';
+    el.disabled = false; el.readOnly = false; el.style.pointerEvents = 'auto';
   });
 }
-
 function goBack(){
   forceFixFocus();
   window.api.changePage('components/student/student_list.html');
 }
 
-// === SINGLE DOMContentLoaded - FIXED ===
+// === CORRECT DOB TO WORDS - NO TIMEZONE BUG ===
+const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+const DAY_ORDINAL = ["","First","Second","Third","Fourth","Fifth","Sixth","Seventh","Eighth","Ninth","Tenth","Eleventh","Twelfth","Thirteenth","Fourteenth","Fifteenth","Sixteenth","Seventeenth","Eighteenth","Nineteenth","Twentieth","Twenty First","Twenty Second","Twenty Third","Twenty Fourth","Twenty Fifth","Twenty Sixth","Twenty Seventh","Twenty Eighth","Twenty Ninth","Thirtieth","Thirty First"];
+
+function yearToWords(y){
+  y = parseInt(y);
+  const ones = ["","One","Two","Three","Four","Five","Six","Seven","Eight","Nine"];
+  const teens = ["Ten","Eleven","Twelve","Thirteen","Fourteen","Fifteen","Sixteen","Seventeen","Eighteen","Nineteen"];
+  const tens = ["","","Twenty","Thirty","Forty","Fifty","Sixty","Seventy","Eighty","Ninety"];
+
+  if(y === 2000) return "Two Thousand";
+  if(y > 2000 && y < 2010) return "Two Thousand " + ones[y-2000];
+  if(y >= 2010 && y < 2100){
+    let r = y - 2000;
+    if(r < 10) return "Two Thousand " + ones[r];
+    if(r < 20) return "Two Thousand " + teens[r-10];
+    let s = "Two Thousand " + tens[Math.floor(r/10)];
+    if(r%10) s += " " + ones[r%10];
+    return s;
+  }
+  // 1990 etc
+  let first = Math.floor(y/100);
+  let last = y % 100;
+  let str = (first === 19? "Nineteen " : first + " ");
+  if(last < 10 && last!==0) str += ones[last];
+  else if(last < 20 && last >=10) str += teens[last-10];
+  else if(last >=20){
+    str += tens[Math.floor(last/10)];
+    if(last%10) str += " " + ones[last%10];
+  }
+  return str.trim();
+}
+
+function convertDobToWords(dateStr){
+  if(!dateStr) return "";
+  // IMPORTANT: dateStr is YYYY-MM-DD, split manually to avoid timezone bug
+  const parts = dateStr.split("-");
+  if(parts.length!== 3) return "";
+  const year = parseInt(parts[0]);
+  const month = parseInt(parts[1]);
+  const day = parseInt(parts[2]);
+  if(!year ||!month ||!day) return "";
+  const dayWord = DAY_ORDINAL[day] || day;
+  const monthWord = MONTHS[month-1] || "";
+  const yearWord = yearToWords(year);
+  return `${dayWord} ${monthWord} ${yearWord}`;
+}
+
 window.addEventListener('DOMContentLoaded', async () => {
+  const dobInput = document.getElementById('dob');
+  const dobWordsInput = document.getElementById('dobWords');
+  if(dobInput && dobWordsInput){
+    const autoFill = () => {
+      if(dobInput.value){
+        dobWordsInput.value = convertDobToWords(dobInput.value);
+      } else {
+        dobWordsInput.value = "";
+      }
+    };
+    dobInput.addEventListener('change', autoFill);
+    dobInput.addEventListener('input', autoFill);
+  }
 
   document.body.addEventListener('change', (e)=>{
-    if(e.target.tagName==='SELECT'){
-      e.target.blur();
-      setTimeout(forceFixFocus, 100);
-    }
+    if(e.target.tagName==='SELECT'){ e.target.blur(); setTimeout(forceFixFocus, 100); }
   });
 
   await populateClasses();
   await fillStudentData();
-
-  // Unlock edit mode after data load
   setTimeout(forceFixFocus, 300);
   setTimeout(forceFixFocus, 800);
-
-  // Focus regNo only for NEW admission, not edit
   const urlParams = new URLSearchParams(window.location.search);
   if(!urlParams.get('id')){
-    setTimeout(()=>{
-      const reg = document.getElementById('regNo');
-      if(reg){ reg.focus(); }
-    }, 400);
+    setTimeout(()=>{ const reg = document.getElementById('regNo'); if(reg){ reg.focus(); } }, 400);
   }
 });
 
@@ -156,7 +191,6 @@ async function populateClasses() {
       });
   } catch (err) { console.error(err); }
 }
-
 async function fillStudentData() {
   if (!studentId) return;
   try {
@@ -170,7 +204,8 @@ async function fillStudentData() {
       document.getElementById('fatherName').value = s.father_name || '';
       document.getElementById('fatherNameUrdu').value = s.father_name_urdu || '';
       document.getElementById('dob').value = s.dob || '';
-      document.getElementById('dobWords').value = s.dob_in_words || '';
+      // agar dob_in_words khali hai to dob se auto generate karo
+      document.getElementById('dobWords').value = s.dob_in_words || (s.dob? convertDobToWords(s.dob) : '');
       document.getElementById('bForm').value = s.cnic_bform || '';
       document.getElementById('admClass').value = s.admission_class || '';
       document.getElementById('studyClass').value = s.current_class || '';
@@ -195,7 +230,6 @@ async function fillStudentData() {
       forceFixFocus();
   } catch (err) { console.error(err); }
 }
-
 studentForm.addEventListener('submit', async (e) => {
   e.preventDefault();
   const picInput = document.getElementById('picture');
@@ -243,6 +277,7 @@ studentForm.addEventListener('submit', async (e) => {
           await window.api.addStudent(studentData);
           showAlert("Saved Successfully!", "regNo");
           studentForm.reset();
+          document.getElementById('dobWords').value = "";
       }
   } catch (error) {
       if (error.message && error.message.includes('UNIQUE constraint failed: students.registration_no')) {

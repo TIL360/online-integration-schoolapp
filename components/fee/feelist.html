@@ -117,11 +117,82 @@ async function confirmDeleteFee(){
   const id = pendingDeleteId;
   closeDeleteConfirm();
   await window.api.deleteFee(id);
-  await loadFeeData();
+  await loadFeeData(true); // keep selection
   window.focus();
 }
 
-document.addEventListener('DOMContentLoaded', async () => { window.focus(); await loadApplicationDetails(); await populateFilters(); generateColumnToggles(); });
+// === NEW: STATE SAVE / RESTORE ===
+function saveFilterState(){
+  const state = {
+    month: document.getElementById('filterMonth').value,
+    year: document.getElementById('filterYear').value,
+    className: document.getElementById('filterClass').value,
+    page: currentPage,
+    search: document.getElementById('feeSearch').value,
+    scrollY: window.scrollY
+  };
+  localStorage.setItem('feeFiltersState', JSON.stringify(state));
+}
+function getSavedState(){
+  try{ return JSON.parse(localStorage.getItem('feeFiltersState')||'null'); }catch{ return null; }
+}
+function restoreFilterValues(state){
+  if(!state) return false;
+  if(state.month) document.getElementById('filterMonth').value = state.month;
+  if(state.year) document.getElementById('filterYear').value = state.year;
+  if(state.className) document.getElementById('filterClass').value = state.className;
+  return!!(state.month && state.year && state.className);
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+  window.focus();
+  await loadApplicationDetails();
+  await populateFilters();
+  generateColumnToggles();
+  // AUTO RESTORE if user coming back from collection
+  const saved = getSavedState();
+  if(saved && restoreFilterValues(saved)){
+    await loadFeeData(true);
+    if(saved.search){
+      document.getElementById('feeSearch').value = saved.search;
+      filterFeeTable();
+    }
+    if(saved.page) currentPage = saved.page;
+    setTimeout(()=>{ renderPage(currentPage); if(saved.scrollY) window.scrollTo(0, saved.scrollY); }, 200);
+  }
+  // LISTEN FOR RETURN FROM COLLECTION PAGE
+  window.addEventListener('focus', handleReturnFromCollection);
+  window.addEventListener('storage', (e)=>{ if(e.key==='feeUpdatedId') handleReturnFromCollection(); });
+});
+
+async function handleReturnFromCollection(){
+  const updatedId = localStorage.getItem('feeUpdatedId');
+  const closed = localStorage.getItem('feeCollectionClosed');
+  if(!updatedId &&!closed) return;
+
+  // clear flags
+  localStorage.removeItem('feeUpdatedId');
+  localStorage.removeItem('feeCollectionClosed');
+
+  const saved = getSavedState();
+  if(!saved) return;
+
+  // Option 1: if you have getFeeRecordById API -> update only one row (fast, no flicker)
+  if(updatedId && window.api.getFeeRecordById){
+    try{
+      const freshRow = await window.api.getFeeRecordById(parseInt(updatedId));
+      if(freshRow){
+        const idx = currentTableData.findIndex(r=> r.id == updatedId);
+        if(idx!== -1) currentTableData[idx] = {...currentTableData[idx],...freshRow};
+        renderPage(currentPage);
+        document.getElementById('filterInfoDisplay').innerHTML = `Found ${currentTableData.length} Records • Updated #${updatedId}`;
+        return;
+      }
+    }catch(e){ console.log("single refresh failed, fallback to full", e); }
+  }
+  // Fallback: full reload but KEEP selection & page
+  await loadFeeData(true);
+}
 
 function generateColumnToggles() {
     const headers = document.querySelectorAll("table thead th");
@@ -152,11 +223,14 @@ async function populateFilters() {
     const monthSelect = document.getElementById('filterMonth');
     const yearSelect = document.getElementById('filterYear');
     const classSelect = document.getElementById('filterClass');
+    monthSelect.innerHTML = `<option value="">Select Month</option>`;
+    yearSelect.innerHTML = `<option value="">Select Year</option>`;
+    classSelect.innerHTML = `<option value="">Select Class</option>`;
     data.months.forEach(m => monthSelect.innerHTML += `<option value="${m.invoice_month}">${m.invoice_month}</option>`);
     data.years.forEach(y => yearSelect.innerHTML += `<option value="${y.invoice_year}">${y.invoice_year}</option>`);
     data.classes.forEach(c => classSelect.innerHTML += `<option value="${c.class_name}">${c.class_name}</option>`);
 }
-async function loadFeeData() {
+async function loadFeeData(keepPage = false) {
     const month = document.getElementById('filterMonth').value;
     const year = document.getElementById('filterYear').value;
     const className = document.getElementById('filterClass').value;
@@ -164,10 +238,18 @@ async function loadFeeData() {
     document.getElementById('filterInfoDisplay').innerHTML = "Loading...";
     currentTableData = await window.api.getFeeRecordsFilters({ month, year, className });
     document.getElementById('filterInfoDisplay').innerHTML = `Found ${currentTableData.length} Records`;
-    renderPage(1);
+    saveFilterState(); // save after load
+    if(keepPage && currentPage > 1){
+      const totalPages = Math.ceil(currentTableData.length / recordsPerPage);
+      if(currentPage > totalPages) currentPage = totalPages || 1;
+      renderPage(currentPage);
+    } else {
+      renderPage(1);
+    }
 }
 function renderPage(page) {
     currentPage = page;
+    saveFilterState();
     const tableBody = document.getElementById('feeTableBody');
     tableBody.innerHTML = '';
     const start = (page - 1) * recordsPerPage;
@@ -211,7 +293,7 @@ function renderPaginationControls() {
     for (let i = 1; i <= totalPages; i++) { container.innerHTML += `<button class="page-btn ${i === currentPage? 'active' : ''}" onclick="renderPage(${i})">${i}</button>`; }
 }
 
-// === NEW INDIVIDUAL FULL EDIT LOGIC ===
+//... (your other modal functions same as before - keep them)...
 function openIndividualFeeEditor(feeId){
     const row = currentTableData.find(r => r.id === feeId);
     if(!row){ showAlert("Record not found"); return; }
@@ -229,14 +311,8 @@ function openIndividualFeeEditor(feeId){
     document.getElementById('indMiscRemarks').value = row.misc_remarks || '';
     document.getElementById('individualFeeModal').style.display = 'flex';
     document.getElementById('individualFeeModal').classList.add('show');
-    // FIX: auto cursor blink
-    setTimeout(() => {
-        const first = document.getElementById('indMonthlyFee');
-        first.focus();
-        first.select();
-    }, 100);
+    setTimeout(() => { const first = document.getElementById('indMonthlyFee'); first.focus(); first.select(); }, 100);
 }
-
 function closeIndividualFeeModal(){
     document.getElementById('individualFeeModal').style.display = 'none';
     document.getElementById('individualFeeModal').classList.remove('show');
@@ -259,37 +335,18 @@ async function saveIndividualFee(){
     const result = await window.api.updateIndividualFullFees(data);
     if(result.success){
         closeIndividualFeeModal();
-        await loadFeeData();
+        await loadFeeData(true);
     } else {
         showAlert("Failed to update: " + (result.error || 'Unknown'));
     }
 }
-
-function openOtherFeeModal() { 
-    if(currentTableData.length > 0) { 
-        document.getElementById('otherFeeModal').style.display = 'flex'; 
+function openOtherFeeModal() {
+    if(currentTableData.length > 0) {
+        document.getElementById('otherFeeModal').style.display = 'flex';
         document.getElementById('otherFeeModal').classList.add('show');
-        // FIX: auto cursor blink for bulk modal
-        setTimeout(() => {
-            const first = document.getElementById('newExamFee');
-            first.focus();
-            first.select();
-        }, 100);
-    } else { 
-        showAlert("Please load records first"); 
-    } 
+        setTimeout(() => { const first = document.getElementById('newExamFee'); first.focus(); first.select(); }, 100);
+    } else { showAlert("Please load records first"); }
 }
-
-// Auto focus on Enter key navigation inside modals
-document.querySelectorAll('#individualFeeModal input, #otherFeeModal input').forEach((input, idx, all) => {
-    input.addEventListener('keydown', (e) => {
-        if(e.key === 'Enter'){
-            e.preventDefault();
-            const next = all[idx+1];
-            if(next) { next.focus(); next.select(); }
-        }
-    });
-});
 function closeOtherFeeModal() { document.getElementById('otherFeeModal').style.display = 'none'; document.getElementById('otherFeeModal').classList.remove('show'); window.focus(); }
 async function applyBulkFeeUpdate() {
     const data = {
@@ -306,16 +363,23 @@ async function applyBulkFeeUpdate() {
         className: document.getElementById('filterClass').value
     };
     const result = await window.api.bulkUpdateFees(data);
-    if(result.success) { closeOtherFeeModal(); showAlert(`Updated ${result.count} records.`); loadFeeData(); }
+    if(result.success) { closeOtherFeeModal(); showAlert(`Updated ${result.count} records.`); loadFeeData(true); }
 }
 function filterFeeTable() {
     const filter = document.getElementById('feeSearch').value.toLowerCase().trim();
+    saveFilterState();
     const rows = document.getElementById('feeTableBody').getElementsByTagName('tr');
     for (let i = 0; i < rows.length; i++) { rows[i].style.display = rows[i].innerText.toLowerCase().includes(filter)? "" : "none"; }
 }
 function viewInvoice(id) { printTargetIds = String(id); document.getElementById('printChoiceModal').style.display = 'flex'; document.getElementById('printChoiceModal').classList.add('show'); }
 function viewBulkInvoices() { if (currentTableData.length === 0) { showAlert("No records to print"); return; } printTargetIds = currentTableData.map(r => r.id).join(','); document.getElementById('printChoiceModal').style.display = 'flex'; document.getElementById('printChoiceModal').classList.add('show'); }
-function collectFee(id) { localStorage.setItem('collectFeeId', id); localStorage.setItem('feeMode', 'collect'); window.api.changePage('components/fee/feecollection.html'); }
+
+function collectFee(id) {
+  saveFilterState(); // IMPORTANT: save before leave
+  localStorage.setItem('collectFeeId', id);
+  localStorage.setItem('feeMode', 'collect');
+  window.api.changePage('components/fee/feecollection.html');
+}
 
 function sendWhatsAppReminder(name, total_fee, arrears, phone, invoice_month, monthly_fee, adm_fee = 0, exam_fee = 0, misc_fee = 0, lab_fee = 0, reg_fee = 0, annual_fund = 0, stationary_fund = 0, bus_charges = 0, collection = 0) {
     if (!phone || phone === 'null' || phone == "") { showAlert("Phone number not found for this student!"); return; }

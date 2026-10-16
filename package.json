@@ -8,14 +8,10 @@
     "start": "electron .",
     "dev": "electron .",
     "build": "electron-builder --win --x64",
-    "postinstall": "electron-rebuild -f -w better-sqlite3"
+    "postinstall": "electron-builder install-app-deps"
   },
-  "keywords": [
-    "electron",
-    "school",
-    "offline"
-  ],
-  "author": "Raja Bilal",
+  "keywords": ["electron", "school", "offline"],
+  "author": "Raja Bilal | Techinfolab",
   "license": "ISC",
   "dependencies": {
     "@supabase/supabase-js": "^2.117.2",
@@ -24,46 +20,57 @@
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
-    "@electron/rebuild": "^4.2.0",
     "electron": "^40.8.0",
-    "electron-builder": "^26.8.1",
+    "electron-builder": "^26.15.3",
     "nodemon": "^3.1.14"
   },
   "build": {
-    "appId": "com.kips.schoolapp",
+    "appId": "com.techinfolab.edupulse2026",
     "productName": "EDUPULSE-2026",
+    "copyright": "Copyright © 2026 Techinfolab",
     "icon": "images/icons/logo.ico",
-    "artifactName": "${productName} Setup ${version} ${arch}.${ext}",
+    "artifactName": "${productName}-Setup-${version}-64bit.${ext}",
     "asar": true,
     "asarUnpack": [
-      "**/*.node"
+      "**/*.node",
+      "**/better-sqlite3/**/*"
     ],
     "files": [
       "**/*",
       "!**/*.db-journal",
-      "!node_modules/.cache"
+      "!**/node_modules/.cache",
+      "!dist",
+      "!*.docx",
+      "!School App Online"
     ],
     "extraResources": [
       "school.db"
     ],
+    "directories": {
+      "buildResources": "images/icons",
+      "output": "dist"
+    },
     "win": {
-      "icon": "images/icons/logo.ico",
       "target": [
         {
           "target": "nsis",
-          "arch": [
-            "x64",
-            "ia32"
-          ]
+          "arch": ["x64"]
         }
-      ]
+      ],
+      "icon": "images/icons/logo.ico"
     },
     "nsis": {
       "oneClick": false,
       "perMachine": false,
       "allowToChangeInstallationDirectory": true,
+      "allowElevation": true,
       "createDesktopShortcut": true,
-      "createStartMenuShortcut": true
+      "createStartMenuShortcut": true,
+      "shortcutName": "EDUPULSE 2026",
+      "runAfterFinish": true,
+      "installerIcon": "images/icons/logo.ico",
+      "uninstallerIcon": "images/icons/logo.ico",
+      "deleteAppDataOnUninstall": false
     }
   }
 }

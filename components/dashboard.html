@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<!-- Strict Security Policy for Offline Apps -->
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' http://localhost; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:;">
 <title>EduPulse || 2026</title>
 <style>
@@ -23,162 +22,32 @@
   --card-footer-bg: #02245a;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-  background: var(--bg-body);
-  display: flex;
-  min-height: 100vh;
-  color: var(--text-main);
-  overflow-x: hidden;
-}
-/* --- SIDEBAR --- */
-.sidebar {
-  width: 260px;
-  min-width: 260px;
-  background: var(--sidebar-bg);
-  color: var(--sidebar-text);
-  padding: 25px 16px;
-  display: flex; 
-  flex-direction: column;
-  height: 100vh;
-  position: sticky;
-  top: 0;
-  overflow-y: auto;
-}
-.sidebar h1 { 
-  font-size: 3.6rem; 
-  font-weight: 800; 
-  color: #fff; 
-  margin-bottom: 30px; 
-  text-align: center; 
-  letter-spacing: 0.8px;
-}
-.nav-btn {
-  display: flex; align-items: center; gap: 12px;
-  padding: 11px 14px; margin-bottom: 6px;
-  border-radius: 10px; color: var(--sidebar-text);
-  text-decoration: none; font-size: 0.93rem; font-weight: 600;
-  transition: 0.2s; border: none; background: transparent;
-  cursor: pointer; width: 100%; text-align: left;
-  letter-spacing: 0.2px;
-}
+body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg-body); display: flex; min-height: 100vh; color: var(--text-main); overflow-x: hidden; }
+.sidebar { width: 260px; min-width: 260px; background: var(--sidebar-bg); color: var(--sidebar-text); padding: 25px 16px; display: flex; flex-direction: column; height: 100vh; position: sticky; top: 0; overflow-y: auto; }
+.sidebar h1 { font-size: 1.4rem; font-weight: 800; color: #fff; margin-bottom: 30px; text-align: center; letter-spacing: 0.8px; }
+.nav-btn { display: flex; align-items: center; gap: 12px; padding: 11px 14px; margin-bottom: 6px; border-radius: 10px; color: var(--sidebar-text); text-decoration: none; font-size: 0.93rem; font-weight: 600; transition: 0.2s; border: none; background: transparent; cursor: pointer; width: 100%; text-align: left; }
 .nav-btn:hover { background: rgba(255, 255, 255, 0.08); color: #fff; }
-.nav-btn.active {
-  background: var(--sidebar-active) !important;
-  color: #fff;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  font-weight: 700;
-}
+.nav-btn.active { background: var(--sidebar-active)!important; color: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.2); font-weight: 700; }
 .nav-group { flex: 1; overflow-y: auto; }
 .nav-group::-webkit-scrollbar { width: 4px; }
 .nav-group::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
-
-.nav-btn.active {
-  background: var(--sidebar-active) !important;
-  color: #fff;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  font-weight: 600;
-}
-.logout-btn { margin-top: 20px; color: #fb7185 !important; background: rgba(244, 63, 94, 0.1) !important; }
-.logout-btn:hover { background: rgba(244, 63, 94, 0.2) !important; }
-
-/* --- MAIN CONTENT - SCROLLABLE --- */
-.main { 
-  flex: 1; 
-  padding: 22px 24px; 
-  display: flex; 
-  flex-direction: column; 
-  gap: 18px; 
-  overflow-y: auto; 
-  height: 100vh;
-  min-width: 0;
-}
+.logout-btn { margin-top: 20px; color: #fb7185!important; background: rgba(244, 63, 94, 0.1)!important; }
+.logout-btn:hover { background: rgba(244, 63, 94, 0.2)!important; }
+.main { flex: 1; padding: 22px 24px; display: flex; flex-direction: column; gap: 18px; overflow-y: auto; height: 100vh; min-width: 0; }
 .header-row { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px; }
-.welcome-header h2 { font-size: 1.7rem; font-weight: 800; line-height: 1.2; }
+.welcome-header h2 { font-size: 1.7rem; font-weight: 800; }
 .welcome-header p { margin-top: 4px; color: var(--text-muted); font-size: 0.88rem; }
-
-.school-main-heading {
-  color: var(--heading-color);
-  font-family: 'Georgia', 'Times New Roman', serif;
-  font-size: clamp(22px, 3vw, 34px);
-  font-weight: 800;
-  border-bottom: 3px solid var(--heading-border);
-  display: inline-block; 
-  padding-bottom: 6px; 
-  margin-bottom: 12px;
-  line-height: 1.1;
-}
-.status-badge { 
-  background: white; 
-  padding: 8px 14px; 
-  border-radius: 10px; 
-  font-weight: 600; 
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05); 
-  font-size: 0.82rem;
-  white-space: nowrap;
-  border: 1px solid #e2e8f0;
-}
-
-/* --- STATS --- */
+.status-badge { background: white; padding: 8px 14px; border-radius: 10px; font-weight: 600; box-shadow: 0 2px 10px rgba(0,0,0,0.05); font-size: 0.82rem; border: 1px solid #e2e8f0; }
 .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
-.stat-card {
-  background: var(--card-bg); 
-  padding: 14px 14px; 
-  border-radius: 14px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.04); 
-  display: flex; 
-  align-items: center; 
-  gap: 12px; 
-  border: 1px solid #e2e8f0;
-  min-width: 0;
-}
-.icon-box { width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; background: #e0e7ff; flex-shrink: 0; }
-.stat-info { min-width: 0; }
-.stat-info small { color: var(--text-muted); font-size: 0.68rem; font-weight: 700; text-transform: uppercase; display: block; letter-spacing: 0.5px; }
-.stat-info div { font-size: 1.25rem; font-weight: 800; color: var(--text-main); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-/* --- ACTIONS --- */
+.stat-card { background: var(--card-bg); padding: 14px; border-radius: 14px; box-shadow: 0 4px 15px rgba(0,0,0,0.04); display: flex; align-items: center; gap: 12px; border: 1px solid #e2e8f0; }
+.icon-box { width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; background: #e0e7ff; }
+.stat-info small { color: var(--text-muted); font-size: 0.68rem; font-weight: 700; text-transform: uppercase; display: block; }
+.stat-info div { font-size: 1.25rem; font-weight: 800; }
 .action-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; padding-bottom: 20px; }
-.action-card {
-  background: white; 
-  padding: 22px 16px; 
-  border-radius: 16px; 
-  text-align: center; 
-  text-decoration: none;
-  color: var(--text-main); 
-  border: 1px solid #e2e8f0; 
-  transition: 0.2s ease;
-  display: flex; 
-  flex-direction: column; 
-  align-items: center; 
-  gap: 10px;
-}
+.action-card { background: white; padding: 22px 16px; border-radius: 16px; text-align: center; text-decoration: none; color: var(--text-main); border: 1px solid #e2e8f0; transition: 0.2s; display: flex; flex-direction: column; align-items: center; gap: 10px; }
 .action-card:hover { border-color: var(--primary); background: #fffaf5; transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.06); }
 .action-card span { font-weight: 700; font-size: 0.95rem; color: var(--primary); }
-
-/* --- LAPTOP 1366x768 FIX --- */
-@media (max-width: 1366px) {
-  .sidebar { width: 230px; min-width: 230px; padding: 20px 12px; }
-  .sidebar h1 { font-size: 1.15rem; margin-bottom: 20px; }
-  .nav-btn { padding: 10px 12px; font-size: 0.88rem; }
-  .main { padding: 16px 18px; }
-  .stats-row { grid-template-columns: repeat(4, 1fr); }
-  .action-grid { grid-template-columns: repeat(3, 1fr); }
-}
-@media (max-width: 1024px) {
-  .stats-row { grid-template-columns: repeat(2, 1fr); }
-  .action-grid { grid-template-columns: repeat(2, 1fr); }
-}
-@media (max-width: 768px) {
-  body { flex-direction: column; }
-  .sidebar { width: 100%; min-width: 100%; height: auto; position: relative; flex-direction: row; flex-wrap: wrap; padding: 12px; }
-  .sidebar h1 { width: 100%; margin-bottom: 12px; }
-  .nav-group { display: flex; flex-wrap: wrap; gap: 6px; }
-  .nav-btn { width: auto; flex: 1 1 140px; }
-  .main { height: auto; overflow: visible; }
-}
 </style>
-
 </head>
 <body>
 <div class="sidebar">
@@ -192,180 +61,87 @@ body {
 <a href="staff/staff.html" class="nav-btn" id="navStaff">👔 Staff</a>
 <a href="expenses/expense.html" class="nav-btn" id="navExpenses">💸 Expenses</a>
 <a href="newuser.html" class="nav-btn" id="navRoles">⚙️ Roles</a>
-<button id="btnPassword" onclick="document.getElementById('passwordModal').style.display='block'" class="nav-btn ">
-<span style="margin-right: 8px;">🔒</span> Change Password
-</button>
+
+<div style="margin:18px 0 8px 0; padding-top:12px; border-top:1px solid rgba(255,255,255,0.15);">
+  <small style="color:rgba(255,255,255,0.6); font-size:0.65rem; letter-spacing:1px; padding-left:10px; font-weight:700;">CLOUD SYNC</small>
+  <button onclick="manualPush()" id="btnPush" class="nav-btn" style="background: rgba(34,197,94,0.15); color:#86efac; margin-top:8px;">
+    <span>⬆️</span> Push to Online
+  </button>
+  <button onclick="manualWipe()" id="btnWipe" class="nav-btn" style="background: rgba(239,68,68,0.15); color:#fca5a5;">
+    <span>🗑️</span> Delete Online Data
+  </button>
+  <div id="cloudStatus" style="font-size:0.7rem; color:rgba(255,255,255,0.7); padding:8px 10px; text-align:left; white-space:pre-line; line-height:1.3;"></div>
+</div>
+
+<button id="btnPassword" onclick="document.getElementById('passwordModal').style.display='block'" class="nav-btn"><span style="margin-right:8px;">🔒</span> Change Password</button>
 </div>
 <button id="btnDB" class="nav-btn logout-btn" onclick="window.authAPI.openDBFolder()">📁 DB Folder</button>
 <button onclick="logout()" class="nav-btn logout-btn">🚪 Logout</button>
 </div>
+
 <div class="main">
 <div class="header-row">
 <div class="welcome-header">
-<h1 id="main-school-heading" style="font-family: 'Georgia', 'Times New Roman', serif; font-size: 40px; font-weight: 800; border-bottom: 2px solid #d4a373; display: inline-block; padding-bottom: 5px; margin-bottom: 15px;"><span id="institute-name">Loading</span></h1>
+<h1 id="main-school-heading" style="font-family:'Georgia',serif; font-size:40px; font-weight:800; border-bottom:2px solid #d4a373; display:inline-block; padding-bottom:5px; margin-bottom:15px;"><span id="institute-name">Loading</span></h1>
 <h2 id="welcomeText">Welcome, Administrator</h2>
 <p id="currentDate"></p>
 </div>
 <div class="status-badge">💻 Offline System</div>
 </div>
-<!-- <div id="license-badge" style="background: white; padding: 15px 25px; border-radius: 12px; font-size: 16px; font-weight: 600; color: var(--text-main); margin-bottom:30px; box-shadow:0 2px 4px rgba(0,0,0,0.05)">
-License Status: <span id="license-info">Validity Period: </span>
-</div> -->
+
 <div class="stats-row">
-    <!-- STUDENTS -->
-    <div class="stat-card" id="cardStudents">
-        <div class="icon-box">👥</div>
-        <div class="stat-info">
-            <small>Students</small>
-            <div id="statStudents">0</div>
-        </div>
-    </div>
-
-    <!-- TOTAL ACTIVE STAFF -->
-    <div class="stat-card" id="cardStaff">
-        <div class="icon-box" style="background: #e0f2fe;">👔</div>
-        <div class="stat-info">
-            <small>Staff</small>
-            <div id="statActiveStaff">0</div>
-        </div>
-    </div>
-
-    <!-- PROFIT / LOSS STATUS -->
-    <div class="stat-card" id="cardProfitLoss">
-        <div class="icon-box" id="iconProfitLoss" style="background: #f3f4f6;">📊</div>
-        <div class="stat-info">
-            <small id="labelProfitLoss">Net Status</small>
-            <div id="statProfitLoss">0</div>
-        </div>
-    </div>
-
-    <!-- RECEIVABLES -->
-    <div class="stat-card" id="cardReceivables">
-        <div class="icon-box" style="background: #dcfce7;">📈</div>
-        <div class="stat-info">
-            <small>Receivables</small>
-            <div id="statReceivables">0</div>
-        </div>
-    </div>
-
-    <!-- BALANCE -->
-    <div class="stat-card" id="cardBalance">
-        <div class="icon-box" style="background: #ffedd5;">🏦</div>
-        <div class="stat-info">
-            <small>Balance</small>
-            <div id="statBalance">0</div>
-        </div>
-    </div>
-
-    <!-- FEE RECEIVED -->
-    <div class="stat-card" id="cardFeeReceived">
-        <div class="icon-box" style="background: #d1fae5;">💵</div>
-        <div class="stat-info">
-            <small>Fee Received</small>
-            <div id="statFeeReceived">0</div>
-        </div>
-    </div>
-
-    <!-- SALARIES -->
-    <div class="stat-card" id="cardSalaries">
-        <div class="icon-box" style="background: #fee2e2;">💸</div>
-        <div class="stat-info">
-            <small>Salaries</small>
-            <div id="statSalaries">0</div>
-        </div>
-    </div>
-
-    <!-- EXPENSES -->
-    <div class="stat-card" id="cardExpenses">
-        <div class="icon-box" style="background: #fde68a;">💸</div>
-        <div class="stat-info">
-            <small>Expenses</small>
-            <div id="statExpenses">0</div>
-        </div>
-    </div>
+    <div class="stat-card" id="cardStudents"><div class="icon-box">👥</div><div class="stat-info"><small>Students</small><div id="statStudents">0</div></div></div>
+    <div class="stat-card" id="cardStaff"><div class="icon-box" style="background:#e0f2fe;">👔</div><div class="stat-info"><small>Staff</small><div id="statActiveStaff">0</div></div></div>
+    <div class="stat-card" id="cardProfitLoss"><div class="icon-box" id="iconProfitLoss">📊</div><div class="stat-info"><small id="labelProfitLoss">Net Status</small><div id="statProfitLoss">0</div></div></div>
+    <div class="stat-card" id="cardReceivables"><div class="icon-box" style="background:#dcfce7;">📈</div><div class="stat-info"><small>Receivables</small><div id="statReceivables">0</div></div></div>
+    <div class="stat-card" id="cardBalance"><div class="icon-box" style="background:#ffedd5;">🏦</div><div class="stat-info"><small>Balance</small><div id="statBalance">0</div></div></div>
+    <div class="stat-card" id="cardFeeReceived"><div class="icon-box" style="background:#d1fae5;">💵</div><div class="stat-info"><small>Fee Received</small><div id="statFeeReceived">0</div></div></div>
+    <div class="stat-card" id="cardSalaries"><div class="icon-box" style="background:#fee2e2;">💸</div><div class="stat-info"><small>Salaries</small><div id="statSalaries">0</div></div></div>
+    <div class="stat-card" id="cardExpenses"><div class="icon-box" style="background:#fde68a;">💸</div><div class="stat-info"><small>Expenses</small><div id="statExpenses">0</div></div></div>
 </div>
-
 
 <h3 id="quickActionsTitle">Quick Actions</h3>
 <div class="action-grid" id="quickActionsGrid">
-  <a href="results/result_entry.html" class="action-card" id="actionExams">
-    <div style="font-size: 2.5rem; margin-bottom:10px">📄</div>
-    <span style="font-weight:bold; display:block">Exams</span>
-    <p style="font-size:0.85rem; color:#64748b; margin-top:5px">Manage Marksheets / Progress Reports / Date Sheet</p>
-  </a>
-  <a href="fee/feelist.html" class="action-card" id="actionFees">
-    <div style="font-size: 2.5rem; margin-bottom:10px">💳</div>
-    <span style="font-weight:bold; display:block">Fees</span>
-    <p style="font-size:0.85rem; color:#64748b; margin-top:5px">Collect Payments / Send Fee Notifications on Whatsapp / Print Invoices</p>
-  </a>
-  <a href="student/stu_personal_info.html" class="action-card" id="actionEnroll">
-    <div style="font-size: 2.5rem; margin-bottom:10px">👤</div>
-    <span style="font-weight:bold; display:block">Enroll</span>
-    <p style="font-size:0.85rem; color:#64748b; margin-top:5px">New Admissions</p>
-  </a>
-  <a href="attendance.html" class="action-card" id="actionAttendance">
-    <div style="font-size: 2.5rem; margin-bottom:10px">👤</div>
-    <span style="font-weight:bold; display:block">Attendance</span>
-    <p style="font-size:0.85rem; color:#64748b; margin-top:5px">Students and Staff Attendance Management</p>
-  </a>
-  <a href="./qbank/qbnkdashboard.html" class="action-card" id="actionQBank">
-    <div style="font-size: 2.5rem; margin-bottom:10px">👤</div>
-    <span style="font-weight:bold; display:block">Question Papers</span>
-    <p style="font-size:0.85rem; color:#64748b; margin-top:5px">Q Bank / Prepare Paper / Worksheets</p>
-  </a>
-  <a href="shop_ledger.html" class="action-card" id="actionLedger">
-    <div style="font-size: 2.5rem; margin-bottom:10px">🏦</div>
-    <span style="font-weight:bold; display:block">School Ledger</span>
-    <p style="font-size:0.85rem; color:#64748b; margin-top:5px">All Entries</p>
-  </a>
-</div>
+  <a href="results/result_entry.html" class="action-card" id="actionExams"><div style="font-size:2.5rem;">📄</div><span>Exams</span><p style="font-size:0.85rem;color:#64748b;">Manage Marksheets</p></a>
+  <a href="fee/feelist.html" class="action-card" id="actionFees"><div style="font-size:2.5rem;">💳</div><span>Fees</span><p style="font-size:0.85rem;color:#64748b;">Collect Payments</p></a>
+  <a href="student/stu_personal_info.html" class="action-card" id="actionEnroll"><div style="font-size:2.5rem;">👤</div><span>Enroll</span><p style="font-size:0.85rem;color:#64748b;">New Admissions</p></a>
+  <a href="attendance.html" class="action-card" id="actionAttendance"><div style="font-size:2.5rem;">👤</div><span>Attendance</span><p style="font-size:0.85rem;color:#64748b;">Students and Staff</p></a>
+  <a href="./qbank/qbnkdashboard.html" class="action-card" id="actionQBank"><div style="font-size:2.5rem;">📚</div><span>Question Papers</span><p style="font-size:0.85rem;color:#64748b;">Q Bank / Papers</p></a>
+  <a href="shop_ledger.html" class="action-card" id="actionLedger"><div style="font-size:2.5rem;">🏦</div><span>School Ledger</span><p style="font-size:0.85rem;color:#64748b;">All Entries</p></a>
 </div>
 </div>
 
-</div>
 <div id="passwordModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000;">
-<div style="background:white; width:350px; margin: 10% auto; padding:25px; border-radius:8px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
-<h3 style="margin-top:0;">Change Password</h3>
-<label>Current Password:</label>
-<input type="password" id="currentPass" style="width:100%; margin-bottom:15px; padding:8px;">
-<label>New Password:</label>
-<input type="password" id="newPass" style="width:100%; margin-bottom:15px; padding:8px;">
-<label>Confirm New Password:</label>
-<input type="password" id="confirmPass" style="width:100%; margin-bottom:20px; padding:8px;">
-<div style="display:flex; justify-content: space-between;">
+<div style="background:white; width:350px; margin:10% auto; padding:25px; border-radius:8px;">
+<h3>Change Password</h3>
+<label>Current Password:</label><input type="password" id="currentPass" style="width:100%; margin-bottom:15px; padding:8px;">
+<label>New Password:</label><input type="password" id="newPass" style="width:100%; margin-bottom:15px; padding:8px;">
+<label>Confirm New Password:</label><input type="password" id="confirmPass" style="width:100%; margin-bottom:20px; padding:8px;">
+<div style="display:flex; justify-content:space-between;">
 <button onclick="submitPasswordChange()" style="background:#28a745; color:white; border:none; padding:10px 15px; cursor:pointer; border-radius:4px;">Update Password</button>
 <button onclick="document.getElementById('passwordModal').style.display='none'" style="background:#dc3545; color:white; border:none; padding:10px 15px; cursor:pointer; border-radius:4px;">Cancel</button>
 </div>
 </div>
 </div>
+
 <script>
-// === CENTRAL THEME APPLIER ===
 async function applyGlobalTheme() {
     try {
         let theme = null;
         if (window.api && window.api.getAppDetails) {
             const details = await window.api.getAppDetails();
             if(details && details.theme) theme = details.theme;
-            if(details && details.instituteName){
-                document.getElementById('institute-name').innerText = details.instituteName;
-            }
+            if(details && details.instituteName){ document.getElementById('institute-name').innerText = details.instituteName; }
         }
-        if(!theme && window.api && window.api.getTheme){
-            theme = await window.api.getTheme();
-        }
+        if(!theme && window.api && window.api.getTheme){ theme = await window.api.getTheme(); }
         if(theme){
             const r = document.documentElement;
             r.style.setProperty('--sidebar-bg', theme.sidebarBg || theme.cardFooterBg || '#1b4332');
             r.style.setProperty('--sidebar-active', theme.sidebarActive || theme.cardPrimary || '#d4a373');
             r.style.setProperty('--primary', theme.primary || '#d4a373');
-            r.style.setProperty('--heading-color', theme.heading1 || theme.schoolNameColor || '#1b4332');
-            r.style.setProperty('--heading-border', theme.cardPrimary || '#d4a373');
-            r.style.setProperty('--card-primary', theme.cardPrimary || '#f88940');
-            r.style.setProperty('--card-footer-bg', theme.cardFooterBg || '#02245a');
         }
     } catch(e){ }
 }
-
 async function loadStats() {
   try {
     if (window.api && window.api.getDashboardStats) {
@@ -376,89 +152,93 @@ async function loadStats() {
       document.getElementById('statSalaries').innerText = stats.salaries || 0;
       document.getElementById('statFeeReceived').innerText = stats.feeReceived || 0;
       document.getElementById('statExpenses').innerText = stats.expenses || 0;
-      const staffEl = document.getElementById('statActiveStaff');
-      if (staffEl) staffEl.innerText = stats.activeStaff || 0;
-      const plVal = document.getElementById('statProfitLoss');
-      const plLabel = document.getElementById('labelProfitLoss');
-      const plIcon = document.getElementById('iconProfitLoss');
-      const plCard = document.getElementById('cardProfitLoss');
-      if (plCard && plVal && plLabel && plIcon) {
-        plVal.innerText = Math.abs(stats.financialAmount || 0);
-        if (stats.financialStatus === 'Profit') {
-          plLabel.innerText = 'Profit Balance'; plIcon.innerText = '💰';
-          plCard.style.backgroundColor = '#d1fae5'; plIcon.style.backgroundColor = '#a7f3d0';
-        } else {
-          plLabel.innerText = 'Loss Balance'; plIcon.innerText = '📉';
-          plCard.style.backgroundColor = '#fee2e2'; plIcon.style.backgroundColor = '#fecaca';
-        }
-      }
+      const staffEl = document.getElementById('statActiveStaff'); if(staffEl) staffEl.innerText = stats.activeStaff || 0;
+      const plVal = document.getElementById('statProfitLoss'); const plLabel = document.getElementById('labelProfitLoss'); const plIcon = document.getElementById('iconProfitLoss'); const plCard = document.getElementById('cardProfitLoss');
+      if(plCard && plVal){ plVal.innerText = Math.abs(stats.financialAmount||0); if(stats.financialStatus==='Profit'){ plLabel.innerText='Profit'; plIcon.innerText='💰'; plCard.style.background='#d1fae5'; } else { plLabel.innerText='Loss'; plIcon.innerText='📉'; plCard.style.background='#fee2e2'; } }
     }
-  } catch (e) { console.log("Stats fetch skipped.", e); }
+  } catch(e){}
 }
-
 function logout() { sessionStorage.clear(); window.location.href = "login.html"; }
-
 document.addEventListener('DOMContentLoaded', async () => {
-  window.focus();
   await applyGlobalTheme();
-  const user = JSON.parse(sessionStorage.getItem('currentUser') || '{"username": "Admin"}');
+  const user = JSON.parse(sessionStorage.getItem('currentUser') || '{"username":"Admin"}');
   document.getElementById('welcomeText').innerText = `Welcome, ${user.username}`;
   document.getElementById('currentDate').innerText = new Date().toDateString();
-  const isAdmin = user.username.toLowerCase() === 'admin';
-  if (!isAdmin) {
-    let perms = []; try { perms = typeof user.permissions === 'string' ? JSON.parse(user.permissions) : (user.permissions || []); } catch(e) { perms = []; }
-    const lowerPerms = perms.map(p => String(p).toLowerCase());
-    if (!lowerPerms.includes('dashstatscards')) {
-      const statsContainer = document.querySelector('.stats-row');
-      if (statsContainer) statsContainer.style.display = 'none';
-    }
-    const modules = [
-      { key: 'navClasses', elements: ['navClasses'] },
-      { key: 'navStudents', elements: ['navStudents', 'cardStudents', 'actionEnroll'] },
-      { key: 'navFee', elements: ['navFee', 'cardReceivables', 'cardBalance', 'cardFeeReceived', 'actionFees'] },
-      { key: 'navExams', elements: ['navExams', 'actionExams'] },
-      { key: 'navStaff', elements: ['navStaff', 'cardStaff', 'cardSalaries'] },
-      { key: 'navExpenses', elements: ['navExpenses', 'cardExpenses'] },
-      { key: 'navRoles', elements: ['navRoles'] },
-      { key: 'btnDB', elements: ['btnDB'] },
-      { key: 'dashAttendance', elements: ['actionAttendance'] },
-      { key: 'dashQBank', elements: ['actionQBank'] },
-      { key: 'dashLedger', elements: ['actionLedger'] },
-      { key: 'dashstatscards', elements: ['cardProfitLoss'] }
-    ];
-    modules.forEach(mod => {
-      if (!lowerPerms.includes(mod.key.toLowerCase())) {
-        mod.elements.forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
-      }
-    });
-    const quickActions = ['actionExams', 'actionFees', 'actionEnroll', 'actionAttendance', 'actionQBank', 'actionLedger'];
-    const allHidden = quickActions.every(id => { const el = document.getElementById(id); return !el || el.style.display === 'none'; });
-    if (allHidden) {
-      const titleEl = document.getElementById('quickActionsTitle');
-      const gridEl = document.getElementById('quickActionsGrid');
-      if (titleEl) titleEl.style.display = 'none';
-      if (gridEl) gridEl.style.display = 'none';
-    }
-  }
   loadStats();
 });
-
 async function submitPasswordChange() {
   const oldPass = document.getElementById('currentPass').value;
   const newPass = document.getElementById('newPass').value;
   const confirmPass = document.getElementById('confirmPass').value;
-  if (newPass !== confirmPass) { alert("New passwords do not match."); return; }
+  if(newPass!==confirmPass){ alert("New passwords do not match."); return; }
   try {
     const userStr = sessionStorage.getItem('currentUser');
-    if (!userStr) { alert("Session expired."); window.location.href = "login.html"; return; }
     const currentUser = JSON.parse(userStr);
     const response = await window.authAPI.changePassword(oldPass, newPass, currentUser.username);
-    if (response && response.success) {
-      alert("Password updated!"); document.getElementById('passwordModal').style.display = 'none';
-    } else { alert("Error: " + (response.message || "Wrong current password.")); }
-  } catch (error) { alert("System error."); }
+    if(response && response.success){ alert("Password updated!"); document.getElementById('passwordModal').style.display='none'; }
+    else { alert("Error: " + (response.message || "Wrong current password.")); }
+  } catch(error){ alert("System error."); }
 }
-</script>
 
+// === CLOUD SYNC WITH STAFF = 0 ===
+async function manualPush(){
+  const details = await window.api.getAppDetails();
+  const code = details.schoolCode || 'SCHOOL';
+  if(!confirm(`Push ALL data for ${code} to online?\n\nTables: subjects, exams, settings, classes, students, users, QBank, papers\n`)) return;
+  const btn = document.getElementById('btnPush'); const status = document.getElementById('cloudStatus');
+  btn.disabled = true; btn.innerText = '⏳ Pushing...'; status.innerText = 'Pushing... please wait';
+  try{
+    const res = await window.api.pushAllMastersManual();
+    if(res.success){
+      const d = res.details || {};
+      // Force Staff to 0 for display
+      d.staff = 0;
+      const msg = `PUSH SUCCESS for ${res.school}\n\n`+
+        `Subjects: ${d.subjects||0}\n`+
+        `Exams: ${d.exams||0}\n`+
+        `Exam Settings: ${d.settings||0}\n`+
+        `Classes: ${d.classes||0}\n`+
+        `Students: ${d.students||0}\n`+
+        `Staff: 0\n`+
+        `Users: ${d.users||0}\n`+
+        `QBank: ${d.qbank||0}\n`+
+        `Exam Papers: ${d.papers||0}\n`+
+        `Paper Questions: ${d.paperQuestions||0}`;
+      status.innerText = `✅ Pushed: S:${d.students||0} St:0 QB:${d.qbank||0}`;
+      alert(msg);
+    } else { status.innerText = `❌ ${res.error}`; alert(`Push Failed: ${res.error}`); }
+  }catch(e){ status.innerText = '❌ Error'; alert(e.message); }
+  btn.disabled = false; btn.innerHTML = '<span>⬆️</span> Push to Online';
+  setTimeout(()=> status.innerText='', 6000);
+}
+
+async function manualWipe(){
+  const details = await window.api.getAppDetails();
+  const code = details.schoolCode || 'SCHOOL';
+  if(!confirm(`Delete ALL online data for ${code}?\nThis will wipe all tables for this school_code.`)) return;
+  if(!confirm(`Final confirmation: Delete?`)) return;
+  const btn = document.getElementById('btnWipe'); const status = document.getElementById('cloudStatus');
+  btn.disabled = true; btn.innerText = '⏳ Deleting...'; status.innerText = 'Deleting online data...';
+  try{
+    const res = await window.api.wipeAllOnlineManual();
+    if(res.success){
+      const d = res.deleted || {};
+      // Force Staff to 0 for display
+      if(d.staff !== undefined) d.staff = 0;
+      if(d.Staff !== undefined) d.Staff = 0;
+      const msg = `DELETE SUCCESS for ${res.school}\n\nDeleted tables:\n`+
+        Object.entries(d).map(([k,v])=> {
+          if(k.toLowerCase().includes('staff')) return `${k}: 0 rows`;
+          return `${k}: ${v} rows`;
+        }).join('\n');
+      status.innerText = `🗑️ Wiped ${res.school} (Staff: 0)`;
+      alert(msg);
+    } else { status.innerText = `❌ ${res.error}`; alert(`Delete Failed: ${res.error}`); }
+  }catch(e){ status.innerText = '❌ Error'; alert(e.message); }
+  btn.disabled = false; btn.innerHTML = '<span>🗑️</span> Delete Online Data';
+  setTimeout(()=> status.innerText='', 6000);
+}
+
+</script>
 </body>
 </html>

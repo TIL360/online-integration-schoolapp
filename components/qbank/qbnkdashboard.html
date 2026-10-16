@@ -3,195 +3,170 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Question Bank Dashboard</title>
+  <title>Question Bank Dashboard - Rahbar Public School</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
-    /* Main Theme matching your Attendance Dashboard */
-    body { 
-      font-family: 'Segoe UI', Arial, sans-serif; 
-      background-color: #f4f6f9; 
-      padding: 25px; 
-      color: #333; 
-      margin: 0;
-    }
-    
-    /* Top Header Bar Layout */
-    .header-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: white;
-      padding: 12px 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-      margin-bottom: 25px;
-    }
-    h2 { margin: 0; color: #1e293b; font-size: 22px; }
-    
-    .nav-btn {
-      background-color: #f8fafc;
-      color: #475569;
-      border: 1px solid #cbd5e1;
-      padding: 8px 16px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: 600;
-      text-decoration: none;
-      font-size: 13px;
-      display: inline-flex;
-      align-items: center;
-      transition: all 0.2s;
-    }
-    .nav-btn:hover {
-      background-color: #f1f5f9;
-      color: #1e293b;
-    }
-
-    /* Dashboard Main Container Box (Expanded slightly for 3 cards) */
-    .dashboard-container {
-      background: white; 
-      padding: 30px; 
-      border-radius: 10px; 
-      box-shadow: 0 4px 12px rgba(0,0,0,0.04); 
-      max-width: 850px;
-      margin: 0 auto;
-      border: 1px solid #e2e8f0;
-      text-align: center;
-    }
-
-    h3 {
-      margin-top: 0;
-      margin-bottom: 25px;
-      color: #0f172a;
-      font-size: 20px;
-    }
-
-    /* Flex Grid Layout for Main Action Buttons */
-    .button-grid {
-      display: flex;
-      gap: 20px;
-      justify-content: center;
-      margin-top: 20px;
-    }
-
-    /* Style for big navigation link buttons */
-    .menu-card {
-      flex: 1;
-      max-width: 250px;
-      background: #f8fafc;
-      border: 1px solid #cbd5e1;
-      padding: 24px;
-      border-radius: 8px;
-      text-decoration: none;
-      color: #1e293b;
-      font-weight: bold;
-      font-size: 16px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-      transition: all 0.2s ease-in-out;
-    }
-
-    /* Color styles matching your system buttons */
-    .menu-card.add-q {
-      border-top: 4px solid #003049;
-    }
-    .menu-card.build-p {
-      border-top: 4px solid #bd081c;
-    }
-    .menu-card.view-p {
-      border-top: 4px solid #198754; /* Green accent color */
-    }
-
-    .menu-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-      background-color: #ffffff;
-    }
-
-    .icon {
-      font-size: 32px;
-    }
-
-    .description {
-      font-weight: normal;
-      font-size: 12px;
-      color: #64748b;
-      text-align: center;
-    }
-    /* Update the button-grid container to allow multiple rows gracefully */
-.button-grid {
-    display: flex;
-    gap: 20px;
-    justify-content: center;
-    margin-top: 20px;
-    flex-wrap: wrap; /* Allows your two rows of cards to wrap naturally on smaller monitors */
-}
-
+    *{margin:0;padding:0;box-sizing:border-box}
+    body { font-family: 'Outfit', sans-serif; background: #f1f5f9; min-height:100vh; color: #0f172a; }
+    .header-bar { background: linear-gradient(135deg,#0f172a 0%, #1e293b 100%); padding: 18px 28px; display:flex; justify-content:space-between; align-items:center; color:white; position:sticky; top:0; z-index:10; box-shadow: 0 8px 24px rgba(15,23,42,0.2); }
+    .header-bar h2{ font-size:20px; font-weight:800; display:flex; align-items:center; gap:10px; }
+    .header-bar h2 span{ background: linear-gradient(135deg,#f84040,#ff8a5b); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+    .nav-btn { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border:1px solid rgba(255,255,255,0.15); color:white; padding:9px 16px; border-radius:999px; font-weight:600; font-size:12px; text-decoration:none; transition:0.2s; }
+    .nav-btn:hover{ background:white; color:#0f172a; }
+    .page-wrap{ max-width:1050px; margin:30px auto; padding:0 20px 40px; }
+    .sync-hero{ background: linear-gradient(135deg,#0f172a 0%, #334155 100%); border-radius:20px; padding:22px 26px; display:flex; justify-content:space-between; align-items:center; color:white; position:relative; overflow:hidden; box-shadow: 0 20px 40px rgba(15,23,42,0.2); margin-bottom:28px; }
+    .sync-hero::before{ content:''; position:absolute; right:-30px; top:-30px; width:180px; height:180px; background: radial-gradient(circle, rgba(248,64,64,0.3) 0%, transparent 70%); border-radius:50%; }
+    .sync-left b{ font-size:16px; font-weight:800; display:flex; align-items:center; gap:8px; }
+    .sync-left small{ display:block; margin-top:6px; color:#94a3b8; font-size:12px; font-weight:500; }
+    .sync-actions{ display:flex; gap:10px; z-index:2; }
+    .sync-btn{ border:none; padding:11px 18px; border-radius:12px; font-weight:800; font-size:12px; cursor:pointer; transition:0.2s; display:flex; align-items:center; gap:6px; }
+    .sync-btn.push{ background: linear-gradient(135deg,#22c55e,#16a34a); color:white; box-shadow: 0 8px 16px rgba(34,197,94,0.3); }
+    .sync-btn.pull{ background: linear-gradient(135deg,#3b82f6,#2563eb); color:white; box-shadow: 0 8px 16px rgba(59,130,246,0.3); }
+    .sync-btn:hover{ transform:translateY(-2px); }
+    .sync-btn:disabled{ opacity:0.6; }
+    .section-head{ display:flex; align-items:center; gap:12px; margin:30px 0 18px; }
+    .section-head h3{ font-size:18px; font-weight:800; color:#0f172a; }
+    .section-head .line{ flex:1; height:1px; background: linear-gradient(90deg,#e2e8f0,transparent); }
+    .button-grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap:18px; }
+    .menu-card{ background:white; border-radius:18px; padding:24px 22px; text-decoration:none; border:1px solid #e2e8f0; position:relative; overflow:hidden; transition: all 0.3s; display:flex; flex-direction:column; gap:10px; }
+    .menu-card::before{ content:''; position:absolute; top:0; left:0; right:0; height:4px; }
+    .menu-card:hover{ transform:translateY(-6px); box-shadow: 0 20px 40px rgba(0,0,0,0.08); }
+    .menu-card .top{ display:flex; justify-content:space-between; align-items:center; }
+    .menu-card .icon-box{ width:48px; height:48px; border-radius:14px; display:grid; place-items:center; font-size:22px; }
+    .menu-card h4{ font-size:15px; font-weight:800; color:#0f172a; }
+    .menu-card p{ font-size:12.5px; line-height:1.5; color:#64748b; font-weight:500; }
+    .c1::before{ background: linear-gradient(90deg,#0f172a,#334155); } .c1 .icon-box{ background:#f1f5f9; }
+    .c2::before{ background: linear-gradient(90deg,#f84040,#ff5a5a); } .c2 .icon-box{ background:#fef2f2; }
+    .c3::before{ background: linear-gradient(90deg,#22c55e,#16a34a); } .c3 .icon-box{ background:#f0fdf4; }
+    .c4::before{ background: linear-gradient(90deg,#8b5cf6,#7c3aed); } .c4 .icon-box{ background:#f5f3ff; }
+    .c5::before{ background: linear-gradient(90deg,#06b6d4,#0891b2); } .c5 .icon-box{ background:#ecfeff; }
+    .c6::before{ background: linear-gradient(90deg,#f59e0b,#d97706); } .c6 .icon-box{ background:#fffbeb; }
+    .badge{ font-size:10px; font-weight:800; letter-spacing:0.8px; padding:5px 10px; border-radius:999px; background:#f8fafc; border:1px solid #e2e8f0; color:#64748b; }
+    .footer-note{ text-align:center; margin-top:36px; color:#94a3b8; font-size:11px; font-weight:600; letter-spacing:0.5px; }
   </style>
 </head>
 <body>
-
-  <!-- Header Section -->
   <div class="header-bar">
-    <h2>Exam Question Bank & Paper Builder</h2>
-    <a href="../dashboard.html" class="nav-btn">⬅️ Back to Main Dashboard</a>
+    <h2>📚 <span>Question Bank</span> Studio</h2>
+    <a href="../dashboard.html" class="nav-btn">⬅️ Back to Dashboard</a>
+  </div>
+  <div class="page-wrap">
+    <div class="sync-hero">
+      <div class="sync-left">
+        <b>☁️ Cloud Sync Engine <span style="background:#22c55e;color:white;font-size:9px;padding:3px 7px;border-radius:999px;">MERGE SAFE</span></b>
+        <small id="syncStatus">No wipe • No duplicate • Online + Offline merged</small>
+      </div>
+      <div class="sync-actions">
+        <button onclick="handlePushQB()" id="btnPush" class="sync-btn push">⬆️ Push</button>
+        <button onclick="handlePullQB()" id="btnPull" class="sync-btn pull">⬇️ Pull</button>
+      </div>
+    </div>
+
+    <div class="section-head"><h3>Senior Exam Engine</h3><div class="line"></div><span style="font-size:11px; font-weight:700; color:#64748b; background:white; border:1px solid #e2e8f0; padding:4px 10px; border-radius:999px;">CLASS 1 TO 10</span></div>
+    <div class="button-grid">
+      <a href="addq.html" class="menu-card c1"><div class="top"><div class="icon-box">📝</div><span class="badge">STEP 01</span></div><h4>Add Question</h4><p>MCQs, Short, Long & Fill in the blanks ko bank me save karein. Smart duplicate protection ke sath.</p></a>
+      <a href="build-paper.html" class="menu-card c2"><div class="top"><div class="icon-box">🛠️</div><span class="badge">STEP 02</span></div><h4>Build Exam Paper</h4><p>Class, subject, lesson filter karke professional exam paper auto-generate karein.</p></a>
+      <a href="viewpaper.html" class="menu-card c3"><div class="top"><div class="icon-box">👁️</div><span class="badge">STEP 03</span></div><h4>View & Print Paper</h4><p>Ready papers ka preview, marks editing aur one-click PDF print.</p></a>
+    </div>
+
+    <div class="section-head"><h3>Junior Worksheet Engine</h3><div class="line"></div><span style="font-size:11px; font-weight:700; color:#8b5cf6; background:#f5f3ff; border:1px solid #ddd6fe; padding:4px 10px; border-radius:999px;">PLAYGROUP - KG</span></div>
+    <div class="button-grid">
+      <a href="prepare-worksheet.html" class="menu-card c4"><div class="top"><div class="icon-box">✏️</div><span class="badge">WORKSHEET</span></div><h4>Add Worksheet Qs</h4><p>Alfaaz Jor/Tor, CVC Words, Tracing, Drawing exercises create karein.</p></a>
+      <a href="build-worksheet.html" class="menu-card c5"><div class="top"><div class="icon-box">🧩</div><span class="badge">BUILDER</span></div><h4>Build Worksheet</h4><p>Junior classes ke liye colorful worksheets ka builder.</p></a>
+      <a href="view-worksheet.html" class="menu-card c6"><div class="top"><div class="icon-box">🎨</div><span class="badge">CANVAS</span></div><h4>Worksheet Preview</h4><p>A4 canvas preview, padding adjust aur HD print - bachon ke liye perfect.</p></a>
+    </div>
+    <div class="footer-note">Rahbar Public School • Question Bank Studio v2.0 • Merge Sync Enabled • No Data Loss</div>
   </div>
 
-  <!-- Dashboard Container Box -->
-  <!-- Dashboard Container Box -->
-<div class="dashboard-container">
-    <h3>Question Bank Navigation Options</h3>
-    
-    <div class="button-grid">
-        <!-- Button Option 1: Open Add Question Page -->
-        <a href="addq.html" class="menu-card add-q">
-            <span class="icon">📝</span>
-            <span>Add Question</span>
-            <span class="description">Save new questions, MCQs, and fill-in-the-blanks to your bank.</span>
-        </a>
+<script>
+const SCHOOL_CODE = 'TECHINFO_2026';
 
-        <!-- Button Option 2: Open Build Exam Paper Page -->
-        <a href="build-paper.html" class="menu-card build-p">
-            <span class="icon">📜</span>
-            <span>Build Exam Paper</span>
-            <span class="description">Filter by class or lesson and create complete printable exam layouts.</span>
-        </a>
+function getApi(){ 
+  return window.api || window.electronAPI || window.electron; 
+}
 
-        <!-- Button Option 3: Open View Paper Page -->
-        <a href="viewpaper.html" class="menu-card view-p">
-            <span class="icon">🔍</span>
-            <span>View Paper</span>
-            <span class="description">Preview, filter, and print completed exam question sheets.</span>
-        </a>
-    </div>
+function setStatus(msg, color){
+  const el = document.getElementById('syncStatus');
+  if(!el) return;
+  el.innerText = msg;
+  el.style.color = color || '#94a3b8';
+}
 
-    <!-- NEW SECTION ADDED BELOW FOR JUNIOR SCHOOL WORKSHEETS -->
-    <h3 style="margin-top: 40px; margin-bottom: 25px;">Junior School Worksheet Engine</h3>
-    
-    <div class="button-grid">
-        <!-- Button Option 4: Open Prepare Worksheet Page -->
-        <a href="prepare-worksheet.html" class="menu-card add-q" style="border-top: 4px solid #8e44ad;">
-            <span class="icon">📝</span>
-            <span>Add Questions</span>
-            <span class="description">Generate specialized exercises like Alfaaz Jor/Tor, CVC words, or drawings.</span>
-        </a>
-<a href="build-worksheet.html" class="menu-card add-q" style="border-top: 4px solid #8e44ad;">
-            <span class="icon">🛠️</span>
-            <span>Build Worksheet</span>
-            <span class="description">Generate specialized exercises like Alfaaz Jor/Tor, CVC words, or drawings.</span>
-        </a>
+function setButtons(disabled, pushText, pullText){
+  const bP = document.getElementById('btnPush');
+  const bL = document.getElementById('btnPull');
+  if(bP){ bP.disabled = disabled; if(pushText) bP.innerText = pushText; }
+  if(bL){ bL.disabled = disabled; if(pullText) bL.innerText = pullText; }
+}
 
-        <!-- Button Option 5: View Pre-Compiled Worksheets -->
-        <a href="view-worksheet.html" class="menu-card view-p" style="border-top: 4px solid #2980b9;">
-            <span class="icon">📄</span>
-            <span>Worksheet Preview Canvas</span>
-            <span class="description">Review, format, adjust padding, and instantly compile A4 PDF prints.</span>
-        </a>
-    </div>
-</div>
+async function handlePushQB(){
+  const api = getApi();
+  if(!api){ setStatus('❌ API not found - restart app', '#ef4444'); return; }
 
+  setButtons(true, '⏳ Pushing...', '⬇️ Pull');
+  setStatus(`Pushing offline → online for ${SCHOOL_CODE} (Merge Safe)...`, '#94a3b8');
 
+  try{
+    let res;
+    if(api.pushMasters) res = await api.pushMasters();
+    else if(api.pushAllMasters) res = await api.pushAllMasters();
+    else if(api.pushQuestionBank) res = await api.pushQuestionBank();
+    else throw new Error('No push function in preload');
+
+    if(res && res.success === false){
+      setStatus('❌ Push Failed: '+(res.error||'Unknown'), '#ef4444');
+    } else {
+      setStatus('✅ Push Complete — Teacher data safe! No wipe.', '#22c55e');
+    }
+  }catch(e){
+    setStatus('❌ '+e.message, '#ef4444');
+  } finally {
+    setButtons(false, '⬆️ Push', '⬇️ Pull');
+    setTimeout(()=> setStatus('No wipe • No duplicate • Online + Offline merged', '#94a3b8'), 6000);
+  }
+}
+
+async function handlePullQB(){
+  const api = getApi();
+  if(!api || !api.pullQuestionBank || !api.pullExamPapers){
+    setStatus('❌ pull functions missing in preload.js', '#ef4444');
+    return;
+  }
+
+  setButtons(true, '⬆️ Push', '⏳ Pulling...');
+  setStatus(`🔄 Full Sync for ${SCHOOL_CODE} — Pulling...`, '#3b82f6');
+
+  try{
+    // STEP 1: PULL first (Online -> Offline)
+    const [qb, papers] = await Promise.all([
+      api.pullQuestionBank(),
+      api.pullExamPapers()
+    ]);
+
+    const qc = qb?.count ?? 0;
+    const pc = papers?.count ?? 0;
+
+    setStatus(`✅ Pulled: ${qc} Qs + ${pc} Papers. Now pushing offline new...`, '#f59e0b');
+
+    // STEP 2: AUTO PUSH after Pull (Offline -> Online) - YOUR REQUESTED LOGIC
+    let pushRes = { success: true };
+    if(api.pushMasters) pushRes = await api.pushMasters();
+    else if(api.pushAllMasters) pushRes = await api.pushAllMasters();
+    else if(api.pushQuestionBank) pushRes = await api.pushQuestionBank();
+
+    if(pushRes?.success !== false){
+      setStatus(`✅ Full Sync Done: Pulled ${qc} Qs + ${pc} Papers & Pushed offline → Online | All 7+ synced!`, '#22c55e');
+    } else {
+      setStatus(`⚠️ Pulled ${qc}+${pc} but Push failed: ${pushRes.error}`, '#ef4444');
+    }
+
+  }catch(e){
+    setStatus('❌ '+e.message, '#ef4444');
+  } finally {
+    setButtons(false, '⬆️ Push', '⬇️ Pull');
+    setTimeout(()=> setStatus('No wipe • No duplicate • Online + Offline merged', '#94a3b8'), 7000);
+  }
+}
+</script>
 </body>
 </html>

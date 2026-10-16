@@ -24,9 +24,17 @@ contextBridge.exposeInMainWorld('api', {
     getFilePath: (file) => {
         return webUtils.getPathForFile(file);
     },// in preload.js contextBridge
+     pullAttendanceCloud: (date) => ipcRenderer.invoke('pull-attendance-cloud', date),
   pushMasters: () => ipcRenderer.invoke('push-all-masters'),
+  pushAllMasters: () => ipcRenderer.invoke('push-all-masters'),
+      pushAllMastersManual: () => ipcRenderer.invoke('push-all-masters-manual'),
+    wipeAllOnlineManual: () => ipcRenderer.invoke('wipe-all-online-manual'),
+    getAppDetails: () => ipcRenderer.invoke('get-app-details'),
+   pullStudentsOnline: () => ipcRenderer.invoke('pull-students-online'),
   pushCloudMarks: (data) => ipcRenderer.invoke('push-cloud-marks', data),
 pullCloudMarks: (data) => ipcRenderer.invoke('pull-cloud-marks', data),
+pullQuestionBank: () => ipcRenderer.invoke('pull-question-bank'),
+pullExamPapers: () => ipcRenderer.invoke('pull-exam-papers'),
     // Append these rules inside your existing exposeInMainWorld 'api' section:
 getTimeTable: (classId) => ipcRenderer.invoke('get-timetable', classId),
 saveTimeTableSlot: (data) => ipcRenderer.invoke('save-timetable-slot', data),
@@ -154,6 +162,9 @@ getDateWiseReport: (date) => ipcRenderer.invoke('get-date-wise-report', date),
     getStudentById: (id) => ipcRenderer.invoke('get-student-by-id', id),
     updateStudent: (studentData) => ipcRenderer.invoke('update-student', studentData),
     deleteStudent: (id) => ipcRenderer.invoke('deleteStudentAndRelated', id),
+    deleteStudentsBulk: (ids) => ipcRenderer.invoke('delete-students-bulk', ids),
+    deleteStudentsByClass: (className) => ipcRenderer.invoke('delete-students-by-class', className),
+
 
     // Fee Management & Filters
     generateStudentFee: (id, month, year) => 

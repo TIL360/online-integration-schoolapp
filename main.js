@@ -1,16 +1,18 @@
 // main.js
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 const { app, BrowserWindow, globalShortcut, ipcMain, dialog, protocol, Menu, session } = require('electron');
+const schoolConfig = require('./school.js');
 const path = require('path');
 const fs = require('fs');
 const { shell } = require('electron'); 
-const dbLogic = require('./database.js');
 const XLSX = require('xlsx');
-// 1. PATH SETUP
+// 1. PATH SETUPc
 const userDataPath = app.getPath('userData');
+global.userDataPath = userDataPath;
+const dbLogic = require('./database.js');
 const imagesDir = path.join(userDataPath, 'images');
 const configPath = path.join(userDataPath, 'config.json'); // Path for hidden time-tracking file
-const { supabase, SCHOOL_CODE, pushSubjectsOnline, pushExamsOnline, pushExamSettingsOnline, pushExamStudentsOnline, pushOfflineUsersToCloud, pushDynamicResultsOnline, pushStaffOnline, pullTeacherMarksOnline } = require('./supabase.js');
+const { supabase, SCHOOL_CODE, pushSubjectsOnline, pushExamsOnline, pushExamSettingsOnline, pushExamStudentsOnline, pushOfflineUsersToCloud, pushDynamicResultsOnline, pushStaffOnline, pullTeacherMarksOnline, pushQuestionBankOnline, pushExamPapersOnline, pushPaperQuestionsOnline, pushClassesOnline, pullAttendanceOnline, pullStudentsOnline, pullQuestionBankOnline, pullExamPapersOnline, pullPaperQuestionsOnline, fullSyncQuestionBank   } = require('./supabase.js');
 const http = require('http');
 // 2. INITIALIZE DIRECTORIES
 if (!fs.existsSync(imagesDir)) {
@@ -96,10 +98,6 @@ protocol.registerSchemesAsPrivileged([
   { scheme: 'safe-file', privileges: { standard: true, secure: true, supportFetchAPI: true } }
 ]);
 
-// 4. EXPIRY CONFIGURATION
-// Note: Months are 0-indexed in JS. 4 = May, 5 = June.
-const EXPIRY_DATE = new Date(2027, 9, 3); // May 31, 2026
-
 // 5. DATABASE IMPORTS
 const { 
     db, 
@@ -118,6 +116,9 @@ let win;
 // Menu.setApplicationMenu(null); 
 
 function createWindow() {
+    // --- EXPIRY FROM SCHOOL.JS (AUTO) ---
+    const EXPIRY_DATE = new Date(schoolConfig.currentSchoolDetails.expiry);
+
     // --- OFFLINE PROTECTION & EXPIRY LOGIC (OPTION 2) ---
     const today = new Date();
     let lastRunDate;
@@ -138,90 +139,90 @@ function createWindow() {
     if (today < lastRunDate) {
         dialog.showErrorBox(
             "Time Tamper Detected", 
-            // "Your system clock is incorrect or has been set back. Please correct your time settings to continue."
-
+            "Your system clock is incorrect or has been set back. Please correct your time settings to continue."
         );
         app.quit();
         return;
     }
 
-    // Check B: License Expiry
     // Check B: License Expiry & Proactive Renewal Alerts
-const millisecondsPerDay = 1000 * 60 * 60 * 24;
-const daysRemaining = Math.ceil((EXPIRY_DATE - today) / millisecondsPerDay);
+    const millisecondsPerDay = 1000 * 60 * 60 * 24;
+    const daysRemaining = Math.ceil((EXPIRY_DATE - today) / millisecondsPerDay);
 
-if (daysRemaining <= 0) {
-    // Total Lockout: Triggered once the expiry date passes
-    dialog.showMessageBoxSync({
-        type: 'warning',
-        title: 'System Operational Lock',
-        message: 'Your system cannot operate without the required structural updates.\n\nPlease contact the administrator immediately to avoid prolonged service disruption.\n\nContact: 0311-5101738\nE-mail: techinfolab360@gmail.com'
+    if (daysRemaining <= 0) {
+        dialog.showMessageBoxSync({
+            type: 'warning',
+            title: 'System Operational Lock',
+message: `Your system cannot operate without the required structural updates.\n\nSchool: ${schoolConfig.ACTIVE_SCHOOL} - ${schoolConfig.currentSchoolDetails.instituteName}\nLicense Expired On: ${schoolConfig.currentSchoolDetails.expiry}\n\nPlease contact the administrator immediately to avoid prolonged service disruption.\n\nContact: 0311-5101738\nE-mail: techinfolab360@gmail.com`
     });
-    app.quit();
-    return;
-} else if (daysRemaining <= 10) {
-    // Proactive Reminder: Pops up 10 days before expiry, but lets the user continue working
-    dialog.showMessageBoxSync({
-        type: 'info',
-        title: 'Mandatory System Update Required',
-        message: `Necessary application updates have been detected. Please update your system within the next ${daysRemaining} day(s) to avoid any operational inconvenience.`
-    });
-}
+        app.quit();
+        return;
+    } else if (daysRemaining <= 10) {
+        dialog.showMessageBoxSync({
+            type: 'info',
+            title: 'Mandatory System Update Required',
+            message: `License for ${schoolConfig.currentSchoolDetails.instituteName} will expire in ${daysRemaining} day(s) (${schoolConfig.currentSchoolDetails.expiry}).\n\nNecessary application updates have been detected. Please update your system to avoid any operational inconvenience.`
+        });
+    }
 
     // Update the "Last Run" date to today
-fs.writeFileSync(configPath, JSON.stringify({ lastRun: today.toISOString() }));
+    fs.writeFileSync(configPath, JSON.stringify({ lastRun: today.toISOString() }));
 
-// RUN BACKUP EVERY TIME APP RUNS
-backupDatabaseDaily();
-backupImagesDaily();
+    // RUN BACKUP EVERY TIME APP RUNS
+    backupDatabaseDaily();
+    backupImagesDaily();
 
-  // --- BROWSER WINDOW SETUP ---
-win = new BrowserWindow({
-    width: 1280,
-    height: 800,
-    minWidth: 1024,
-    minHeight: 700,
-icon: path.join(__dirname, 'images', 'icons', 'logo.ico'),    titleBarStyle: "default",
-    backgroundColor: "#f8fafc",
-    show: false, // don't show until ready
-    autoHideMenuBar: true,
-    webPreferences: {
-        preload: path.join(__dirname, 'preload.js'), 
-        contextIsolation: true,
-        nodeIntegration: false,
-        sandbox: false
-    }
-});
+    // --- BROWSER WINDOW SETUP ---
+    win = new BrowserWindow({
+        width: 1280,
+        height: 800,
+        minWidth: 1024,
+        minHeight: 700,
+        icon: path.join(__dirname, 'images', 'icons', 'logo.ico'),
+        titleBarStyle: "default",
+        backgroundColor: "#f8fafc",
+        show: false,
+        autoHideMenuBar: true,
+        webPreferences: {
+            preload: path.join(__dirname, 'preload.js'), 
+            contextIsolation: true,
+            nodeIntegration: false,
+            sandbox: false
+        }
+    });
 
-win.maximize();
-win.show(); // show after maximize
-
-win.once('ready-to-show', () => {
     win.maximize();
     win.show();
-});
-   win.webContents.setWindowOpenHandler(({ url }) => {
-    if (url.includes('invoice') || url.includes('slc_template')) {
+
+    win.once('ready-to-show', () => {
+        win.maximize();
+        win.show();
+    });
+
+win.webContents.setWindowOpenHandler(({ url }) => {
+    if (url.includes('invoice') || url.includes('slc_') || url.includes('slc_template')) {
         return {
             action: 'allow',
             overrideBrowserWindowOptions: {
                 width: 900, height: 800,
                 webPreferences: {
                     preload: path.join(__dirname, 'preload.js'),
-                    contextIsolation: true, nodeIntegration: false, sandbox: false
+                    contextIsolation: true, 
+                    nodeIntegration: false, 
+                    sandbox: false
                 }
             }
         };
     }
     if (url.startsWith('file://')) return { action: 'deny' };
     
-    // This now allows wa.me, api.whatsapp.com AND web.whatsapp.com
     if (url.startsWith('https://') || url.startsWith('http://')) {
         shell.openExternal(url);
         return { action: 'deny' };
     }
     return { action: 'deny' };
 });
+
     win.loadFile(path.join(__dirname, 'components', 'login.html'));
     win.on('closed', () => { win = null; });
 }
@@ -327,94 +328,20 @@ function backupImagesDaily() {
   }
 }
 //backup ends
+ipcMain.handle('get-app-details', () => {
+  return {
+    ...schoolConfig.currentSchoolDetails,
+    theme: schoolConfig.appTheme,
+    schoolCode: schoolConfig.ACTIVE_SCHOOL,
+    slcFile: schoolConfig.currentSchoolDetails.slcFile || `slc_${schoolConfig.ACTIVE_SCHOOL.toLowerCase()}.html`
+  };
+});
 //change password
 ipcMain.handle('change-password', async (event, currentP, newP) => {
     return changeUserPassword(currentP, newP);
 });
 
-// --- IPC HANDLERS ---
-// Centralized Application Metadata Configuration
 
-// ===== CENTRAL THEME CONFIG =====
-const appTheme = {
-//   studentCardHeaderBg: '#04A0E8', //<-- Eagl'es Nest
-  studentCardHeaderBg: '#054b6b', //<-- Eagl'es Nest
-  studentCardHeaderText: '#f9fbfd', 
-  studentCardSmallText: '#ffffff',
-//   studentCardFooterBg: '#04A0E8', //<-- Eagle's Nest
-  studentCardFooterBg: '#054b6b', //<-- Eagle's Nest
-
-//   staffCardHeaderBg: '#0A1931',       // <-- Eagles's Nest
-  
-  staffCardHeaderBg: '#f58012',       // <-- Kips's Nest
-  staffCardHeaderText: '#000000',     // <-- Staff institute name color
-  staffCardSmallText: '#ffffff',      // <-- Staff small text
-  staffCardFooterBg: '#02245a',
-  
-  sidebarBg: '#030303',
-  sidebarActive: '#f84040',
-  cardPrimary: '#f84040',
-  cardSecondary: '#ffffff',
-  cardFooterBg: '#02245a',
-  primary: '#4f46e5',
-  heading1: '#ffffff',
-  heading2: '#ffffff',
-  heading3: '#ffffff'
-};
-// Make it accessible to all HTMLs
-ipcMain.handle('get-theme', () => {
-  return appTheme;
-});
-
-ipcMain.handle('get-app-details', () => {
-//   return {
-//     instituteName: "Kauthar Ideal Public School (KIPS)",
-//     contactNumber: "03708087772 | 0512249471",
-//     email: "mahboobbalti110@gmail.com ",
-//     address: "Jigyot Road Old Bank Stop Alipur, Islamabad ",
-//     account: "Raast Account: 03368187772 || Essay pesa 0342-2384030",
-//     footerText: "EduPulse System Engine © 2026",
-// theme: appTheme ,
-//   };
-
-//   return {
-//     instituteName: "Islamia Model School",
-//     contactNumber: "0300-9813940 ",
-//     email: "imssohan1987@gmail.com ",
-//     address: "Sohan, Islamabad ",
-//     account: "HBL Account No: 17420009698101",
-//     footerText: "EduPulse System Engine © 2026",
-// theme: appTheme 
-//   };
-
-// return {
-//     instituteName: "Eagle's Nest School System",
-//     contactNumber: "0312-1123205",
-//     email: "eaglesnestenss@gmail.com ",
-//     address: "Ghusia Muhallah Hamdani town Alipur Islamabad ",
-//     // account: "HBL Account No: 17420009698101",
-//     footerText: "EduPulse System Engine © 2026",
-// theme: appTheme 
-//   };
-return {
-    instituteName: "Rahbar Public School",
-    contactNumber: "03151436832",
-    email: "asadaslam60@gmail.com",
-    address: "Pore Garhi, Habibullah ",
-    account: "Easypaisa No: 03424449242",
-    footerText: "EduPulse System Engine © 2026",
-    theme: appTheme     
-};
-//   return {
-//     instituteName: "Techinfo",
-//     contactNumber: "0311-5101738 ",
-//     email: "techhinfolab360@gmail.com ",
-//     address: "Islamabad ",
-//     // account: "HBL Account No: 17420009698101",
-//     footerText: "EduPulse System Engine © 2026",
-// theme: appTheme 
-//   };
-});
 
 ipcMain.handle('get-student-attendance-status', (e, { student_id, date }) => dbLogic.getStudentAttendanceStatus(student_id, date));
 ipcMain.handle('get-staff-attendance-status', (e, { staff_id, date }) => {
@@ -454,6 +381,9 @@ await pushExamSettingsOnline(db);
 await pushExamStudentsOnline(db);
 await pushOfflineUsersToCloud(db);
 await pushStaffOnline(db);
+await pushQuestionBankOnline(db);
+    await pushExamPapersOnline(db);
+    await pushPaperQuestionsOnline(db);
     console.log(`✅ Masters auto-pushed for ${SCHOOL_CODE}`);
     return {success:true};
   }catch(err){
@@ -494,31 +424,70 @@ ipcMain.handle('pull-cloud-marks', async (event, data) => {
   }
 });
 
+// ✅ CORRECT - Use your global db
+ipcMain.handle('pull-students-online', async (event)=>{
+  try{
+    // Your db is already defined at top of main.js like: const db = require('./database').db or let db = ...
+    const res = await pullStudentsOnline(db);
+    return res;
+  }catch(e){
+    console.log("pull error", e.message);
+    return { success:false, error: e.message };
+  }
+});
 // Alias for old button name (keep for compatibility)
 ipcMain.handle('push-cloud-result', async () => {
   console.log(`⬆️ Manual PUSH results (alias) for ${SCHOOL_CODE}`);
   return await pushDynamicResultsOnline(db);
 });
 
+ipcMain.handle('pull-question-bank', async () => {
+  try {
+    const result = await fullSyncQuestionBank(db);
+    return { success: true, count: result.pulled,...result };
+  } catch (e) {
+    return { success: false, error: e.message };
+  }
+});
 
+ipcMain.handle('pull-exam-papers', async () => {
+  try {
+    // pull-exam-papers bhi same full sync karega
+    const result = await fullSyncQuestionBank(db);
+    return { success: true, count: result.papers,...result };
+  } catch (e) {
+    return { success: false, error: e.message };
+  }
+});
+// This is the ONLY attendance sync you need now
+ipcMain.handle('pull-attendance-cloud', async (event, date) => {
+  try {
+    if (!date) date = new Date().toISOString().split('T')[0];
+
+    // FIX HERE - use dbLogic.db not dbLogic.getDb()
+    const db = dbLogic.db || dbLogic;
+
+    const result = await pullAttendanceOnline(db, date);
+    return { success: true,...result };
+  } catch (e) {
+    console.error("Pull error:", e);
+    return { success: false, error: e.message };
+  }
+});
 
 // 4. LOGIN HANDLERS
 ipcMain.handle('login-attempt', async (event, credentials) => {
     try {
         const user = checkUser(credentials.username, credentials.password);
         if (!user) return { success: false, message: "Invalid credentials" };
-
-        // AUTO PUSH - ADDED STAFF
-        try{
-          console.log("🔄 Auto pushing masters + staff...");
-          await pushSubjectsOnline(db);
-          await pushExamsOnline(db);
-          await pushExamSettingsOnline(db);
-          await pushExamStudentsOnline(db);
-          await pushOfflineUsersToCloud(db);
-          await pushStaffOnline(db); // <-- NEW: Staff auto push
-          console.log(`✅ Masters + Staff auto-pushed for ${SCHOOL_CODE}`);
-        }catch(e){ console.log("Auto master push failed", e.message); }
+// ONLY STAFF AUTO PUSH - NO OTHER DATA
+setTimeout(async () => {
+  try{
+    console.log(`🔄 Auto pushing ONLY STAFF for ${SCHOOL_CODE}...`);
+    await pushStaffOnline(db);
+    console.log(`✅ Staff auto-push done for ${SCHOOL_CODE}`);
+  }catch(e){ console.log("Staff auto push failed", e.message); }
+}, 500);
 
         return { success: true, user };
     } catch (err) { 
@@ -526,21 +495,66 @@ ipcMain.handle('login-attempt', async (event, credentials) => {
         return { success: false, message: "Database Error" }; 
     }
 });
+// MANUAL PUSH BUTTON
+ipcMain.handle('push-all-masters-manual', async () => {
+  try{
+    const count = async (table) => {
+      try { const rows = db.prepare(`SELECT COUNT(*) as c FROM ${table}`).get(); return rows.c; } catch(e){ return 0; }
+    };
+    const s1 = await pushSubjectsOnline(db);
+    const s2 = await pushExamsOnline(db);
+    const s3 = await pushExamSettingsOnline(db);
+    const s4 = await pushClassesOnline(db);
+    const s5 = await pushExamStudentsOnline(db);
+    const s6 = await pushOfflineUsersToCloud(db);
+    const s7 = await pushStaffOnline(db);
+    const s8 = await pushQuestionBankOnline(db);
+    const s9 = await pushExamPapersOnline(db);
+    const s10 = await pushPaperQuestionsOnline(db);
+    return {success:true, school: SCHOOL_CODE, details:{
+      subjects: await count('academy_subjects'),
+      exams: await count('exams'),
+      settings: await count('exam_subject_settings'),
+      classes: await count('classes'),
+      students: await count('students'),
+      staff: await count('staff_tbl') || await count('staff'),
+      users: await count('users'),
+      qbank: await count('question_bank'),
+      papers: await count('exam_papers'),
+      paperQuestions: await count('paper_questions')
+    }};
+  }catch(err){ return {success:false, error: err.message}; }
+});
+
+ipcMain.handle('wipe-all-online-manual', async () => {
+  try{
+    const { wipeAllOnlineData } = require('./supabase');
+    const deleted = await wipeAllOnlineData();
+    return {success:true, school: SCHOOL_CODE, deleted};
+  }catch(err){ return {success:false, error: err.message}; }
+});
+
+
 
 ipcMain.handle('login-user', async (event, username, password) => {
     try {
         const user = checkUser(username, password);
         if (!user) return { success: false, message: "Invalid username or password" };
         
-        // AUTO PUSH masters + staff on login - NO results auto-push
-        try{
-          await pushSubjectsOnline(db);
-          await pushExamsOnline(db);
-          await pushExamSettingsOnline(db);
-          await pushExamStudentsOnline(db);
-          await pushOfflineUsersToCloud(db);
-          await pushStaffOnline(db); // <-- NEW: Staff auto push
-        }catch(e){ console.log("Auto master push failed", e.message); }
+        setTimeout(async () => {
+          try{
+            await pushSubjectsOnline(db);
+            await pushExamsOnline(db);
+            await pushExamSettingsOnline(db);
+            await pushClassesOnline(db);
+            await pushExamStudentsOnline(db);
+            await pushOfflineUsersToCloud(db);
+            await pushStaffOnline(db);
+            await pushQuestionBankOnline(db);
+            await pushExamPapersOnline(db);
+            await pushPaperQuestionsOnline(db);
+          }catch(e){ console.log("Auto master push failed", e.message); }
+        }, 100);
 
         return { success: true, user: user };
     } catch (err) {
@@ -603,11 +617,14 @@ ipcMain.on('logout-trigger', () => {
     if (win) win.loadFile(path.join(__dirname, 'components', 'login.html')); 
 });
 
-// User Management
+// User Management - FIXED
 ipcMain.handle('get-all-users', async () => {
     try {
-        const { getAllUsers } = require('./database.js'); 
-        return getAllUsers();
+        // IMPORTANT: same db instance use karo jo upar app me khula hai
+        // require('./database.js') mat karo
+        const users = db.prepare('SELECT id, username, usertype, permissions, assigned_class FROM users').all();
+        console.log("get-all-users ->", users.length, users);
+        return users;
     } catch (err) {
         console.error("Error fetching users:", err);
         return [];
@@ -689,17 +706,35 @@ ipcMain.handle('get-image-folder', () => {
 
 // main.js - Update the add-student handler
 
+// main.js mein ye 2 handlers is se replace karo
+
 ipcMain.handle('add-student', async (event, studentData) => {
     try {
         let fileNameForDB = ''; 
         if (studentData.pic && fs.existsSync(studentData.pic)) {
-            const ext = path.extname(studentData.pic);
+            const ext = path.extname(studentData.pic).toLowerCase() || '.jpg';
             const fileName = `reg_${studentData.regNo}${ext}`;
             const destination = path.join(imagesDir, fileName);
+
+            // FIX: Add mein bhi purani files delete karo taake .jpg aur .png duplicate na bane
+            if (fs.existsSync(imagesDir)) {
+                fs.readdirSync(imagesDir).forEach(file => {
+                    if (file.startsWith(`reg_${studentData.regNo}.`)) {
+                        try { fs.unlinkSync(path.join(imagesDir, file)); } catch(e){}
+                    }
+                });
+            }
+
             fs.copyFileSync(studentData.pic, destination);
             fileNameForDB = fileName; 
+            
+            // Backup to D: Drive instantly
+            try {
+                const backupFolder = 'D:\\SchoolApp-Backup\\images';
+                if (!fs.existsSync(backupFolder)) fs.mkdirSync(backupFolder, { recursive: true });
+                fs.copyFileSync(studentData.pic, path.join(backupFolder, fileName));
+            } catch(e){}
         }
-        // Update the object with the filename before sending to DB
         const dataToSave = { ...studentData, pic: fileNameForDB };
         return dbLogic.addStudent(dataToSave);
     } catch (error) {
@@ -708,34 +743,34 @@ ipcMain.handle('add-student', async (event, studentData) => {
     }
 });
 
-// Update the update-student handler similarly
 ipcMain.handle('update-student', async (event, studentData) => {
     try {
         let fileNameForDB = studentData.pic; 
         
         if (studentData.pic && fs.existsSync(studentData.pic) && path.isAbsolute(studentData.pic)) {
-            const ext = path.extname(studentData.pic);
+            const ext = path.extname(studentData.pic).toLowerCase() || '.jpg';
             const fileName = `reg_${studentData.regNo}${ext}`;
             const destination = path.join(imagesDir, fileName);
 
-            // 1. CLEAR OLD FILES: Find and delete any previous extensions for this student
+            // 1. CLEAR OLD FILES
             if (fs.existsSync(imagesDir)) {
-                const existingFiles = fs.readdirSync(imagesDir);
-                existingFiles.forEach(file => {
-                    // Check if file starts with "reg_123." matching the registration format
+                fs.readdirSync(imagesDir).forEach(file => {
                     if (file.startsWith(`reg_${studentData.regNo}.`)) {
-                        try {
-                            fs.unlinkSync(path.join(imagesDir, file));
-                        } catch (unlinkErr) {
-                            console.warn(`Could not delete old image file ${file}:`, unlinkErr.message);
-                        }
+                        try { fs.unlinkSync(path.join(imagesDir, file)); } catch(e){}
                     }
                 });
             }
 
-            // 2. COPY NEW FILE: Save the fresh image asset
+            // 2. COPY NEW FILE
             fs.copyFileSync(studentData.pic, destination);
             fileNameForDB = fileName;
+
+            // Backup to D: Drive instantly
+            try {
+                const backupFolder = 'D:\\SchoolApp-Backup\\images';
+                if (!fs.existsSync(backupFolder)) fs.mkdirSync(backupFolder, { recursive: true });
+                fs.copyFileSync(studentData.pic, path.join(backupFolder, fileName));
+            } catch(e){}
         }
         
         const dataToSave = { ...studentData, pic: fileNameForDB };
@@ -744,7 +779,6 @@ ipcMain.handle('update-student', async (event, studentData) => {
         throw error;
     }
 });
-
 
 
 ipcMain.handle('get-students', async () => {
@@ -1293,11 +1327,95 @@ ipcMain.handle('update-staff', async (event, id, data) => {
 
 ipcMain.handle('delete-staff', async (event, id) => {
   try {
-    // Deletes staff_1.jpg from all 3 places
     deleteOldStaffImages(id);
-  } catch (e) {}
-  return dbLogic.deleteStaff(id);
+  } catch (e) { console.log("Image delete error", e.message) }
+  
+  try {
+    const result = dbLogic.deleteStaff(id); // now deletes from both tables
+    return { success: true, result };
+  } catch (err) {
+    console.error("Delete Staff Error:", err);
+    throw new Error(err.message);
+  }
 });
+// === SINGLE DELETE - CASCADE (Result + Fee + Attendance) ===
+ipcMain.handle('delete-student', async (event, id) => {
+  try {
+    const student = db.prepare("SELECT id, registration_no FROM students WHERE id=?").get(id);
+    if(!student) return { success:false, error:"Student not found" };
+    
+    const tx = db.transaction(()=>{
+      // 1. RESULT - student_subject_marks, results
+      db.prepare("DELETE FROM student_subject_marks WHERE student_id=? OR result_id IN (SELECT result_id FROM student_results WHERE student_id=?)").run(id, id);
+      try{ db.prepare("DELETE FROM student_results WHERE student_id=?").run(id); }catch(e){}
+      try{ db.prepare("DELETE FROM results WHERE student_id=?").run(id); }catch(e){}
+      
+      // 2. ATTENDANCE - student_attendance
+      db.prepare("DELETE FROM student_attendance WHERE student_id=?").run(id);
+      
+      // 3. FEE - all fee tables
+      try{ db.prepare("DELETE FROM fee_records WHERE student_id=?").run(id); }catch(e){}
+      try{ db.prepare("DELETE FROM fee_collections WHERE student_id=?").run(id); }catch(e){}
+      try{ db.prepare("DELETE FROM fee_collection WHERE student_id=?").run(id); }catch(e){}
+      try{ db.prepare("DELETE FROM student_fees WHERE student_id=?").run(id); }catch(e){}
+      try{ db.prepare("DELETE FROM invoices WHERE student_id=?").run(id); }catch(e){}
+      
+      // 4. MAIN
+      db.prepare("DELETE FROM students WHERE id=?").run(id);
+    });
+    tx();
+    return { success:true, count:1 };
+  } catch(err){ return { success:false, error:err.message }; }
+});
+
+// === BULK DELETE - MULTIPLE IDS ===
+ipcMain.handle('delete-students-bulk', async (event, ids) => {
+  try {
+    if(!ids || !ids.length) return { success:false, error:"No IDs" };
+    const tx = db.transaction((ids)=>{
+      ids.forEach(id=>{
+        db.prepare("DELETE FROM student_subject_marks WHERE student_id=?").run(id);
+        try{ db.prepare("DELETE FROM student_results WHERE student_id=?").run(id); }catch(e){}
+        try{ db.prepare("DELETE FROM results WHERE student_id=?").run(id); }catch(e){}
+        db.prepare("DELETE FROM student_attendance WHERE student_id=?").run(id);
+        try{ db.prepare("DELETE FROM fee_records WHERE student_id=?").run(id); }catch(e){}
+        try{ db.prepare("DELETE FROM fee_collections WHERE student_id=?").run(id); }catch(e){}
+        try{ db.prepare("DELETE FROM fee_collection WHERE student_id=?").run(id); }catch(e){}
+        try{ db.prepare("DELETE FROM student_fees WHERE student_id=?").run(id); }catch(e){}
+        try{ db.prepare("DELETE FROM invoices WHERE student_id=?").run(id); }catch(e){}
+        db.prepare("DELETE FROM students WHERE id=?").run(id);
+      });
+    });
+    tx(ids);
+    return { success:true, count: ids.length };
+  } catch(err){ return { success:false, error:err.message }; }
+});
+
+// === DELETE BY CLASS ===
+ipcMain.handle('delete-students-by-class', async (event, className) => {
+  try {
+    const students = db.prepare("SELECT id FROM students WHERE current_class=?").all(className);
+    if(!students.length) return { success:true, count:0 };
+    const ids = students.map(s=>s.id);
+    const tx = db.transaction((ids)=>{
+      ids.forEach(id=>{
+        db.prepare("DELETE FROM student_subject_marks WHERE student_id=?").run(id);
+        try{ db.prepare("DELETE FROM student_results WHERE student_id=?").run(id); }catch(e){}
+        try{ db.prepare("DELETE FROM results WHERE student_id=?").run(id); }catch(e){}
+        db.prepare("DELETE FROM student_attendance WHERE student_id=?").run(id);
+        try{ db.prepare("DELETE FROM fee_records WHERE student_id=?").run(id); }catch(e){}
+        try{ db.prepare("DELETE FROM fee_collections WHERE student_id=?").run(id); }catch(e){}
+        try{ db.prepare("DELETE FROM fee_collection WHERE student_id=?").run(id); }catch(e){}
+        try{ db.prepare("DELETE FROM student_fees WHERE student_id=?").run(id); }catch(e){}
+        try{ db.prepare("DELETE FROM invoices WHERE student_id=?").run(id); }catch(e){}
+        db.prepare("DELETE FROM students WHERE id=?").run(id);
+      });
+    });
+    tx(ids);
+    return { success:true, count: ids.length };
+  } catch(err){ return { success:false, error:err.message }; }
+});
+
 ipcMain.handle('initiate-salary', async (event, month, year) => {
     return dbLogic.initiateSalary(month, year);
 });
@@ -1425,19 +1543,30 @@ ipcMain.on('open-db-folder', () => {
     const userDataPath = app.getPath('userData');
     shell.openPath(userDataPath); 
 });
+
 ipcMain.handle('add-expense', async (event, data) => {
     try {
-        const now = new Date();
-        const month = now.toLocaleString('default', { month: 'long' });
-        const year = now.getFullYear();
+        // Frontend se aayi date: YYYY-MM-DD
+        const selectedDateStr = data.date || data.exp_date;
+        let targetDate;
+        if(selectedDateStr){
+            // "2026-09-15" ko local date samjho, timezone issue se bachne ke liye
+            const [y,m,d] = selectedDateStr.split('-').map(Number);
+            targetDate = new Date(y, m-1, d);
+        } else {
+            targetDate = new Date();
+        }
 
-        // FIX: Changed 'expense' to 'expence' to match your DB schema in the image
+        const month = targetDate.toLocaleString('default', { month: 'long' });
+        const year = targetDate.getFullYear().toString();
+        const dbDate = targetDate.toISOString().split('T')[0]; // YYYY-MM-DD
+
         const stmt = db.prepare(`
-            INSERT INTO exp_tbl (expence, exp_amount, exp_year, exp_month, created_at) 
-            VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)
+            INSERT INTO exp_tbl (expence, exp_amount, exp_year, exp_month, created_at)
+            VALUES (?,?,?,?,?)
         `);
-        
-        const info = stmt.run(data.expense, data.amount, year, month);
+
+        const info = stmt.run(data.expense, data.amount, year, month, dbDate);
         return { success: info.changes > 0 };
     } catch (err) {
         console.error("Database Error:", err);
@@ -1445,6 +1574,48 @@ ipcMain.handle('add-expense', async (event, data) => {
     }
 });
 
+ipcMain.handle('update-expense', async (event, data) => {
+    try {
+        console.log("Updating ROWID:", data);
+        const selectedDateStr = data.date || data.exp_date;
+        let targetDate;
+        if(selectedDateStr){
+            const [y,m,d] = selectedDateStr.split('-').map(Number);
+            targetDate = new Date(y, m-1, d);
+        } else {
+            targetDate = new Date();
+        }
+        const month = targetDate.toLocaleString('default', { month: 'long' });
+        const year = targetDate.getFullYear().toString();
+        const dbDate = targetDate.toISOString().split('T')[0];
+
+        // ROWID use kar rahe hain kyunki aapki table me ROWID hai
+        const info = db.prepare(`
+            UPDATE exp_tbl SET expence =?, exp_amount =?, exp_month =?, exp_year =?, created_at =?
+            WHERE ROWID =?
+        `).run(data.expense, data.amount, month, year, dbDate, Number(data.id));
+
+        return { success: info.changes > 0 };
+    } catch (err) {
+        console.error("Update error:", err.message);
+        return { success: false, error: err.message };
+    }
+});
+
+// get-expenses same rahega
+ipcMain.handle('get-expenses', async (event, filters) => {
+    try {
+        let query = "SELECT ROWID as id, * FROM exp_tbl WHERE 1=1";
+        const params = [];
+        if (filters.month) { query += " AND exp_month =?"; params.push(filters.month); }
+        if (filters.year) { query += " AND exp_year =?"; params.push(filters.year); }
+        query += " ORDER BY date(created_at) DESC, ROWID DESC";
+        return db.prepare(query).all(...params);
+    } catch (err) {
+        console.error(err);
+        return [];
+    }
+});
 
 ipcMain.handle('get-expense-filters', async () => {
     try {
@@ -1456,53 +1627,14 @@ ipcMain.handle('get-expense-filters', async () => {
     }
 });
 
-// Update your get-expenses handler to use 'exp_month'
-// --- GET EXPENSES - also return ROWID as id ---
-ipcMain.handle('get-expenses', async (event, filters) => {
-    try {
-        let query = "SELECT ROWID as id, * FROM exp_tbl WHERE 1=1";
-        const params = [];
-
-        if (filters.month) {
-            query += " AND exp_month =?";
-            params.push(filters.month);
-        }
-        if (filters.year) {
-            query += " AND exp_year =?";
-            params.push(filters.year);
-        }
-        query += " ORDER BY ROWID DESC";
-        return db.prepare(query).all(...params);
-    } catch (err) {
-        console.error(err);
-        return [];
-    }
-});
-
 ipcMain.handle('delete-expense', async (event, id) => {
     try {
-        console.log("Deleting ROWID:", id);
         const info = db.prepare("DELETE FROM exp_tbl WHERE ROWID =?").run(Number(id));
         return { success: info.changes > 0 };
     } catch (err) {
-        console.error("Delete error:", err.message);
         return { success: false, error: err.message };
     }
 });
-
-ipcMain.handle('update-expense', async (event, data) => {
-    try {
-        console.log("Updating ROWID:", data);
-        const info = db.prepare("UPDATE exp_tbl SET expence =?, exp_amount =? WHERE ROWID =?")
-                      .run(data.expense, data.amount, Number(data.id));
-        return { success: info.changes > 0 };
-    } catch (err) {
-        console.error("Update error:", err.message);
-        return { success: false, error: err.message };
-    }
-});
-//datesheet
-// main.js
 
 ipcMain.handle('get-datesheet', async (event, filters) => {
     try {

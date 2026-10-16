@@ -5,25 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Invoices 2 in 1 </title>
     <style>
-        /* Base Styling */
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background: #f0f0f0; color: #333; }
         
-        /* Landscape Page Wrapper: One wrapper per student */
-        /* Landscape Page Wrapper: One wrapper per student */
-.page-wrapper {
-    display: grid;
-    grid-template-columns: 1fr 1fr; /* 🌟 Changed to 2 Copies side-by-side */
-    gap: 12px;
-    width: 297mm; 
-    min-height: 200mm;
-    margin: 15px auto;
-    background: white;
-    padding: 10px;
-    box-sizing: border-box;
-    page-break-after: always;
-    border: 1px solid #ccc;
-}
-
+        .page-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            width: 297mm; 
+            min-height: 200mm;
+            margin: 15px auto;
+            background: white;
+            padding: 10px;
+            box-sizing: border-box;
+            page-break-after: always;
+            border: 1px solid #ccc;
+        }
 
         .copy-section {
             border: 1.5px dashed #555;
@@ -32,9 +28,10 @@
             display: flex;
             flex-direction: column;
             position: relative;
+            overflow: hidden;
+            background: white;
         }
 
-        /* Header Styling */
         .header { text-align: center; border-bottom: 2px solid #2c3e50; margin-bottom: 8px; padding-bottom: 5px; }
         .school-name { font-size: 20px; font-weight: bold; margin: 0; text-transform: uppercase; }
         .copy-label { background: #eee; padding: 2px 6px; font-weight: bold; float: right; border-radius: 3px; font-size: 12px; }
@@ -49,25 +46,23 @@
         .fine-row { color: #c0392b; font-style: italic; }
         
         .footer { margin-top: auto; display: flex; justify-content: space-between; padding-top: 10px; margin-bottom: 5px; }
-/* New utility class to cleanly format the copyright line at the very bottom */
-.invoice-copyright {
-  display: flex;
-  justify-content: space-between;
-  font-size: 8px;
-  color: #666;
-  border-top: 1px solid #eee;
-  padding-top: 3px;
-  margin-top: 8px;
-}
+        .invoice-copyright {
+          display: flex;
+          justify-content: space-between;
+          font-size: 8px;
+          color: #666;
+          border-top: 1px solid #eee;
+          padding-top: 3px;
+          margin-top: 8px;
+        }
         .sig-line { border-top: 1.2px solid #000; width: 75px; text-align: center; font-size: 9px; padding-top: 3px; }
 
         .no-print { text-align:center; padding: 15px; background: #2c3e50; color:white; }
         .btn-print { padding: 10px 25px; cursor: pointer; font-weight: bold; border-radius: 5px; border:none; background:#27ae60; color:white; margin-bottom: 5px; }
         .btn-close { background: #e74c3c; border: none; padding: 10px 25px; border-radius: 5px; cursor: pointer; color: white; font-weight: bold; }
    
-        /* Small Logo next to Name */
         .small-logo {
-            height: 28px; /* Matches text height */
+            height: 28px;
             vertical-align: middle;
             margin-right: 8px;
         }
@@ -81,13 +76,19 @@
             opacity: 0.12; 
             z-index: 0;
             pointer-events: none;
-         }  
+         }
 
-        /* Print Specifics */
+        /* Watermark OFF Logic */
+        body.no-watermark .watermark {
+            display: none !important;
+            opacity: 0 !important;
+        }
+
         @media print {
             body { background: white; }
             .no-print { display: none; }
             .page-wrapper { margin: 0; border: none; padding: 5mm; }
+            body.no-watermark .watermark { display: none !important; }
             @page { size: landscape; margin: 0; }
         }
     </style>
@@ -101,48 +102,50 @@
 </div>
 
 <div id="invoiceContainer">
-    <!-- Student Pages will be injected here -->
     <div style="text-align: center; padding: 100px; color: #777;">
         <h3>Loading Invoice Data...</h3>
     </div>
 </div>
 
 <script>
-// Global runtime configuration storage bucket for app details
 let appDetails = {
     instituteName: "Loading...",
     address: "Loading...",
     contactNumber: "Loading...",
     email: "Loading...",
-    account: "Loading..."
+    account: "Loading...",
+    watermark: "Yes"
 };
 
 async function init() {
     const container = document.getElementById('invoiceContainer');
     const counterNote = document.getElementById('counterNote');
 
-    // 1. Safety Check: Is the Electron Bridge (window.api) loaded?
     if (!window.api || !window.api.getFeeRecordById) {
         container.innerHTML = `
         <div style="text-align:center; padding:50px; color:#c0392b;">
             <h2>API Error</h2>
             <p>The database connection (window.api) was not found in this window.</p>
-            <p>Ensure your Electron main process has 'preload' enabled for child windows.</p>
         </div>`;
         return;
     }
 
     try {
-        // 🌟 FETCH APP METADATA FIRST: Request data from main process upfront
         const details = await window.api.getAppDetails();
         if (details) {
-            appDetails = details; // Cache details globally for render template availability
+            appDetails = details;
         }
     } catch (error) {
         console.error("Failed to load application metadata details:", error);
     }
 
-    // 2. Get IDs from URL
+    // WATERMARK CHECK
+    if(appDetails.watermark && String(appDetails.watermark).toLowerCase() === "no"){
+        document.body.classList.add('no-watermark');
+    } else {
+        document.body.classList.remove('no-watermark');
+    }
+
     const params = new URLSearchParams(window.location.search);
     const idString = params.get('ids') || params.get('id');
 
@@ -152,17 +155,14 @@ async function init() {
     }
 
     const ids = idString.split(',');
-    container.innerHTML = ''; // Clear loading message
+    container.innerHTML = '';
     counterNote.innerText = `Total Students in Batch: ${ids.length}`;
 
-    // 3. Loop through and fetch records
     for (let id of ids) {
         try {
             const data = await window.api.getFeeRecordById(parseInt(id));
             if (data) {
                 renderStudentPage(data, container);
-            } else {
-                console.warn(`No data returned for ID: ${id}`);
             }
         } catch (err) {
             console.error(`Error loading record ID ${id}:`, err);
@@ -179,7 +179,6 @@ function renderStudentPage(data, container) {
     const page = document.createElement('div');
     page.className = 'page-wrapper';
 
-    // Calculations & Data Extraction (Updated to include new fee heads)
     const monthly = Number(data.monthly_fee) || 0;
     const admission = Number(data.adm_fee) || 0;
     const exam = Number(data.exam_fee) || 0;
@@ -187,14 +186,12 @@ function renderStudentPage(data, container) {
     const misc = Number(data.misc_fee) || 0;
     const arrears = Number(data.arrears) || 0;
 
-    // New Fee Extractions added here
     const regFee = Number(data.reg_fee) || 0;
     const annualFund = Number(data.annual_fund) || 0;
     const stationaryFund = Number(data.stationary_fund) || 0;
     const busCharges = Number(data.bus_charges) || 0;
     const misc_remarks = data.misc_remarks || '';
 
-    // Updated total formula combining the 4 new items
     const currentTotal = monthly + admission + exam + misc + lab + regFee + annualFund + stationaryFund + busCharges;
     const netPayable = currentTotal + arrears;
     const fineAmount = 200;
@@ -203,8 +200,8 @@ function renderStudentPage(data, container) {
 
     page.innerHTML = copies.map(title => `
         <div class="copy-section">
-                                  <!-- <img src="../../images/logo.png" class="watermark"> -->
-                                 <span class="copy-label">${title}</span>
+            <img src="../../images/logo.png" class="watermark">
+            <span class="copy-label">${title}</span>
             <div class="header">
                 <p class="school-name">
                     <img src="../../images/logo.png" class="small-logo">
@@ -244,13 +241,10 @@ function renderStudentPage(data, container) {
                     ${admission > 0 ? `<tr><td>Admission Fee</td><td>${admission.toLocaleString()}</td></tr>` : ''}
                     ${exam > 0 ? `<tr><td>Examination Fee</td><td>${exam.toLocaleString()}</td></tr>` : ''}
                     ${lab > 0 ? `<tr><td>Lab Charges</td><td>${lab.toLocaleString()}</td></tr>` : ''}
-                    
-                    <!-- Conditional Rows for New Items Added Here -->
                     ${regFee > 0 ? `<tr><td>Registration Fee</td><td>${regFee.toLocaleString()}</td></tr>` : ''}
                     ${annualFund > 0 ? `<tr><td>Annual Fund</td><td>${annualFund.toLocaleString()}</td></tr>` : ''}
                     ${stationaryFund > 0 ? `<tr><td>Stationary Fund</td><td>${stationaryFund.toLocaleString()}</td></tr>` : ''}
                     ${busCharges > 0 ? `<tr><td>Bus Charges</td><td>${busCharges.toLocaleString()}</td></tr>` : ''}
-                    
                     ${misc > 0 ? `
                     <tr>
                         <td>${(!misc_remarks || String(misc_remarks).trim() === '' || String(misc_remarks).trim() === '0' || String(misc_remarks).trim() === '0.0') ? 'Misc' : misc_remarks}</td>
@@ -293,7 +287,6 @@ function renderStudentPage(data, container) {
     `).join('');
     container.appendChild(page);
 }
-// Start the process initialization loop setup
 window.addEventListener('DOMContentLoaded', init);
 </script>
 

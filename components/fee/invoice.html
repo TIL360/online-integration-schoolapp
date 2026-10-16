@@ -1,165 +1,258 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8"><title>Invoices 2x2 - 4 per page Parallel</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoices 3 in 1</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: #f0f0f0; color: #333; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background: #f0f0f0; color: #333; }
+        
         .page-wrapper {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr 1fr;
-            gap: 0;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
             width: 297mm; 
             height: 210mm;
-            margin: 10px auto;
+            margin: 15px auto;
             background: white;
-            padding: 3mm;
+            padding: 6mm;
             box-sizing: border-box;
             page-break-after: always;
             border: 1px solid #999;
             position: relative;
         }
-        .cut-line-v { position: absolute; top: 3mm; bottom: 3mm; width: 0; border-left: 1px dashed #000; z-index: 10; }
+
+        /* Cut lines */
+        .cut-line-v { position: absolute; top: 6mm; bottom: 6mm; width: 0; border-left: 1px dashed #000; z-index: 10; }
         .cut-line-v::before { content: "✂"; position: absolute; top: -6px; left: -8px; background: white; font-size: 12px; }
-        .cut-line-v.c1 { left: 25%; } .cut-line-v.c2 { left: 50%; } .cut-line-v.c3 { left: 75%; }
+        .cut-line-v.c1 { left: 33.33%; }
+        .cut-line-v.c2 { left: 66.66%; }
 
         .copy-section {
-            border: none;
-            border-right: 1px dashed #777;
-            padding: 6px 7px 4px 7px;
-            font-size: 11.5px;
+            border: 1.5px dashed #555;
+            padding: 8px;
+            font-size: 12px;
             display: flex;
             flex-direction: column;
             position: relative;
-            height: 100%;
-            box-sizing: border-box;
             overflow: hidden;
             background: white;
-        }
-        .copy-section:last-child { border-right: none; }
-
-
-.copy-section::before {
-    content: "";
-    position: absolute;
-    top: 40%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 110px;
-    height: 110px;
-    background-image: url('../../images/logo.png');
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: contain;
-    opacity: 0.09;
-    z-index: 0;
-    pointer-events: none;
-}
-
-        .copy-content { position: relative; z-index: 1; display:flex; flex-direction:column; height:100%; }
-
-        .header { text-align: center; border-bottom: 2px solid #2c3e50; margin-bottom: 5px; padding-bottom: 5px; }
-        .school-name { font-size: 14px; font-weight: 800; margin: 2px 0; text-transform: uppercase; }
-        .badge { font-size:8.5px; background:#000; color:#fff; padding:2px 6px; border-radius:3px; font-weight:bold; }
-        .inv-no { font-size:8.5px; font-weight:bold; }
-
-        .info-table { width: 100%; border-collapse: collapse; margin-top: 4px; }
-        .info-table td { padding: 2px 0; font-size: 11px; line-height: 1.35; text-align: left; }
-        .info-table td.month-center { text-align: center !important; font-weight: 800; font-size: 11.5px; padding-top: 4px; }
-
-        .fee-table { width: 100%; border-collapse: collapse; margin-top: 5px; }
-        .fee-table th, .fee-table td { border: 1px solid #bbb; padding: 4.5px 4px; text-align: left; font-size: 11px; line-height: 1.3; }
-        .fee-table th { background: #f0f0f0; font-weight: 700; }
-        .total-row { font-weight: 800; background: #e9e9e9; }
-        .net-payable { background: #2c3e50 !important; color: white !important; font-weight: 800; }
-        .fine-row { color: #c0392b; font-weight: 600; }
-
-        .footer { margin-top: auto; display: flex; justify-content: space-between; padding-top: 10px; }
-        .sig-line { border-top: 1.3px solid #000; width: 62px; text-align: center; font-size: 9px; padding-top: 3px; font-weight: 700; }
-
-        .copyright {
-            display: flex; justify-content: space-between;
-            font-size: 6.5px; color: #444; border-top: 1px solid #ccc;
-            padding-top: 3px; margin-top: 5px; font-weight: 600;
+            height: 100%;
+            box-sizing: border-box;
         }
 
-        .no-print { text-align:center; padding: 12px; background: #2c3e50; color:white; }
-        .btn-print { padding: 9px 22px; cursor: pointer; font-weight: bold; border-radius: 5px; border:none; background:#27ae60; color:white; }
-        .btn-close { background: #e74c3c; border: none; padding: 9px 22px; border-radius: 5px; cursor: pointer; color: white; font-weight: bold; }
-        .small-logo { height: 18px; vertical-align: middle; margin-right: 4px; }
-        .note-box { font-size:7.5px; border:1px solid #bbb; padding:3px; margin-top:5px; text-align:center; font-weight:600; }
+        .header { text-align: center; border-bottom: 2px solid #2c3e50; margin-bottom: 6px; padding-bottom: 4px; position: relative; z-index: 1; }
+        .school-name { font-size: 15px; font-weight: bold; margin: 0; text-transform: uppercase; line-height: 1.2; }
+        .copy-label { background: #000; color: #fff; padding: 2px 6px; font-weight: bold; float: right; border-radius: 3px; font-size: 10px; }
+        
+        .info-table, .fee-table { width: 100%; border-collapse: collapse; margin-top: 6px; position: relative; z-index: 1; }
+        .info-table td { padding: 2px 0; font-size: 11px; }
+        .fee-table th, .fee-table td { border: 1px solid #ddd; padding: 3px 4px; text-align: left; font-size: 11px; }
+        .fee-table th { background: #f9f9f9; }
+        
+        .total-row { font-weight: bold; background: #f2f2f2; }
+        .net-payable { background: #2c3e50 !important; color: white !important; font-weight: bold; }
+        .fine-row { color: #c0392b; font-style: italic; }
+        
+        .footer { margin-top: auto; display: flex; justify-content: space-between; padding-top: 8px; margin-bottom: 2px; position: relative; z-index: 1; }
+        .invoice-copyright { display: flex; justify-content: space-between; font-size: 6.5px; color: #666; border-top: 1px solid #eee; padding-top: 2px; margin-top: 6px; position: relative; z-index: 1; }
+        .sig-line { border-top: 1.2px solid #000; width: 65px; text-align: center; font-size: 8px; padding-top: 2px; }
+
+        .no-print { text-align:center; padding: 15px; background: #2c3e50; color:white; }
+        .btn-print { padding: 10px 25px; cursor: pointer; font-weight: bold; border-radius: 5px; border:none; background:#27ae60; color:white; margin-bottom: 5px; }
+        .btn-close { background: #e74c3c; border: none; padding: 10px 25px; border-radius: 5px; cursor: pointer; color: white; font-weight: bold; }
+   
+        .small-logo { height: 22px; vertical-align: middle; margin-right: 6px; }
+      
+        .watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 75%; 
+            opacity: 0.12; 
+            z-index: 0;
+            pointer-events: none;
+         }
+
+        /* Watermark OFF Logic - SAME AS YOUR WORKING FILE */
+        body.no-watermark .watermark {
+            display: none !important;
+            opacity: 0 !important;
+        }
 
         @media print {
             body { background: white; }
             .no-print { display: none; }
-            .page-wrapper { margin: 0; border: none; padding: 3mm; width: 297mm; height: 205mm; }
-            .copy-section::before { opacity: 0.08 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .page-wrapper { margin: 0; border: none; padding: 4mm; width: 297mm; height: 205mm; }
+            body.no-watermark .watermark { display: none !important; }
             @page { size: landscape; margin: 2mm; }
         }
     </style>
 </head>
 <body>
+
 <div class="no-print">
-    <button class="btn-print" onclick="window.print()">🖨️ Print 4 Parallel</button>
-    <button class="btn-close" onclick="window.close()">Close</button>
-    <p id="counterNote" style="margin:6px 0 0; font-size:12px;">Loading...</p>
+    <button class="btn-print" onclick="window.print()">🖨️ Print 3 Slips</button>
+    <button class="btn-close" onclick="window.close()">Close Window</button>
+    <p id="counterNote" style="margin: 8px 0 0 0; font-size: 13px; opacity: 0.9;">Initializing...</p>
 </div>
-<div id="invoiceContainer" style="text-align:center; padding:60px;">Loading...</div>
+
+<div id="invoiceContainer">
+    <div style="text-align: center; padding: 100px; color: #777;">
+        <h3>Loading Invoice Data...</h3>
+    </div>
+</div>
+
 <script>
-let appDetails = { instituteName:"TECHINFO", address:"Islamabad", contactNumber:"0311-5101738", email:"", account:"" };
-async function init(){
-    const container=document.getElementById('invoiceContainer'), note=document.getElementById('counterNote');
-    try{ const d=await window.api.getAppDetails(); if(d) appDetails=d; }catch(e){}
-    const ids=(new URLSearchParams(location.search).get('ids')||'').split(',').filter(Boolean);
-    note.innerText=`Total: ${ids.length} | Pages: ${Math.ceil(ids.length/2)} | 4 Parallel`;
-    let all=[]; for(let id of ids){ try{ let data=await window.api.getFeeRecordById(parseInt(id)); if(data) all.push(data); }catch(e){} }
-    container.innerHTML='';
-    for(let i=0;i<all.length;i+=2){
-        const chunk=all.slice(i,i+2), page=document.createElement('div'); page.className='page-wrapper';
-        page.innerHTML=`<div class="cut-line-v c1"></div><div class="cut-line-v c2"></div><div class="cut-line-v c3"></div>`;
-        let h=''; 
-        chunk.forEach(d=>{ ['OFFICE COPY','STUDENT COPY'].forEach(t=> h+=build(d,t)); });
-        if(chunk.length===1){ h+=`<div class="copy-section"><div class="copy-content" style="justify-content:center; align-items:center; width:100%; color:#bbb;">Empty</div></div><div class="copy-section"><div class="copy-content" style="justify-content:center; align-items:center; width:100%; color:#bbb;">Empty</div></div>`; }
-        page.innerHTML+=h; container.appendChild(page);
+let appDetails = {
+    instituteName: "Loading...",
+    address: "Loading...",
+    contactNumber: "Loading...",
+    email: "Loading...",
+    account: "Loading...",
+    watermark: "Yes"
+};
+
+async function init() {
+    const container = document.getElementById('invoiceContainer');
+    const counterNote = document.getElementById('counterNote');
+
+    try {
+        const details = await window.api.getAppDetails();
+        if (details) {
+            appDetails = details;
+        }
+    } catch (error) {
+        console.error("Failed to load application metadata details:", error);
+    }
+
+    // WATERMARK CHECK - SAME LOGIC
+    if(appDetails.watermark && String(appDetails.watermark).toLowerCase() === "no"){
+        document.body.classList.add('no-watermark');
+    } else {
+        document.body.classList.remove('no-watermark');
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    const idString = params.get('ids') || params.get('id');
+
+    if (!idString) {
+        container.innerHTML = "<h2 style='text-align:center; padding:50px;'>No Record IDs provided in URL.</h2>";
+        return;
+    }
+
+    const ids = idString.split(',');
+    container.innerHTML = '';
+    counterNote.innerText = `Total Students: ${ids.length} | Pages: ${ids.length} | 3 Slips per Page`;
+
+    for (let id of ids) {
+        try {
+            const data = await window.api.getFeeRecordById(parseInt(id));
+            if (data) {
+                renderStudentPage(data, container);
+            }
+        } catch (err) {
+            console.error(`Error loading record ID ${id}:`, err);
+        }
     }
 }
-function build(data, type){
-    const m=Number(data.monthly_fee)||0,a=Number(data.adm_fee)||0,ex=Number(data.exam_fee)||0,l=Number(data.lab_fee)||0,mi=Number(data.misc_fee)||0,ar=Number(data.arrears)||0,rg=Number(data.reg_fee)||0,an=Number(data.annual_fund)||0,st=Number(data.stationary_fund)||0,b=Number(data.bus_charges)||0;
-    const cur=m+a+ex+l+mi+rg+an+st+b, net=cur+ar, fine=200, aft=net+fine, mr=data.misc_remarks||'';
-    return `<div class="copy-section">
-    <div class="copy-content">
-    <div style="display:flex; justify-content:space-between; align-items:center;"><span class="badge">${type}</span><span class="inv-no">#${data.id}</span></div>
-    <div class="header">
-        <p class="school-name"><img src="../../images/logo.png" class="small-logo">${appDetails.instituteName}</p>
-        <p style="margin:2px 0 0; font-size:8.5px; font-weight:600;">${appDetails.address} | ${appDetails.contactNumber}</p>
-    </div>
-    <table class="info-table">
-        <tr><td>Stu: <strong>${data.student_name}</strong></td></tr>
-        <tr><td>Father: ${data.father_name}</td></tr>
-        <tr><td>Reg: ${data.registration_no} | Class: ${data.current_class} (${data.section||'N/A'})</td></tr>
-        <tr><td class="month-center">Month: ${data.invoice_month} ${data.invoice_year}</td></tr>
-    </table>
-    <table class="fee-table">
-        <tr><th style="width:62%">Description</th><th>Amount</th></tr>
-        <tr><td>Monthly Tuition</td><td>${m.toLocaleString()}</td></tr>
-        ${a>0?`<tr><td>Admission</td><td>${a.toLocaleString()}</td></tr>`:''}
-        ${ex>0?`<tr><td>Examination</td><td>${ex.toLocaleString()}</td></tr>`:''}
-        ${l>0?`<tr><td>Lab Charges</td><td>${l.toLocaleString()}</td></tr>`:''}
-        ${rg>0?`<tr><td>Registration</td><td>${rg.toLocaleString()}</td></tr>`:''}
-        ${an>0?`<tr><td>Annual Fund</td><td>${an.toLocaleString()}</td></tr>`:''}
-        ${st>0?`<tr><td>Stationary Fund</td><td>${st.toLocaleString()}</td></tr>`:''}
-        ${b>0?`<tr><td>Bus Charges</td><td>${b.toLocaleString()}</td></tr>`:''}
-        ${mi>0?`<tr><td>${(mr||'Misc Fee')}</td><td>${mi.toLocaleString()}</td></tr>`:''}
-        <tr class="total-row"><td>Current Total</td><td>${cur.toLocaleString()}</td></tr>
-        <tr><td>Previous Arrears</td><td>${ar.toLocaleString()}</td></tr>
-        <tr class="net-payable"><td>NET PAYABLE (10th)</td><td>Rs. ${net.toLocaleString()}</td></tr>
-        <tr class="fine-row"><td>Late Fine (After 10th)</td><td>${fine}</td></tr>
-        <tr class="total-row"><td>AFTER DUE DATE</td><td>Rs. ${aft.toLocaleString()}</td></tr>
-    </table>
-    <div class="note-box">Please pay by 10th to avoid fine. Thank you!</div>
-    <div class="footer"><div class="sig-line">Parent</div><div class="sig-line">Cashier / Principal</div></div>
-    <div class="copyright"><span>© Techinfolab. All Rights Reserved.</span><span>Designed by: Raja Bilal || 0311-5101738</span></div>
-    </div>
-    </div>`;
+
+function renderStudentPage(data, container) {
+    const copies = ['BANK COPY', 'STUDENT COPY', 'SCHOOL COPY'];
+    const page = document.createElement('div');
+    page.className = 'page-wrapper';
+    page.innerHTML = `<div class="cut-line-v c1"></div><div class="cut-line-v c2"></div>`;
+
+    const monthly = Number(data.monthly_fee) || 0;
+    const admission = Number(data.adm_fee) || 0;
+    const exam = Number(data.exam_fee) || 0;
+    const lab = Number(data.lab_fee) || 0;
+    const misc = Number(data.misc_fee) || 0;
+    const arrears = Number(data.arrears) || 0;
+    const regFee = Number(data.reg_fee) || 0;
+    const annualFund = Number(data.annual_fund) || 0;
+    const stationaryFund = Number(data.stationary_fund) || 0;
+    const busCharges = Number(data.bus_charges) || 0;
+    const misc_remarks = data.misc_remarks || '';
+
+    const currentTotal = monthly + admission + exam + misc + lab + regFee + annualFund + stationaryFund + busCharges;
+    const netPayable = currentTotal + arrears;
+    const fineAmount = 200;
+    const netAfterDue = netPayable + fineAmount;
+    const dueDate = `10th ${data.invoice_month} ${data.invoice_year}`;
+
+    let html = '';
+    copies.forEach(title => {
+        html += `
+        <div class="copy-section">
+            <img src="../../images/logo.png" class="watermark">
+            <span class="copy-label">${title}</span>
+            <div class="header">
+                <p class="school-name">
+                    <img src="../../images/logo.png" class="small-logo">
+                    <span>${appDetails.instituteName}</span>
+                </p>
+                <p style="margin: 2px; font-size: 10px;">${appDetails.address} | ${appDetails.contactNumber}</p>
+                <p style="margin: 2px; font-size:9px; font-weight:600;">
+                    ${appDetails.account ? `A/C: ${appDetails.account}` : ''}</p>
+            </div>
+            <table class="info-table">
+                <tr>
+                    <td><strong>Inv #:</strong> ${data.id}</td>
+                    <td style="text-align:right"><strong>${data.invoice_month} ${data.invoice_year}</strong></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><strong>Student:</strong> ${data.student_name}</td>
+                </tr>
+                <tr>
+                    <td colspan="2"><strong>Father:</strong> ${data.father_name}</td>
+                </tr>
+                <tr>
+                    <td><strong>Reg:</strong> ${data.registration_no}</td>
+                    <td><strong>Class:</strong> ${data.current_class}</td>
+                </tr>
+            </table>
+            <table class="fee-table">
+                <thead>
+                    <tr><th>Description</th><th>Amount</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Monthly Tuition</td><td>${monthly.toLocaleString()}</td></tr>
+                    ${admission > 0 ? `<tr><td>Admission</td><td>${admission.toLocaleString()}</td></tr>` : ''}
+                    ${exam > 0 ? `<tr><td>Examination</td><td>${exam.toLocaleString()}</td></tr>` : ''}
+                    ${lab > 0 ? `<tr><td>Lab Charges</td><td>${lab.toLocaleString()}</td></tr>` : ''}
+                    ${regFee > 0 ? `<tr><td>Registration</td><td>${regFee.toLocaleString()}</td></tr>` : ''}
+                    ${annualFund > 0 ? `<tr><td>Annual Fund</td><td>${annualFund.toLocaleString()}</td></tr>` : ''}
+                    ${stationaryFund > 0 ? `<tr><td>Stationary</td><td>${stationaryFund.toLocaleString()}</td></tr>` : ''}
+                    ${busCharges > 0 ? `<tr><td>Bus Charges</td><td>${busCharges.toLocaleString()}</td></tr>` : ''}
+                    ${misc > 0 ? `<tr><td>${(!misc_remarks || String(misc_remarks).trim() === '' || String(misc_remarks).trim() === '0') ? 'Misc' : misc_remarks}</td><td>${misc.toLocaleString()}</td></tr>` : ''}
+                    <tr class="total-row"><td>Current Total</td><td>${currentTotal.toLocaleString()}</td></tr>
+                    <tr><td>Arrears</td><td>${arrears.toLocaleString()}</td></tr>
+                    <tr class="net-payable"><td>NET PAYABLE (By ${dueDate})</td><td>Rs. ${netPayable.toLocaleString()}</td></tr>
+                    <tr class="fine-row"><td>Late Fine</td><td>${fineAmount.toLocaleString()}</td></tr>
+                    <tr class="total-row"><td>AFTER DUE DATE</td><td>Rs. ${netAfterDue.toLocaleString()}</td></tr>
+                </tbody>
+            </table>
+            <div style="margin-top:6px; font-size:8px; border:1px solid #ccc; padding:3px; text-align:center; position:relative; z-index:1;">
+                Please submit fee by the 10th to avoid late fee fine.
+            </div>
+            <div class="footer">
+                <div class="sig-line">Parent/Bank</div>
+                <div class="sig-line">Cashier/Principal</div>
+            </div>
+            <div class="invoice-copyright">
+                <span>© Techinfolab</span>
+                <span>Raja Bilal || 0311-5101738</span>
+            </div>
+        </div>`;
+    });
+
+    page.innerHTML += html;
+    container.appendChild(page);
 }
-window.addEventListener('DOMContentLoaded',init);
-</script></body></html>
+window.addEventListener('DOMContentLoaded', init);
+</script>
+
+</body>
+</html>
