@@ -2,7 +2,7 @@
 const fs = require("fs");
 const path = require("path");
 
-const ACTIVE_SCHOOL = "ISLAMIA"; // KIPS | EAGLES | RAHBAR | ISLAMIA | TECHINFO
+const ACTIVE_SCHOOL = "TECHINFO"; // KIPS | EAGLES | RAHBAR | ISLAMIA | TECHINFO
 
 const SCHOOL_THEMES = {
   KIPS: {
@@ -157,7 +157,7 @@ const SCHOOL_DETAILS = {
   TECHINFO: {
     shortName: "TECHINFO",
     logo: "logo-tech.png",
-    expiry: "2026-10-10",
+    expiry: "2026-10-30",
     slcFile: "slc_template.html",
     instituteName: "Techinfo",
     contactNumber: "0311-5101738",

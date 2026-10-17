@@ -454,7 +454,105 @@ async function wipeAllOnlineData() {
   }
   return deleted;
 }
+//fee notificaiton
+async function pushFeeNotificationsOnline(db) {
+  console.log(`\n--- PUSHING ONLY CURRENT MONTH FEE FOR ${SCHOOL_CODE} ---`);
+  try {
+    const now = new Date();
+    const currentMonthName = now.toLocaleString('en-US', { month: 'long' }); // October
+    const currentMonthShort = now.toLocaleString('en-US', { month: 'short' }); // Oct
+    const currentYear = now.getFullYear().toString(); // 2026
+    const currentMonthNum = (now.getMonth() + 1).toString(); // 10
 
+    console.log(`Current: ${currentMonthName} ${currentYear}`);
+
+    // Detect fee table
+    const allTables = db.prepare("SELECT name FROM sqlite_master WHERE type='table'").all().map(t => t.name);
+    const candidates = ['fee_records', 'fees', 'fee_invoices', 'invoices', 'student_fees', 'fee'];
+    let feeTable = candidates.find(c => allTables.includes(c));
+    if (!feeTable) {
+      for (let t of allTables) {
+        try {
+          const cols = db.prepare(`PRAGMA table_info(${t})`).all().map(c => c.name);
+          if (cols.includes('registration_no') && cols.includes('monthly_fee') && cols.includes('invoice_month')) { feeTable = t; break; }
+        } catch {}
+      }
+    }
+    if (!feeTable) { console.log("❌ No fee table found"); return false; }
+
+    const rows = db.prepare(`SELECT * FROM ${feeTable}`).all();
+    
+    // === FILTER: ONLY CURRENT MONTH ===
+    const currentRows = rows.filter(r => {
+      const m = String(r.invoice_month || r.month || '').toLowerCase();
+      const y = String(r.invoice_year || r.year || '').toLowerCase();
+      const mMatch = m === currentMonthName.toLowerCase() || m === currentMonthShort.toLowerCase() || m === currentMonthNum || m === currentMonthNum.padStart(2,'0');
+      const yMatch = y === currentYear || y === currentYear.slice(-2);
+      return mMatch && yMatch;
+    });
+
+    console.log(`Total offline: ${rows.length} | Current month filtered: ${currentRows.length} for ${currentMonthName} ${currentYear}`);
+
+    // === STEP 1: DELETE ALL OLD FEE NOTIFICATIONS FOR THIS SCHOOL (Burden khatam) ===
+    const { error: delErr, data: delData } = await supabase.from('notifications').delete().eq('school_code', SCHOOL_CODE).eq('type', 'fee').select();
+    if (delErr) console.log("Delete error:", delErr.message);
+    else console.log(`🗑️ DELETED ${delData?.length || 0} old fee notifications for ${SCHOOL_CODE} - DB Cleaned`);
+
+    if (currentRows.length === 0) {
+      console.log(`No fee for current month, online fee table now empty (burden 0)`);
+      return true;
+    }
+
+    // === STEP 2: INSERT ONLY CURRENT MONTH ===
+    const payload = currentRows.map(r => {
+      const total = parseFloat(r.total_fee || 0) + parseFloat(r.arrears || 0);
+      const collection = parseFloat(r.collection || 0);
+      const balance = total - collection;
+      let status = balance <= 0 && collection > 0 ? 'PAID' : collection > 0 ? 'PARTIAL' : 'DUE';
+      const invNo = r.id || r.invoice_no || '-';
+      const sName = r.student_name || 'Student';
+      const regNo = String(r.registration_no || '').trim();
+      const className = r.class_name || r.class || r.current_class || 'N/A';
+      
+      const title = status === 'PAID' ? `[FEE] ${currentMonthName} ${currentYear} - Inv #${invNo} - PAID ✅` : `[FEE] ${currentMonthName} ${currentYear} - Inv #${invNo} - DUE Rs.${balance}`;
+      
+      let breakdown = '';
+      if (r.monthly_fee > 0) breakdown += `Tuition: Rs. ${r.monthly_fee}\n`;
+      if (r.exam_fee > 0) breakdown += `Exam: Rs. ${r.exam_fee}\n`;
+      if (r.misc_fee > 0) breakdown += `Misc: Rs. ${r.misc_fee}\n`;
+
+      const message = `Fee for ${sName} (${regNo})\nMonth: ${currentMonthName} ${currentYear}\nInv: #${invNo}\n${breakdown}Total: Rs.${total}\nPaid: Rs.${collection}\nBalance: Rs.${balance}\nStatus: ${status}`;
+
+      return {
+        school_code: SCHOOL_CODE,
+        class_id: className,
+        registration_no: regNo,
+        student_id: r.student_id || regNo,
+        title, message, type: 'fee',
+        invoice_no: String(invNo),
+        invoice_month: currentMonthName,
+        invoice_year: currentYear,
+        total_fee: total, balance, status
+      };
+    }).filter(n => n.registration_no);
+
+    for (let i = 0; i < payload.length; i += 100) {
+      const batch = payload.slice(i, i + 100);
+      const { error } = await supabase.from('notifications').insert(batch);
+      if (error) {
+        const fallback = batch.map(({invoice_no, invoice_month, invoice_year, total_fee, balance, status, ...rest}) => rest);
+        await supabase.from('notifications').insert(fallback);
+      }
+    }
+
+    console.log(`✅ PUSHED ONLY ${payload.length} records for ${currentMonthName} ${currentYear} | Online burden minimal`);
+    return true;
+
+  } catch (e) {
+    console.log("pushFeeNotificationsOnline error:", e.message);
+    return false;
+  }
+}
 module.exports = {
   supabase, SCHOOL_CODE,
   pushSubjectsOnline, pushExamsOnline, pushExamSettingsOnline,
@@ -466,6 +564,6 @@ module.exports = {
   pullExamPapersOnline, pullPaperQuestionsOnline,
   pushClassesOnline,
   pullAttendanceOnline, pullStudentsOnline, wipeAllOnlineData,
-  wipeOnlineQBAndPapers, fullSyncQuestionBank,
+  wipeOnlineQBAndPapers, fullSyncQuestionBank,pushFeeNotificationsOnline,
   IMAGES_DIR, downloadImageIfNeeded, ensureImagesDir
 };

@@ -12,7 +12,7 @@ global.userDataPath = userDataPath;
 const dbLogic = require('./database.js');
 const imagesDir = path.join(userDataPath, 'images');
 const configPath = path.join(userDataPath, 'config.json'); // Path for hidden time-tracking file
-const { supabase, SCHOOL_CODE, pushSubjectsOnline, pushExamsOnline, pushExamSettingsOnline, pushExamStudentsOnline, pushOfflineUsersToCloud, pushDynamicResultsOnline, pushStaffOnline, pullTeacherMarksOnline, pushQuestionBankOnline, pushExamPapersOnline, pushPaperQuestionsOnline, pushClassesOnline, pullAttendanceOnline, pullStudentsOnline, pullQuestionBankOnline, pullExamPapersOnline, pullPaperQuestionsOnline, fullSyncQuestionBank   } = require('./supabase.js');
+const { supabase, SCHOOL_CODE, pushSubjectsOnline, pushExamsOnline, pushExamSettingsOnline, pushExamStudentsOnline, pushOfflineUsersToCloud, pushDynamicResultsOnline, pushStaffOnline, pullTeacherMarksOnline, pushQuestionBankOnline, pushExamPapersOnline, pushPaperQuestionsOnline, pushClassesOnline, pullAttendanceOnline, pullStudentsOnline, pullQuestionBankOnline, pullExamPapersOnline, pullPaperQuestionsOnline, fullSyncQuestionBank, pushFeeNotificationsOnline    } = require('./supabase.js');
 const http = require('http');
 // 2. INITIALIZE DIRECTORIES
 if (!fs.existsSync(imagesDir)) {
@@ -480,19 +480,31 @@ ipcMain.handle('login-attempt', async (event, credentials) => {
     try {
         const user = checkUser(credentials.username, credentials.password);
         if (!user) return { success: false, message: "Invalid credentials" };
-// ONLY STAFF AUTO PUSH - NO OTHER DATA
-setTimeout(async () => {
-  try{
-    console.log(`🔄 Auto pushing ONLY STAFF for ${SCHOOL_CODE}...`);
-    await pushStaffOnline(db);
-    console.log(`✅ Staff auto-push done for ${SCHOOL_CODE}`);
-  }catch(e){ console.log("Staff auto push failed", e.message); }
-}, 500);
+
+        // AUTO SYNC - STAFF + FEE NOTIFICATIONS (Background)
+        setTimeout(async () => {
+          try{
+            console.log(`🔄 [${SCHOOL_CODE}] Auto-Sync Started after login by ${user.username}...`);
+            
+            // 1. Staff push (tumhara old wala)
+            console.log(`-> Pushing Staff...`);
+            await pushStaffOnline(db);
+            console.log(`✅ Staff push done`);
+
+            // 2. NEW: Fee Notifications push to Supabase
+            console.log(`-> Pushing Fee Notifications for all students...`);
+            await pushFeeNotificationsOnline(db);
+            console.log(`✅ Fee Notifications push done for ${SCHOOL_CODE}`);
+
+          }catch(e){ 
+            console.log("❌ Auto push failed", e.message); 
+          }
+        }, 800);
 
         return { success: true, user };
     } catch (err) { 
         console.error(err);
-        return { success: false, message: "Database Error" }; 
+        return { success: false, message: "Database Error: " + err.message }; 
     }
 });
 // MANUAL PUSH BUTTON
