@@ -5,46 +5,49 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fee Management - Records</title>
 <style>
-:root { --primary: #2c3e50; --bg: #f4f7f6; --white: #ffffff; --danger: #e74c3c; --success: #27ae60; --purple: #8e44ad; }
+:root { 
+  --p:#2c3e50; --sidebar-bg:#2c3e50; --bg:#f4f7f6; --p-border:#2c3e5030;
+  --primary: #2c3e50; --bg: #f4f7f6; --white: #ffffff; --danger: #e74c3c; --success: #27ae60; --purple: #8e44ad; 
+}
 body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); padding: 20px; color: #333; margin: 0; }
-.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-h2 { color: var(--primary); margin: 0; font-weight: 600; }
-.table-container { background: var(--white); border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); overflow-x: auto; }
+.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background:var(--white); padding:14px 18px; border-radius:10px; border:2px solid var(--p-border); }
+h2 { color: var(--p); margin: 0; font-weight: 800; display:flex; align-items:center; gap:8px; }
+h2:before{content:''; width:4px; height:18px; background:var(--p); border-radius:4px; display:inline-block;}
+.table-container { background: var(--white); border-radius: 10px; border:2px solid var(--p-border); box-shadow: 0 4px 15px rgba(0,0,0,0.05); overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; min-width: 1150px; text-align: left; }
-th { background: var(--primary); color: white; padding: 14px 10px; font-size: 0.75rem; text-transform: uppercase; position: sticky; top: 0; }
+th { background: var(--sidebar-bg); color: white; padding: 14px 10px; font-size: 0.75rem; text-transform: uppercase; position: sticky; top: 0; }
 td { padding: 12px 10px; border-bottom: 1px solid #eee; font-size: 0.85rem; vertical-align: middle; }
-tr:hover { background: #fcfcfc; }
+tr:hover { background: var(--bg); }
 .txt-bold { font-weight: bold; }.txt-success { color: var(--success); font-weight: bold; }.txt-danger { color: var(--danger); font-weight: bold; }
-.btn-group { display: flex; gap: 8px; }.btn { border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; transition: 0.2s; font-size: 0.8rem; display: flex; align-items: center; gap: 4px; }
-.btn-edit { background: #3498db; color: white; }.btn-delete { background: var(--danger); color: white; }.btn-pay { background: var(--success); color: white; font-weight: bold; }.btn-invoice { background: linear-gradient(135deg, #e67e22, #d35400); color: white; border: none; }
-.refresh-btn { background: var(--white); border: 1px solid #ddd; padding: 8px 15px; border-radius: 5px; cursor: pointer; }
-.filter-container { background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); display: flex; gap: 15px; align-items: center; margin-bottom: 20px; }
-.filter-group { display: flex; flex-direction: column; gap: 5px; }.filter-group label { font-size: 12px; color: #666; font-weight: bold; }
-.nice-select { padding: 8px 12px; border: 1px solid #ddd; border-radius: 5px; min-width: 140px; outline: none; }
-.btn-action { border: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; color: white; }
-.btn-filter { background: linear-gradient(135deg, #3498db, #2980b9); color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
-.btn-print-all { background: linear-gradient(135deg, #27ae60, #2ecc71); }.btn-other-fee { background: linear-gradient(135deg, var(--purple), #732d91); }
-.column-toggle-container { background: #fff; padding: 12px 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 15px; display: none; }
+.btn-group { display: flex; gap: 8px; }.btn { border: none; padding: 6px 10px; border-radius: 20px; cursor: pointer; transition: 0.2s; font-size: 0.8rem; display: flex; align-items: center; gap: 4px; font-weight:700; }
+.btn-edit { background: var(--bg); color: var(--p); border:2px solid var(--p-border); }.btn-delete { background: #fff1f2; color:var(--danger); border:2px solid #ffe4e6; }.btn-pay { background: var(--p); color: white; font-weight: bold; }.btn-invoice { background: var(--white); color:var(--p); border:2px solid var(--p-border); }
+.refresh-btn { background: var(--white); border: 2px solid var(--p-border); color:var(--p); padding: 8px 15px; border-radius: 20px; cursor: pointer; font-weight:700; }
+.filter-container { background: #fff; padding: 15px; border-radius: 10px; border:2px solid var(--p-border); display: flex; gap: 15px; align-items: center; margin-bottom: 20px; flex-wrap:wrap; }
+.filter-group { display: flex; flex-direction: column; gap: 5px; }.filter-group label { font-size: 11px; color: var(--p); font-weight: 800; text-transform:uppercase; }
+.nice-select { padding: 8px 12px; border: 2px solid var(--p-border); border-radius: 20px; min-width: 140px; outline: none; font-weight:600; }
+.btn-action { border: none; padding: 10px 20px; border-radius: 20px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; color: white; }
+.btn-filter { background: var(--p); color: white; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-weight:800; }
+.btn-print-all { background: var(--p); }.btn-other-fee { background: var(--sidebar-bg); }
+.column-toggle-container { background: #fff; padding: 12px 15px; border-radius: 10px; border:2px solid var(--p-border); margin-bottom: 15px; display: none; }
 .column-toggle-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-top: 10px; }
-.column-checkbox-label { font-size: 13px; display: flex; align-items: center; gap: 6px; cursor: pointer; user-select: none; }
-.btn-toggle-panel { background: #e0e6ed; color: #2c3e50; font-weight: 600; border: 1px solid #cbd5e1; padding: 8px 12px; border-radius: 8px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 10px; font-size: 13px; }
-.btn-toggle-panel:hover { background: #cbd5e1; }
-.modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
+.column-checkbox-label { font-size: 13px; display: flex; align-items: center; gap: 6px; cursor: pointer; user-select: none; background:var(--bg); padding:6px 8px; border-radius:8px; border:1px solid var(--p-border); }
+.btn-toggle-panel { background: var(--white); color: var(--p); font-weight: 700; border: 2px solid var(--p-border); padding: 8px 14px; border-radius: 20px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 10px; font-size: 13px; }
+.modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15,23,42,.55); backdrop-filter:blur(8px); z-index: 1000; align-items: center; justify-content: center; }
 .modal-overlay.show { display: flex; }
-.modal-content { background: white; padding: 25px; border-radius: 12px; width: 400px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); max-height: 90vh; overflow-y: auto; }
+.modal-content { background: white; padding: 25px; border-radius: 16px; width: 400px; border:2px solid var(--p-border); box-shadow: 0 20px 40px rgba(0,0,0,0.2); max-height: 90vh; overflow-y: auto; }
 .pagination-bar { display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 20px; padding-bottom: 30px; }
-.page-btn { padding: 8px 12px; border: 1px solid #ddd; background: white; border-radius: 4px; cursor: pointer; }
-.page-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+.page-btn { padding: 8px 12px; border: 2px solid var(--p-border); background: white; border-radius: 20px; cursor: pointer; font-weight:700; color:var(--p); }
+.page-btn.active { background: var(--p); color: white; border-color: var(--p); }
 .custom-foot { padding:10px 0 0 0; display:flex; justify-content:flex-end; gap:10px; }
-.custom-foot button { padding:6px 14px; border-radius:6px; border:1px solid #ddd; cursor:pointer; font-weight:600; }
+.custom-foot button { padding:8px 16px; border-radius:20px; border:2px solid #ddd; cursor:pointer; font-weight:700; }
 .btn-del { background:var(--danger)!important; color:white!important; border-color:var(--danger)!important; }
-.btn-ok { background:var(--primary)!important; color:white!important; border-color:var(--primary)!important; }
+.btn-ok { background:var(--p)!important; color:white!important; border-color:var(--p)!important; }
 </style>
 <style id="columnVisibilityStyles"></style>
 </head>
 <body>
 <div class="header">
-<div><h2 style="margin: 0;">Fee Records</h2><p id="displayInstituteName" style="margin: 5px 0 0 0; color: var(--primary); font-weight: bold; opacity: 0.8; font-size: 14px;">Loading...</p></div>
+<div><h2>Fee Records</h2><p id="displayInstituteName" style="margin: 5px 0 0 0; color: var(--p); font-weight: bold; opacity: 0.9; font-size: 14px;">Loading...</p></div>
 <div class="btn-group"><button class="refresh-btn" onclick="loadFeeData()">Refresh List</button><button class="refresh-btn" onclick="window.location.href='../dashboard.html'">Dashboard</button></div>
 </div>
 <div class="filter-container">
@@ -52,17 +55,16 @@ tr:hover { background: #fcfcfc; }
 <div class="filter-group"><label>Year</label><select id="filterYear" class="nice-select"><option value="">Select Year</option></select></div>
 <div class="filter-group"><label>Class</label><select id="filterClass" class="nice-select"><option value="">Select Class</option></select></div>
 <button class="btn-filter" onclick="loadFeeData()">Apply Filters</button>
-<div id="filterInfoDisplay" style="margin-left: 20px; font-weight: bold; color: #2c3e50; flex-grow: 1;"></div>
+<div id="filterInfoDisplay" style="margin-left: 20px; font-weight: 800; color: var(--p); flex-grow: 1;"></div>
 <div class="btn-group"><button class="btn-action btn-print-all" onclick="viewBulkInvoices()"><span>🖨️ Print All</span></button><button class="btn-action btn-other-fee" onclick="openOtherFeeModal()"><span>💰 Other Fee (Bulk)</span></button></div>
 </div>
-<div class="search-container" style="margin-bottom: 10px;"><input type="text" id="feeSearch" onkeyup="filterFeeTable()" placeholder="🔍 Search records..." style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ddd; box-sizing: border-box;"></div>
+<div class="search-container" style="margin-bottom: 10px;"><input type="text" id="feeSearch" onkeyup="filterFeeTable()" placeholder="🔍 Search records..." style="width: 100%; padding: 11px 14px; border-radius: 20px; border: 2px solid var(--p-border); box-sizing: border-box; font-weight:600;"></div>
 <button class="btn-toggle-panel" onclick="toggleColumnPanel()">⚙️ Hide / Show Columns</button>
-<div id="columnToggleContainer" class="column-toggle-container"><div style="font-size: 12px; color: #666; font-weight: bold; border-bottom: 1px solid #eee; padding-bottom: 5px;">Uncheck fields to hide them from the table viewport view layout:</div><div class="column-toggle-grid" id="columnToggleGrid"></div></div>
+<div id="columnToggleContainer" class="column-toggle-container"><div style="font-size: 12px; color: var(--p); font-weight: 800; border-bottom: 2px solid var(--p-border); padding-bottom: 5px;">Uncheck fields to hide them:</div><div class="column-toggle-grid" id="columnToggleGrid"></div></div>
 <div class="table-container"><table><thead><tr><th>Inv #</th><th>Reg No / Student Name</th><th>Tuition</th><th>Adm</th><th>Exam</th><th>Lab</th><th>Reg. Fee</th><th>Annual Fund</th><th>Stationary Fund</th><th>Bus Charges</th><th>Sec.</th><th>Misc</th><th>Total</th><th>Collected</th><th>Bal</th><th>Arrears</th><th>Actions</th></tr></thead><tbody id="feeTableBody"><tr><td colspan="17" style="text-align:center; padding: 40px; color: #7f8c8d;">Please apply filters to view records.</td></tr></tbody></table></div>
 <div id="paginationControls" class="pagination-bar"></div>
 
-<!-- NEW: SINGLE STUDENT FULL EDIT MODAL -->
-<div id="individualFeeModal" class="modal-overlay"><div class="modal-content"><h3 style="margin-top:0;">Edit Individual Fees - <span id="indStudentName"></span></h3><p style="font-size:12px; color:#666; margin-bottom:15px;">Update fees for this student only. Leave 0 if not applicable.</p>
+<div id="individualFeeModal" class="modal-overlay"><div class="modal-content"><h3 style="margin-top:0; color:var(--p);">Edit Individual Fees - <span id="indStudentName"></span></h3><p style="font-size:12px; color:#666; margin-bottom:15px;">Update fees for this student only.</p>
 <input type="hidden" id="indFeeId">
 <div class="filter-group"><label>Tuition Fee</label><input type="number" id="indMonthlyFee" class="nice-select" style="width:93%"></div>
 <div class="filter-group"><label>Admission Fee</label><input type="number" id="indAdmFee" class="nice-select" style="width:93%"></div>
@@ -77,36 +79,54 @@ tr:hover { background: #fcfcfc; }
 <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:25px;"><button class="btn" style="background:#eee; color:#333;" onclick="closeIndividualFeeModal()">Cancel</button><button class="btn btn-pay" onclick="saveIndividualFee()">Save Changes</button></div>
 </div></div>
 
-<div id="otherFeeModal" class="modal-overlay"><div class="modal-content"><h3 style="margin-top:0;">Update Other Fees (Bulk)</h3><p style="font-size:12px; color:#666; margin-bottom:15px;">Apply to current Class/Month/Year filters.</p><div class="filter-group"><label>Exam Fee</label><input type="number" id="newExamFee" class="nice-select" style="width:93%"></div><div class="filter-group"><label>Lab Fee</label><input type="number" id="newLabFee" class="nice-select" style="width:93%"></div><div class="filter-group"><label>Registration Fee</label><input type="number" id="newRegFee" class="nice-select" style="width:93%"></div><div class="filter-group"><label>Annual Fund</label><input type="number" id="newAnnualFund" class="nice-select" style="width:93%"></div><div class="filter-group"><label>Stationary Fund</label><input type="number" id="newStationaryFund" class="nice-select" style="width:93%"></div><div class="filter-group"><label>Bus Charges</label><input type="number" id="newBusCharges" class="nice-select" style="width:93%"></div><div class="filter-group"><label>Misc Fee</label><input type="number" id="newMiscFee" class="nice-select" style="width:93%"></div><div class="filter-group"><label>Misc Fee Remarks</label><input type="text" id="miscRemarks" class="nice-select" style="width:93%"></div><div style="display:flex; gap:10px; justify-content:flex-end; margin-top:25px;"><button class="btn" style="background:#eee; color:#333;" onclick="closeOtherFeeModal()">Cancel</button><button class="btn btn-pay" onclick="applyBulkFeeUpdate()">Update All</button></div></div></div>
+<div id="otherFeeModal" class="modal-overlay"><div class="modal-content"><h3 style="margin-top:0; color:var(--p);">Update Other Fees (Bulk)</h3><p style="font-size:12px; color:#666; margin-bottom:15px;">Apply to current Class/Month/Year filters.</p><div class="filter-group"><label>Exam Fee</label><input type="number" id="newExamFee" class="nice-select" style="width:93%"></div><div class="filter-group"><label>Lab Fee</label><input type="number" id="newLabFee" class="nice-select" style="width:93%"></div><div class="filter-group"><label>Registration Fee</label><input type="number" id="newRegFee" class="nice-select" style="width:93%"></div><div class="filter-group"><label>Annual Fund</label><input type="number" id="newAnnualFund" class="nice-select" style="width:93%"></div><div class="filter-group"><label>Stationary Fund</label><input type="number" id="newStationaryFund" class="nice-select" style="width:93%"></div><div class="filter-group"><label>Bus Charges</label><input type="number" id="newBusCharges" class="nice-select" style="width:93%"></div><div class="filter-group"><label>Misc Fee</label><input type="number" id="newMiscFee" class="nice-select" style="width:93%"></div><div class="filter-group"><label>Misc Fee Remarks</label><input type="text" id="miscRemarks" class="nice-select" style="width:93%"></div><div style="display:flex; gap:10px; justify-content:flex-end; margin-top:25px;"><button class="btn" style="background:#eee; color:#333;" onclick="closeOtherFeeModal()">Cancel</button><button class="btn btn-pay" onclick="applyBulkFeeUpdate()">Update All</button></div></div></div>
 
 <div id="printChoiceModal" class="modal-overlay">
   <div class="modal-content" style="width: 360px; text-align: center;">
-    <h3 style="margin-top: 0; font-size: 16px; color: var(--primary);">Select Print Layout</h3>
+    <h3 style="margin-top: 0; font-size: 16px; color: var(--p);">Select Print Layout</h3>
     <p style="font-size: 13px; color: #666; margin-bottom: 20px;">Choose layout for invoice printing:</p>
     <div style="display: flex; flex-direction: column; gap: 12px;">
-      <button class="btn" style="background: linear-gradient(135deg, #3498db, #2980b9); color: white; padding: 12px; justify-content: center; font-weight: bold;" onclick="handlePrintSelection('invoice2.html')">
-        ✌️ Invoices 2 in 1<br><span style="font-size:11px; font-weight:400; opacity:0.9;">1 Student = Office + Student (Side by Side)</span>
-      </button>
-      <button class="btn" style="background: linear-gradient(135deg, #8e44ad, #732d91); color: white; padding: 12px; justify-content: center; font-weight: bold;" onclick="handlePrintSelection('invoice2by2.html')">
-        📄 Invoices 2x2 - 4 in 1<br><span style="font-size:11px; font-weight:400; opacity:0.9;">2 Students = 4 Copies per Page</span>
-      </button>
-      <button class="btn" style="background: linear-gradient(135deg, #27ae60, #2ecc71); color: white; padding: 12px; justify-content: center; font-weight: bold;" onclick="handlePrintSelection('invoice.html')">
-        🤟 Normal 3 in 1<br><span style="font-size:11px; font-weight:400; opacity:0.9;">3 Copies Vertical - 1 Student</span>
-      </button>
+      <button class="btn" style="background: var(--p); color: white; padding: 12px; justify-content: center; font-weight: bold;" onclick="handlePrintSelection('invoice2.html')">✌️ Invoices 2 in 1<br><span style="font-size:11px; font-weight:400; opacity:0.9;">1 Student = Office + Student</span></button>
+      <button class="btn" style="background: var(--sidebar-bg); color: white; padding: 12px; justify-content: center; font-weight: bold;" onclick="handlePrintSelection('invoice2by2.html')">📄 Invoices 2x2 - 4 in 1<br><span style="font-size:11px; font-weight:400; opacity:0.9;">2 Students = 4 Copies per Page</span></button>
+      <button class="btn" style="background: var(--p); color: white; padding: 12px; justify-content: center; font-weight: bold;" onclick="handlePrintSelection('invoice.html')">🤟 Normal 3 in 1<br><span style="font-size:11px; font-weight:400; opacity:0.9;">3 Copies Vertical - 1 Student</span></button>
     </div>
     <div style="display: flex; justify-content: flex-end; margin-top: 20px;"><button class="btn" style="background: #eee; color: #333;" onclick="closePrintChoiceModal()">Cancel</button></div>
   </div>
 </div>
 
-<div id="deleteConfirmModal" class="modal-overlay"><div class="modal-content" style="width:340px;"><h3 style="margin-top:0;color:var(--primary)">Delete Record</h3><p style="font-size:14px;line-height:1.5">Are you sure you want to delete this fee record?</p><div class="custom-foot"><button class="btn-del btn" onclick="confirmDeleteFee()">Delete</button><button class="btn" style="background:#eee;color:#333" onclick="closeDeleteConfirm()">Cancel</button></div></div></div>
-<div id="customAlertModal" class="modal-overlay"><div class="modal-content" style="width:340px;"><h3 style="margin-top:0;color:var(--primary)">Fee Records</h3><p id="customAlertMsg" style="font-size:14px;line-height:1.5">Message</p><div class="custom-foot"><button class="btn-ok btn" onclick="closeCustomAlert()">OK</button></div></div></div>
+<div id="deleteConfirmModal" class="modal-overlay"><div class="modal-content" style="width:340px;"><h3 style="margin-top:0;color:var(--p)">Delete Record</h3><p style="font-size:14px;line-height:1.5">Are you sure you want to delete this fee record?</p><div class="custom-foot"><button class="btn-del btn" onclick="confirmDeleteFee()">Delete</button><button class="btn" style="background:#eee;color:#333" onclick="closeDeleteConfirm()">Cancel</button></div></div></div>
+<div id="customAlertModal" class="modal-overlay"><div class="modal-content" style="width:340px;"><h3 style="margin-top:0;color:var(--p)">Fee Records</h3><p id="customAlertMsg" style="font-size:14px;line-height:1.5">Message</p><div class="custom-foot"><button class="btn-ok btn" onclick="closeCustomAlert()">OK</button></div></div></div>
 
 <script>
+// ===== THEME MANAGER + INITIAL HIDDEN COLUMNS + 10 PER PAGE =====
+const defaultTheme={primary:"#2c3e50",sidebarBg:"#2c3e50",bg:"#f4f7f6"};
+function applyTheme(t){
+  const theme={...defaultTheme,...(t||{})};
+  const r=document.documentElement;
+  r.style.setProperty('--p',theme.primary);
+  r.style.setProperty('--sidebar-bg',theme.sidebarBg);
+  r.style.setProperty('--bg',theme.bg);
+  r.style.setProperty('--p-border',theme.primary+'30');
+  r.style.setProperty('--primary',theme.primary);
+  document.body.style.background=theme.bg;
+}
+async function loadAndApplyTheme(){
+  try{
+    let saved=null;
+    if(window.api&&window.api.getThemeDetails){try{saved=await window.api.getThemeDetails();}catch(e){}}
+    if(!saved) saved=JSON.parse(localStorage.getItem('eduPulseTheme')||'null');
+    applyTheme(saved||defaultTheme);
+  }catch(e){applyTheme(defaultTheme);}
+}
+loadAndApplyTheme();
+
 let appDetails = { instituteName: "IMS Administration" };
 async function loadApplicationDetails() {
 try { const details = await window.api.getAppDetails(); if (details) { appDetails = details; document.getElementById('displayInstituteName').innerText = details.instituteName; } } catch (error) { console.error(error); }
 }
-let printTargetIds = ''; let currentTableData = []; let currentPage = 1; const recordsPerPage = 30; let pendingDeleteId = null;
+let printTargetIds = ''; let currentTableData = []; let currentPage = 1; 
+const recordsPerPage = 10; // FIXED: 10 per page
+let pendingDeleteId = null;
 
 function showAlert(msg){ document.getElementById('customAlertMsg').innerText = msg; document.getElementById('customAlertModal').classList.add('show'); document.getElementById('customAlertModal').style.display='flex'; }
 function closeCustomAlert(){ document.getElementById('customAlertModal').classList.remove('show'); document.getElementById('customAlertModal').style.display='none'; window.focus(); }
@@ -117,11 +137,9 @@ async function confirmDeleteFee(){
   const id = pendingDeleteId;
   closeDeleteConfirm();
   await window.api.deleteFee(id);
-  await loadFeeData(true); // keep selection
+  await loadFeeData(true);
   window.focus();
 }
-
-// === NEW: STATE SAVE / RESTORE ===
 function saveFilterState(){
   const state = {
     month: document.getElementById('filterMonth').value,
@@ -143,13 +161,11 @@ function restoreFilterValues(state){
   if(state.className) document.getElementById('filterClass').value = state.className;
   return!!(state.month && state.year && state.className);
 }
-
 document.addEventListener('DOMContentLoaded', async () => {
   window.focus();
   await loadApplicationDetails();
   await populateFilters();
   generateColumnToggles();
-  // AUTO RESTORE if user coming back from collection
   const saved = getSavedState();
   if(saved && restoreFilterValues(saved)){
     await loadFeeData(true);
@@ -160,24 +176,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     if(saved.page) currentPage = saved.page;
     setTimeout(()=>{ renderPage(currentPage); if(saved.scrollY) window.scrollTo(0, saved.scrollY); }, 200);
   }
-  // LISTEN FOR RETURN FROM COLLECTION PAGE
   window.addEventListener('focus', handleReturnFromCollection);
   window.addEventListener('storage', (e)=>{ if(e.key==='feeUpdatedId') handleReturnFromCollection(); });
 });
-
 async function handleReturnFromCollection(){
   const updatedId = localStorage.getItem('feeUpdatedId');
   const closed = localStorage.getItem('feeCollectionClosed');
   if(!updatedId &&!closed) return;
-
-  // clear flags
   localStorage.removeItem('feeUpdatedId');
   localStorage.removeItem('feeCollectionClosed');
-
   const saved = getSavedState();
   if(!saved) return;
-
-  // Option 1: if you have getFeeRecordById API -> update only one row (fast, no flicker)
   if(updatedId && window.api.getFeeRecordById){
     try{
       const freshRow = await window.api.getFeeRecordById(parseInt(updatedId));
@@ -188,24 +197,29 @@ async function handleReturnFromCollection(){
         document.getElementById('filterInfoDisplay').innerHTML = `Found ${currentTableData.length} Records • Updated #${updatedId}`;
         return;
       }
-    }catch(e){ console.log("single refresh failed, fallback to full", e); }
+    }catch(e){ console.log("single refresh failed", e); }
   }
-  // Fallback: full reload but KEEP selection & page
   await loadFeeData(true);
 }
 
+// FIXED: Initially hide Sec, Adm, Lab
 function generateColumnToggles() {
     const headers = document.querySelectorAll("table thead th");
     const grid = document.getElementById("columnToggleGrid");
     grid.innerHTML = "";
+    const hiddenByDefault = ["ADM","LAB","SEC."]; // Jo initially hide rakhne hain
     headers.forEach((th, index) => {
         const columnName = th.innerText.trim();
         if (columnName === "Inv #" || columnName === "Reg No / Student Name" || columnName === "Actions") return;
+        const isHidden = hiddenByDefault.some(h => columnName.toUpperCase().includes(h));
+        const checkedAttr = isHidden ? "" : "checked";
         const label = document.createElement("label");
         label.className = "column-checkbox-label";
-        label.innerHTML = `<input type="checkbox" checked data-index="${index + 1}" onchange="updateColumnVisibility()"> ${columnName}`;
+        label.innerHTML = `<input type="checkbox" ${checkedAttr} data-index="${index + 1}" onchange="updateColumnVisibility()"> ${columnName}`;
         grid.appendChild(label);
     });
+    // Apply initial hidden state
+    setTimeout(updateColumnVisibility, 100);
 }
 function toggleColumnPanel() {
     const panel = document.getElementById("columnToggleContainer");
@@ -238,7 +252,7 @@ async function loadFeeData(keepPage = false) {
     document.getElementById('filterInfoDisplay').innerHTML = "Loading...";
     currentTableData = await window.api.getFeeRecordsFilters({ month, year, className });
     document.getElementById('filterInfoDisplay').innerHTML = `Found ${currentTableData.length} Records`;
-    saveFilterState(); // save after load
+    saveFilterState();
     if(keepPage && currentPage > 1){
       const totalPages = Math.ceil(currentTableData.length / recordsPerPage);
       if(currentPage > totalPages) currentPage = totalPages || 1;
@@ -284,16 +298,18 @@ function renderPage(page) {
     </tr>`;
 });
     renderPaginationControls();
+    updateColumnVisibility();
 }
 function renderPaginationControls() {
     const totalPages = Math.ceil(currentTableData.length / recordsPerPage);
     const container = document.getElementById('paginationControls');
     container.innerHTML = '';
     if (totalPages <= 1) return;
-    for (let i = 1; i <= totalPages; i++) { container.innerHTML += `<button class="page-btn ${i === currentPage? 'active' : ''}" onclick="renderPage(${i})">${i}</button>`; }
+    for (let i = 1; i <= totalPages; i++) { 
+      const activeClass = i === currentPage ? 'active' : '';
+      container.innerHTML += `<button class="page-btn ${activeClass}" onclick="renderPage(${i})">${i}</button>`; 
+    }
 }
-
-//... (your other modal functions same as before - keep them)...
 function openIndividualFeeEditor(feeId){
     const row = currentTableData.find(r => r.id === feeId);
     if(!row){ showAlert("Record not found"); return; }
@@ -373,14 +389,12 @@ function filterFeeTable() {
 }
 function viewInvoice(id) { printTargetIds = String(id); document.getElementById('printChoiceModal').style.display = 'flex'; document.getElementById('printChoiceModal').classList.add('show'); }
 function viewBulkInvoices() { if (currentTableData.length === 0) { showAlert("No records to print"); return; } printTargetIds = currentTableData.map(r => r.id).join(','); document.getElementById('printChoiceModal').style.display = 'flex'; document.getElementById('printChoiceModal').classList.add('show'); }
-
 function collectFee(id) {
-  saveFilterState(); // IMPORTANT: save before leave
+  saveFilterState();
   localStorage.setItem('collectFeeId', id);
   localStorage.setItem('feeMode', 'collect');
   window.api.changePage('components/fee/feecollection.html');
 }
-
 function sendWhatsAppReminder(name, total_fee, arrears, phone, invoice_month, monthly_fee, adm_fee = 0, exam_fee = 0, misc_fee = 0, lab_fee = 0, reg_fee = 0, annual_fund = 0, stationary_fund = 0, bus_charges = 0, collection = 0) {
     if (!phone || phone === 'null' || phone == "") { showAlert("Phone number not found for this student!"); return; }
     const totalWithArrears = parseFloat(total_fee || 0);

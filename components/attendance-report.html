@@ -6,6 +6,7 @@
     <title>Attendance Monthly Report</title>
     <style>
         :root {
+            --p:#003049; --sidebar-bg:#003049; --bg:#f4f6f9; --p-border:#00304930;
             --bg-color: #f4f6f9;
             --container-bg: #ffffff;
             --primary: #003049;
@@ -17,12 +18,11 @@
             --text-muted: #6c757d;
             --border-color: #dee2e6;
             --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
-            --shadow-md: 0 crowd 10px 25px rgba(0,0,0,0.08);
+            --shadow-md: 0 10px 25px rgba(0,0,0,0.08);
         }
-
         body {
             font-family: 'Segoe UI', system-ui, sans-serif;
-            background-color: var(--bg-color);
+            background-color: var(--bg);
             margin: 0;
             padding: 30px 20px;
             color: var(--text-main);
@@ -30,173 +30,159 @@
             flex-direction: column;
             align-items: center;
         }
-
-        /* Top Button Navigation */
         .top-nav {
             width: 100%;
             max-width: 1140px;
             display: flex;
             gap: 12px;
             margin-bottom: 20px;
+            flex-wrap:wrap;
         }
-
         .nav-btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
             padding: 10px 20px;
-            font-size: 14px;
-            font-weight: 600;
+            font-size: 13px;
+            font-weight: 800;
             text-decoration: none;
-            color: var(--primary);
+            color: var(--p);
             background: var(--container-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
+            border: 2px solid var(--p-border);
+            border-radius: 20px;
             box-shadow: var(--shadow-sm);
             transition: all 0.2s ease-in-out;
         }
-
         .nav-btn:hover {
             color: white;
-            background-color: var(--primary);
-            border-color: var(--primary);
+            background-color: var(--p);
+            border-color: var(--p);
             transform: translateY(-1px);
         }
-
-        /* Card Container */
         .container {
             width: 100%;
             max-width: 1100px;
             background: var(--container-bg);
             padding: 30px;
-            border-radius: 12px;
+            border-radius: 16px;
+            border:2px solid var(--p-border);
             box-shadow: var(--shadow-md);
             box-sizing: border-box;
         }
-
         h2 {
             margin-top: 0;
             margin-bottom: 25px;
             font-size: 24px;
-            color: var(--primary);
+            color: var(--p);
+            font-weight:900;
             display: flex;
             align-items: center;
             gap: 10px;
         }
-
+        h2:before{content:''; width:6px; height:22px; background:var(--p); border-radius:4px; display:inline-block;}
         .tabs {
             display: flex;
-            background: #e9ecef;
+            background: var(--bg);
             padding: 4px;
-            border-radius: 8px;
+            border-radius: 20px;
             gap: 4px;
             margin-bottom: 25px;
             width: fit-content;
+            border:2px solid var(--p-border);
         }
-
         .tab-btn {
             padding: 10px 24px;
             border: none;
             background: transparent;
             color: var(--text-muted);
             cursor: pointer;
-            border-radius: 6px;
-            font-weight: 600;
-            font-size: 14px;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 13px;
             transition: all 0.2s ease;
         }
-
         .tab-btn.active {
-            background: var(--container-bg);
-            color: var(--primary);
+            background: var(--p);
+            color: white;
             box-shadow: var(--shadow-sm);
         }
-
-        /* Controls Layout Alignment */
         .controls {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 20px;
             align-items: end;
-            background: #f8f9fa;
+            background: var(--bg);
             padding: 20px;
-            border-radius: 10px;
+            border-radius: 12px;
             margin-bottom: 25px;
-            border: 1px solid var(--border-color);
+            border: 2px solid var(--p-border);
         }
-
-        .control-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
+        .control-group { display: flex; flex-direction: column; gap: 8px; }
         .control-group label {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-muted);
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--p);
             text-transform: uppercase;
         }
-
         select, input[type="month"] {
             padding: 10px 14px;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
+            border: 2px solid var(--p-border);
+            border-radius: 20px;
             font-size: 14px;
+            font-weight:600;
             outline: none;
             width: 100%;
             box-sizing: border-box;
         }
-
+        select:focus, input[type="month"]:focus{ border-color:var(--p); box-shadow:0 0 0 4px var(--p-border); }
         .btn {
             padding: 11px 20px;
-            background-color: var(--primary);
+            background-color: var(--p);
             color: white;
             border: none;
-            border-radius: 6px;
+            border-radius: 20px;
             cursor: pointer;
-            font-weight: 600;
-            font-size: 14px;
+            font-weight: 800;
+            font-size: 13px;
             height: 40px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
         }
-
-        .btn:hover { background-color: var(--primary-hover); }
-        .btn-pdf { background-color: var(--accent-red); }
-        .btn-pdf:hover { background-color: var(--accent-red-hover); }
-
-        /* Modern Table Summary Layout */
+        .btn:hover { filter:brightness(0.9); }
+        .btn-pdf { background-color: var(--sidebar-bg); }
+        .btn-pdf:hover { filter:brightness(1.1); }
         table {
             width: 100%;
             border-collapse: separate;
             border-spacing: 0;
             margin-top: 15px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
+            border: 2px solid var(--p-border);
+            border-radius: 12px;
             overflow: hidden;
         }
-
         th, td { padding: 14px 18px; text-align: left; }
         th {
-            background-color: #f8f9fa;
-            border-bottom: 2px solid var(--border-color);
-            font-weight: 600;
+            background-color: var(--bg);
+            border-bottom: 2px solid var(--p-border);
+            font-weight: 800;
+            color:var(--p);
+            font-size:12px;
+            text-transform:uppercase;
         }
-        td { border-bottom: 1px solid var(--border-color); }
-
-        /* Status Pills Badges */
+        td { border-bottom: 1px solid var(--p-border); font-size:13px; }
+        tr:hover td{ background:var(--bg); }
         .badge {
-            padding: 6px 10px;
+            padding: 6px 12px;
             border-radius: 20px;
-            font-weight: 600;
-            font-size: 12px;
+            font-weight: 800;
+            font-size: 11px;
             display: inline-block;
+            border:1px solid;
         }
-        .badge-present { background-color: #e8f5e9; color: #2e7d32; }
-        .badge-absent { background-color: #ffebee; color: #c62828; }
-        .badge-leave { background-color: #fff8e1; color: #f57f17; }
+        .badge-present { background-color: #e8f5e9; color: #2e7d32; border-color:#c8e6c9; }
+        .badge-absent { background-color: #ffebee; color: #c62828; border-color:#ffcdd2; }
+        .badge-leave { background-color: #fff8e1; color: #f57f17; border-color:#ffecb3; }
     </style>
 </head>
 <body>
@@ -242,6 +228,29 @@
 </div>
 
 <script>
+// ===== THEME MANAGER ONLY - NO OTHER LOGIC DELETED =====
+const defaultTheme={primary:"#003049",sidebarBg:"#003049",bg:"#f4f6f9"};
+function applyTheme(t){
+  const theme={...defaultTheme,...(t||{})};
+  const r=document.documentElement;
+  r.style.setProperty('--p',theme.primary);
+  r.style.setProperty('--sidebar-bg',theme.sidebarBg);
+  r.style.setProperty('--bg',theme.bg);
+  r.style.setProperty('--p-border',theme.primary+'30');
+  r.style.setProperty('--primary',theme.primary);
+  r.style.setProperty('--bg-color',theme.bg);
+  document.body.style.background=theme.bg;
+}
+async function loadAndApplyTheme(){
+  try{
+    let saved=null;
+    if(window.api&&window.api.getThemeDetails){try{saved=await window.api.getThemeDetails();}catch(e){}}
+    if(!saved) saved=JSON.parse(localStorage.getItem('eduPulseTheme')||'null');
+    applyTheme(saved||defaultTheme);
+  }catch(e){applyTheme(defaultTheme);}
+}
+loadAndApplyTheme();
+
     let currentTab = 'student';
 
 const now = new Date();
@@ -268,14 +277,15 @@ window.addEventListener('DOMContentLoaded', async () => {
 function switchTab(tabName, event) {
     currentTab = tabName;
     document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-
     if (event && event.target) {
         event.target.classList.add('active');
+    } else {
+        // fallback: highlight by text
+        document.querySelectorAll('.tab-btn').forEach(b=>{
+            if(b.textContent.toLowerCase().includes(tabName)) b.classList.add('active');
+        });
     }
-
     document.getElementById('class-select-container').style.display = (tabName === 'staff') ? 'none' : 'block';
-
-    // Reset table content
     document.getElementById('table-body').innerHTML = `
         <tr>
             <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 30px;">Please reload sheet listings.</td>
@@ -286,92 +296,40 @@ async function loadMonthlyReport() {
     const yearMonth = document.getElementById('report-month').value;
     const headersTr = document.getElementById('table-headers');
     const bodyTbody = document.getElementById('table-body');
-
-    if (!yearMonth) {
-        alert("Please pick a month first.");
-        return;
-    }
-
-    bodyTbody.innerHTML = `
-        <tr>
-            <td colspan="7" style="text-align: center; padding: 30px;">Processing calculations...</td>
-        </tr>`;
-
+    if (!yearMonth) { alert("Please pick a month first."); return; }
+    bodyTbody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 30px;">Processing calculations...</td></tr>`;
     if (currentTab === 'student') {
         const className = document.getElementById('class-dropdown').value;
-        if (!className) {
-            alert("Please select a class stream.");
-            return;
-        }
-
-        headersTr.innerHTML = `
-            <th>Reg No</th>
-            <th>Roll No</th>
-            <th>Student Name</th>
-            <th>Present Count</th>
-            <th>Absent Count</th>
-            <th>Leave Count</th>
-            <th>Attendance Ratio</th>`;
-
+        if (!className) { alert("Please select a class stream."); return; }
+        headersTr.innerHTML = `<th>Reg No</th><th>Roll No</th><th>Student Name</th><th>Present Count</th><th>Absent Count</th><th>Leave Count</th><th>Attendance Ratio</th>`;
         const data = await window.api.getStudentMonthlyReport({ className, yearMonth });
-
         if (!data || data.length === 0) {
-            bodyTbody.innerHTML = `
-                <tr>
-                    <td colspan="7" style="text-align: center; color: red; padding: 30px;">No summary data found for this period.</td>
-                </tr>`;
+            bodyTbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: red; padding: 30px;">No summary data found for this period.</td></tr>`;
             return;
         }
-
         bodyTbody.innerHTML = '';
         data.forEach(row => {
             const pct = row.total_days > 0 ? Math.round((row.total_present / row.total_days) * 100) : 0;
             const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td>${row.registration_no}</td>
-                <td>${row.roll_no}</td>
-                <td>${row.student_name}</td>
-                <td>${row.total_present} Days</td>
-                <td>${row.total_absent} Days</td>
-                <td>${row.total_leave} Days</td>
-                <td>${pct}%</td>`;
+            tr.innerHTML = `<td>${row.registration_no}</td><td>${row.roll_no}</td><td>${row.student_name}</td><td>${row.total_present} Days</td><td>${row.total_absent} Days</td><td>${row.total_leave} Days</td><td><strong>${pct}%</strong></td>`;
             bodyTbody.appendChild(tr);
         });
     } else if (currentTab === 'staff') {
-        headersTr.innerHTML = `
-            <th>Employee ID</th>
-            <th>Employee Name</th>
-            <th>Designation</th>
-            <th>Present Count</th>
-            <th>Absent Count</th>
-            <th>Leave Count</th>
-            <th>Attendance Ratio</th>`;
-
+        headersTr.innerHTML = `<th>Employee ID</th><th>Employee Name</th><th>Designation</th><th>Present Count</th><th>Absent Count</th><th>Leave Count</th><th>Attendance Ratio</th>`;
         const data = await window.api.getStaffMonthlyReport({ yearMonth });
-
         if (!data || data.length === 0) {
-            bodyTbody.innerHTML = `
-                <tr>
-                    <td colspan="7" style="text-align: center; color: red; padding: 30px;">No employee data records discovered.</td>
-                </tr>`;
+            bodyTbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: red; padding: 30px;">No employee data records discovered.</td></tr>`;
             return;
         }
-
         bodyTbody.innerHTML = '';
         data.forEach(row => {
             const pct = row.total_days > 0 ? Math.round((row.total_present / row.total_days) * 100) : 0;
             const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td>EMP-${row.staff_id}</td>
-                <td><b>${row.name}</b></td>
-                <td><i>${row.designation}</i></td>
-                <td><span class="badge badge-present">${row.total_present} Days</span></td>
-                <td><span class="badge badge-absent">${row.total_absent} Days</span></td>
-                <td><span class="badge badge-leave">${row.total_leave} Days</span></td>
-                <td><strong>${pct}%</strong></td>`;
+            tr.innerHTML = `<td>EMP-${row.staff_id}</td><td><b>${row.name}</b></td><td><i>${row.designation}</i></td><td><span class="badge badge-present">${row.total_present} Days</span></td><td><span class="badge badge-absent">${row.total_absent} Days</span></td><td><span class="badge badge-leave">${row.total_leave} Days</span></td><td><strong>${pct}%</strong></td>`;
             bodyTbody.appendChild(tr);
         });
     }
 }
-
 </script>
+</body>
+</html>

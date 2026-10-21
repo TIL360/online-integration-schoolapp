@@ -6,6 +6,7 @@
     <title>Attendance Management System</title>
     <style>
         :root {
+            --p:#003049; --sidebar-bg:#003049; --bg:#f4f6f9; --p-border:#00304930;
             --bg-color: #f4f6f9;
             --container-bg: #ffffff;
             --primary: #003049;
@@ -21,10 +22,9 @@
             --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
             --shadow-md: 0 10px 25px rgba(0,0,0,0.08);
         }
-
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background-color: var(--bg-color);
+            background-color: var(--bg);
             margin: 0;
             padding: 30px 20px;
             color: var(--text-main);
@@ -32,160 +32,132 @@
             flex-direction: column;
             align-items: center;
         }
-
-        /* Modern Top Navigation Bar Styling */
         .top-nav {
             width: 100%;
             max-width: 1040px;
             display: flex;
             gap: 12px;
             margin-bottom: 20px;
+            flex-wrap:wrap;
         }
-
         .nav-btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
             padding: 10px 20px;
-            font-size: 14px;
-            font-weight: 600;
+            font-size: 13px;
+            font-weight: 800;
             text-decoration: none;
-            color: var(--primary);
+            color: var(--p);
             background: var(--container-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
+            border: 2px solid var(--p-border);
+            border-radius: 20px;
             box-shadow: var(--shadow-sm);
             transition: all 0.2s ease-in-out;
             cursor: pointer;
         }
-
         .nav-btn:hover {
             color: white;
-            background-color: var(--primary);
-            border-color: var(--primary);
+            background-color: var(--p);
+            border-color: var(--p);
             transform: translateY(-1px);
         }
-
-        /* Container Card Styling */
         .container {
             width: 100%;
             max-width: 1000px;
             background: var(--container-bg);
             padding: 30px;
-            border-radius: 12px;
+            border-radius: 16px;
+            border:2px solid var(--p-border);
             box-shadow: var(--shadow-md);
             box-sizing: border-box;
         }
-
         h2 {
             margin-top: 0;
             margin-bottom: 25px;
             font-size: 24px;
-            color: var(--primary);
+            color: var(--p);
+            font-weight:900;
             display: flex;
             align-items: center;
             gap: 10px;
         }
-
-        /* Clean Functional Tab Segment Elements */
+        h2:before{content:''; width:6px; height:22px; background:var(--p); border-radius:4px; display:inline-block;}
         .tabs {
             display: flex;
-            background: #e9ecef;
+            background: var(--bg);
             padding: 4px;
-            border-radius: 8px;
+            border-radius: 20px;
             gap: 4px;
             margin-bottom: 25px;
             width: fit-content;
+            border:2px solid var(--p-border);
         }
-
         .tab-btn {
             padding: 10px 24px;
             border: none;
             background: transparent;
             color: var(--text-muted);
             cursor: pointer;
-            border-radius: 6px;
-            font-weight: 600;
-            font-size: 14px;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 13px;
             transition: all 0.2s ease;
         }
-
-        .tab-btn:hover {
-            color: var(--primary);
-        }
-
+        .tab-btn:hover { color: var(--p); }
         .tab-btn.active {
-            background: var(--container-bg);
-            color: var(--primary);
+            background: var(--p);
+            color: white;
             box-shadow: var(--shadow-sm);
         }
-        
-        /* Controls Form Panel Alignment Grid */
         .controls {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
             align-items: end;
-            background: #f8f9fa;
+            background: var(--bg);
             padding: 20px;
-            border-radius: 10px;
+            border-radius: 12px;
             margin-bottom: 25px;
-            border: 1px solid var(--border-color);
+            border: 2px solid var(--p-border);
         }
-
-        .control-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
+        .control-group { display: flex; flex-direction: column; gap: 8px; }
         .control-group label {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-muted);
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--p);
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
-
         select, input[type="date"], input[type="text"] {
             padding: 10px 14px;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
+            border: 2px solid var(--p-border);
+            border-radius: 20px;
             font-size: 14px;
+            font-weight:600;
             background-color: var(--input-bg);
             color: var(--text-main);
             outline: none;
-            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            transition: 0.2s ease;
             width: 100%;
             box-sizing: border-box;
         }
-
         select:focus, input[type="date"]:focus, input[type="text"]:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(0, 48, 73, 0.15);
+            border-color: var(--p);
+            box-shadow: 0 0 0 4px var(--p-border);
         }
-
-        /* Scanner Specific Focus Accent Ring Styling */
-        #card-scanner {
-            border: 1px solid var(--border-color);
-        }
-        
-        #card-scanner:focus {
-            border-color: #f39c12;
-            box-shadow: 0 0 0 3px rgba(243, 156, 18, 0.2);
-        }
-
-        /* Action Buttons */
+        #card-scanner { border: 2px solid #f39c12; }
+        #card-scanner:focus { border-color: #f39c12; box-shadow: 0 0 0 4px rgba(243, 156, 18, 0.2); }
         .btn {
             padding: 11px 20px;
-            background-color: var(--accent-red);
+            background-color: var(--p);
             color: white;
             border: none;
-            border-radius: 6px;
+            border-radius: 20px;
             cursor: pointer;
-            font-weight: 600;
-            font-size: 14px;
-            transition: background-color 0.2s ease, transform 0.1s ease;
+            font-weight: 800;
+            font-size: 13px;
+            transition: 0.2s ease;
             white-space: nowrap;
             height: 40px;
             display: inline-flex;
@@ -193,108 +165,60 @@
             justify-content: center;
             box-sizing: border-box;
         }
-
-        .btn:hover {
-            background-color: var(--accent-red-hover);
-        }
-
-        .btn:active {
-            transform: scale(0.98);
-        }
-
-        .btn-save {
-            background-color: var(--accent-green);
-        }
-
-        .btn-save:hover {
-            background-color: var(--accent-green-hover);
-        }
-
-        /* Clean Table Structures */
+        .btn:hover { filter:brightness(0.9); }
+        .btn:active { transform: scale(0.97); }
+        .btn-save { background-color: var(--p); }
+        .btn-save:hover { filter:brightness(0.9); }
         table {
             width: 100%;
             border-collapse: separate;
             border-spacing: 0;
             margin-top: 15px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
+            border: 2px solid var(--p-border);
+            border-radius: 12px;
             overflow: hidden;
         }
-
-        th, td {
-            padding: 14px 18px;
-            text-align: left;
-        }
-
+        th, td { padding: 14px 18px; text-align: left; }
         th {
-            background-color: #f8f9fa;
-            color: var(--text-main);
-            font-weight: 600;
-            font-size: 14px;
-            border-bottom: 2px solid var(--border-color);
+            background-color: var(--bg);
+            color: var(--p);
+            font-weight: 800;
+            font-size: 12px;
+            border-bottom: 2px solid var(--p-border);
+            text-transform:uppercase;
         }
-
         td {
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--p-border);
             font-size: 14px;
             color: #4a4a4a;
             background-color: #ffffff;
         }
-
-        tr:last-child td {
-            border-bottom: none;
-        }
-
-        tr:hover td {
-            background-color: #fdfdfd;
-        }
-
-        /* Modern Custom Status Option Radios */
-        .status-options {
-            display: flex;
-            gap: 15px;
-        }
-
-        .status-label {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            cursor: pointer;
-            font-weight: 500;
-            font-size: 13px;
-        }
-
-        .status-label input[type="radio"] {
-            margin: 0;
-            accent-color: var(--primary);
-            width: 16px;
-            height: 16px;
-        }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background-color: var(--bg); }
+        .status-options { display: flex; gap: 15px; flex-wrap:wrap; }
+        .status-label { display: flex; align-items: center; gap: 6px; cursor: pointer; font-weight: 600; font-size: 13px; }
+        .status-label input[type="radio"] { margin: 0; accent-color: var(--p); width: 16px; height: 16px; }
     </style>
 </head>
 <body>
 
-<!-- Modernized Top Navigation Row Element Links Styled As Premium Buttons -->
 <div class="top-nav">
     <a href="./dashboard.html" class="nav-btn">📊 Dashboard</a>
     <a href="./attendance-report.html" class="nav-btn">📋 Attendance Report</a>
     <a href="./attendance-report2.html" class="nav-btn">📈 Attendance Grid Report</a>
-    <button id="pull-cloud-btn" onclick="pullOnlineAttendance()" class="nav-btn" style="background:#059669; color:white; border-color:#059669; margin-left:auto;">⬇️ Pull Online Attendance</button>
+    <button id="pull-cloud-btn" onclick="pullOnlineAttendance()" class="nav-btn" style="background:var(--p); color:white; border-color:var(--p); margin-left:auto;">⬇️ Pull Online Attendance</button>
 </div>
 
-<div id="pull-status" style="max-width:1040px; width:100%; margin:0 auto 15px auto; display:none; background:#ecfdf5; border:1px solid #a7f3d0; color:#065f46; padding:12px 16px; border-radius:8px; font-size:13px; font-weight:600;"></div>
+<div id="pull-status" style="max-width:1040px; width:100%; margin:0 auto 15px auto; display:none; background:#ecfdf5; border:2px solid #a7f3d0; color:#065f46; padding:12px 16px; border-radius:12px; font-size:13px; font-weight:700;"></div>
 
 <div class="container">
-    <h2> Attendance Dashboard</h2>
+    <h2>Attendance Dashboard</h2>
 
-    <!-- Navigation Tabs -->
     <div class="tabs">
         <button class="tab-btn active" onclick="switchTab('student')">Student Attendance</button>
         <button class="tab-btn" onclick="switchTab('staff')">Staff Attendance</button>
     </div>
 
-    <!-- Responsive Responsive Form Controls Configuration Panel Grid -->
-        <!-- Beautiful & Explicitly Positioned Controls Panel Grid -->
     <div class="controls">
     <div class="control-group">
         <label>SELECT DATE</label>
@@ -311,13 +235,9 @@
     <button class="btn" onclick="loadAttendanceList()">🔍 Load Records</button>
 </div>
 
-
-    <!-- Data Presentation Table List Spreadsheet Sheet -->
     <table id="attendance-table">
         <thead>
-            <tr id="table-headers">
-                <!-- Dynamic Header Output Injector Target -->
-            </tr>
+            <tr id="table-headers"></tr>
         </thead>
         <tbody id="table-body">
             <tr>
@@ -326,27 +246,49 @@
         </tbody>
     </table>
 
-    <!-- Actions Control Panel Segment Footer row -->
     <div style="margin-top: 25px; text-align: right;">
         <button class="btn btn-save" id="save-btn" onclick="saveAttendanceRecords()" style="display: none;">💾 Save Attendance Sheet</button>
     </div>
 </div>
 
 <script>
+// ===== THEME MANAGER ONLY - NO OTHER LOGIC DELETED =====
+const defaultTheme={primary:"#003049",sidebarBg:"#003049",bg:"#f4f6f9"};
+function applyTheme(t){
+  const theme={...defaultTheme,...(t||{})};
+  const r=document.documentElement;
+  r.style.setProperty('--p',theme.primary);
+  r.style.setProperty('--sidebar-bg',theme.sidebarBg);
+  r.style.setProperty('--bg',theme.bg);
+  r.style.setProperty('--p-border',theme.primary+'30');
+  r.style.setProperty('--primary',theme.primary);
+  r.style.setProperty('--bg-color',theme.bg);
+  document.body.style.background=theme.bg;
+}
+async function loadAndApplyTheme(){
+  try{
+    let saved=null;
+    if(window.api&&window.api.getThemeDetails){try{saved=await window.api.getThemeDetails();}catch(e){}}
+    if(!saved) saved=JSON.parse(localStorage.getItem('eduPulseTheme')||'null');
+    applyTheme(saved||defaultTheme);
+  }catch(e){applyTheme(defaultTheme);}
+}
+loadAndApplyTheme();
+
     let currentTab = 'student';
-    let scannerLock = false; // prevents focus fight
+    let scannerLock = false;
 
     function showPopup(regNo, name, date, type) {
         const old = document.getElementById('temp-success-msg');
         if (old) old.remove();
         const div = document.createElement('div');
         div.id = 'temp-success-msg';
-        div.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:99999;';
+        div.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(15,23,42,0.55);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;z-index:99999;';
         let icon = type === 'already'? '⚠️' : (type === 'error'? '❌' : '✅');
         let title = type === 'already'? 'Already Marked!' : (type === 'error'? 'Not Found!' : 'Attendance Marked!');
         let color = type === 'already'? '#f39c12' : (type === 'error'? '#e74c3c' : '#2ec4b6');
         let statusText = type === 'already'? 'Already Present Today' : (type === 'error'? 'Not Found' : 'Present');
-        div.innerHTML = `<div style="background:white;padding:35px 40px;border-radius:16px;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,0.3);min-width:380px;"><div style="font-size:50px;">${icon}</div><div style="font-size:20px;font-weight:700;color:#003049;margin:10px 0 5px;">${title}</div><div style="font-size:14px;color:#555;line-height:1.6;">Attendance of <b style="color:#003049;">Rg No ${regNo}</b>, <b style="color:#003049;">${name}</b> is <b style="color:${color};">${statusText}</b></div><div style="margin-top:12px;font-size:12px;background:#f4f6f9;padding:6px 12px;border-radius:20px;display:inline-block;color:#6c757d;">📅 ${date}</div></div>`;
+        div.innerHTML = `<div style="background:white;padding:35px 40px;border-radius:16px;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,0.3);min-width:380px; border:2px solid var(--p-border);"><div style="font-size:50px;">${icon}</div><div style="font-size:20px;font-weight:800;color:var(--p);margin:10px 0 5px;">${title}</div><div style="font-size:14px;color:#555;line-height:1.6;">Attendance of <b style="color:var(--p);">Rg No ${regNo}</b>, <b style="color:var(--p);">${name}</b> is <b style="color:${color};">${statusText}</b></div><div style="margin-top:12px;font-size:12px;background:var(--bg);padding:6px 12px;border-radius:20px;display:inline-block;color:var(--p); font-weight:700;">📅 ${date}</div></div>`;
         div.onclick = () => { div.remove(); focusScannerInput(); };
         document.body.appendChild(div);
         setTimeout(() => { if(div && div.parentNode) div.remove(); focusScannerInput(); }, 2000);
@@ -356,20 +298,15 @@
         if(scannerLock) return;
         const scanner = document.getElementById('card-scanner');
         if (!scanner || document.activeElement === scanner) return;
-        // Don't steal focus if user is typing in other inputs
         const activeTag = document.activeElement? document.activeElement.tagName.toLowerCase() : '';
         if (['input', 'select', 'textarea'].includes(activeTag) && document.activeElement.id!== 'card-scanner') return;
-
         scanner.focus();
-        // For barcode scanners that need selection
-        // scanner.select();
     }
 
     window.addEventListener('DOMContentLoaded', async () => {
         const today = new Date();
         const dateEl = document.getElementById('attendance-date');
         if(dateEl) dateEl.value = today.toISOString().split('T')[0];
-
         try {
             const classes = await window.api.getClasses();
             const dropdown = document.getElementById('class-dropdown');
@@ -382,10 +319,8 @@
                 });
             }
         } catch (err) { console.error(err); }
-
         const scannerInput = document.getElementById('card-scanner');
         if (scannerInput) {
-            // FIXED SCANNER HANDLER - NO ALERT
             scannerInput.addEventListener('keydown', async function(e) {
                 if (e.key!== 'Enter') return;
                 e.preventDefault();
@@ -393,10 +328,8 @@
                 if (!val) return;
                 const date = document.getElementById('attendance-date').value;
                 this.value = '';
-
-                scannerLock = true; // prevent refocus during async
+                scannerLock = true;
                 let isStaff = val.startsWith('EMP-');
-
                 try {
                     if (isStaff) {
                         let staffId = parseInt(val.replace('EMP-',''));
@@ -431,8 +364,6 @@
                     setTimeout(focusScannerInput, 100);
                 }
             });
-
-            // Auto-refocus only when scanner loses focus and user is not typing elsewhere
             scannerInput.addEventListener('blur', () => {
                 setTimeout(() => {
                     const active = document.activeElement;
@@ -440,21 +371,15 @@
                 }, 500);
             });
         }
-
-        // FIXED: Focus only on window focus, NOT on every click
         window.addEventListener('focus', () => setTimeout(focusScannerInput, 100));
-
-        // Initial focus with delay - solves Alt+Tab issue
         setTimeout(focusScannerInput, 300);
     });
 
     function switchTab(tabName) {
         currentTab = tabName;
         document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-        // fix event target
         const btns = document.querySelectorAll('.tab-btn');
         btns.forEach(b => { if(b.textContent.toLowerCase().includes(tabName)) b.classList.add('active'); });
-
         const classContainer = document.getElementById('class-select-container');
         if (classContainer) classContainer.style.display = tabName === 'staff'? 'none' : 'block';
         document.getElementById('table-body').innerHTML = `<tr><td colspan="4" style="text-align:center;padding:30px;">Please select class...</td></tr>`;
@@ -478,7 +403,7 @@
                 bodyTbody.innerHTML = '';
                 students.forEach(s => {
                     const tr = document.createElement('tr');
-                    tr.innerHTML = `<td>${s.registration_no}</td><td>${s.roll_no}</td><td><b>${s.student_name}</b></td><td><div class="status-options" data-id="${s.student_id}"><label><input type="radio" name="status-${s.student_id}" value="Present" ${s.status === 'Present'? 'checked' : ''}> Present</label><label><input type="radio" name="status-${s.student_id}" value="Absent" ${s.status === 'Absent'? 'checked' : ''}> Absent</label><label><input type="radio" name="status-${s.student_id}" value="Leave" ${s.status === 'Leave'? 'checked' : ''}> Leave</label></div></td>`;
+                    tr.innerHTML = `<td>${s.registration_no}</td><td>${s.roll_no}</td><td><b>${s.student_name}</b></td><td><div class="status-options" data-id="${s.student_id}"><label class="status-label"><input type="radio" name="status-${s.student_id}" value="Present" ${s.status === 'Present'? 'checked' : ''}> Present</label><label class="status-label"><input type="radio" name="status-${s.student_id}" value="Absent" ${s.status === 'Absent'? 'checked' : ''}> Absent</label><label class="status-label"><input type="radio" name="status-${s.student_id}" value="Leave" ${s.status === 'Leave'? 'checked' : ''}> Leave</label></div></td>`;
                     bodyTbody.appendChild(tr);
                 });
                 document.getElementById('save-btn').style.display = 'inline-block';
@@ -491,7 +416,7 @@
                 bodyTbody.innerHTML = '';
                 staffList.forEach(st => {
                     const tr = document.createElement('tr');
-                    tr.innerHTML = `<td>EMP-${st.staff_id}</td><td><i>${st.designation}</i></td><td><b>${st.name}</b></td><td><div class="status-options" data-id="${st.staff_id}"><label><input type="radio" name="status-${st.staff_id}" value="Present" ${st.status === 'Present'? 'checked' : ''}> Present</label><label><input type="radio" name="status-${st.staff_id}" value="Absent" ${st.status === 'Absent'? 'checked' : ''}> Absent</label><label><input type="radio" name="status-${st.staff_id}" value="Leave" ${st.status === 'Leave'? 'checked' : ''}> Leave</label></div></td>`;
+                    tr.innerHTML = `<td>EMP-${st.staff_id}</td><td><i>${st.designation}</i></td><td><b>${st.name}</b></td><td><div class="status-options" data-id="${st.staff_id}"><label class="status-label"><input type="radio" name="status-${st.staff_id}" value="Present" ${st.status === 'Present'? 'checked' : ''}> Present</label><label class="status-label"><input type="radio" name="status-${st.staff_id}" value="Absent" ${st.status === 'Absent'? 'checked' : ''}> Absent</label><label class="status-label"><input type="radio" name="status-${st.staff_id}" value="Leave" ${st.status === 'Leave'? 'checked' : ''}> Leave</label></div></td>`;
                     bodyTbody.appendChild(tr);
                 });
                 document.getElementById('save-btn').style.display = 'inline-block';
@@ -522,14 +447,11 @@
   if(!date){ alert("Select DATE first"); return; }
   const btn = document.getElementById('pull-cloud-btn');
   const statusBox = document.getElementById('pull-status');
-  
   btn.disabled = true;
   btn.textContent = '⏳ Pulling...';
   statusBox.style.display = 'block';
   statusBox.textContent = `Pulling attendance for ${date} from Cloud Database...`;
-
   try {
-    // Works with both preload styles
     let res;
     if(window.api && window.api.pullAttendanceCloud){
         res = await window.api.pullAttendanceCloud(date);
@@ -538,13 +460,11 @@
     }else{
         res = await window.api.invoke('pull-attendance-cloud', date);
     }
-
     console.log("Pull result", res);
     if(res && res.success){
         statusBox.style.background = '#ecfdf5';
         statusBox.innerHTML = `✅ Pulled Successfully! ${res.student_count || 0} Students + ${res.staff_count || 0} Staff for ${date} from online. Now click Load Records.`;
         showPopup('Cloud', `${res.student_count} records synced`, date, 'success');
-        // auto reload list if class selected
         const className = document.getElementById('class-dropdown').value;
         if(className) loadAttendanceList();
     }else{

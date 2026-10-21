@@ -1524,8 +1524,8 @@ ipcMain.handle('load-salary-data', async () => {
 
 
 
-ipcMain.handle('get-dashboard-stats', async () => {
-    return dbLogic.getDashboardStats();
+ipcMain.handle('get-dashboard-stats', async (event, filters) => {
+    return dbLogic.getDashboardStats(filters || {});
 });
 // --- FIX FOR AUTH LEAVES ---
 // main.js

@@ -4,43 +4,46 @@
     <meta charset="UTF-8">
     <title>Date Sheet</title>
     <style>
-        :root { --primary: #4361ee; --accent: #fdf0d5; --danger: #e71d36; --success: #2ec4b6; }
-        body { font-family: 'Segoe UI', sans-serif; background-color: rgb(109, 60, 4); padding: 20px; color: #333; }
-        .container { max-width: 1000px; margin: 0 auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 20px; }
-        .form-row { display: flex; gap: 15px; align-items: flex-end; margin-bottom: 20px; }
-        .form-group { flex: 1; }
-        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 0.9em; }
-        select, input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
-        .btn { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; color: white; font-weight: bold; }
-        .btn-add { background: var(--primary); }
+        :root { 
+          --p:#4361ee; --sidebar-bg:#6d3c04; --bg:#fdf0d5; --p-border:#4361ee30;
+          --primary: #4361ee; --accent: #fdf0d5; --danger: #e71d36; --success: #2ec4b6; 
+        }
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--sidebar-bg); padding: 20px; color: #333; }
+        .container { max-width: 1000px; margin: 0 auto; background: white; padding: 30px; border-radius: 16px; border:2px solid var(--p-border); box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .form-row { display: flex; gap: 15px; align-items: flex-end; margin-bottom: 20px; flex-wrap:wrap; }
+        .form-group { flex: 1; min-width:140px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 800; font-size: 11px; color:var(--p); text-transform:uppercase; }
+        select, input { width: 100%; padding: 10px; border: 2px solid var(--p-border); border-radius: 20px; font-weight:600; outline:none; }
+        select:focus, input:focus{ border-color:var(--p); box-shadow:0 0 0 4px var(--p-border); }
+        .btn { padding: 10px 20px; border: none; border-radius: 20px; cursor: pointer; color: white; font-weight: 800; }
+        .btn-add { background: var(--p); }
         .btn-update { background: #ff9f1c; }
-        .btn-view { background: var(--success); width: 100%; margin-top: 10px; font-size: 16px; }
-        .refresh-btn { background: white; border: 1px solid #ddd; padding: 8px 15px; border-radius: 5px; cursor: pointer; margin-bottom: 10px; }
+        .btn-view { background: var(--p); width: 100%; margin-top: 10px; font-size: 15px; }
+        .refresh-btn { background: white; border: 2px solid var(--p-border); color:var(--p); padding: 8px 15px; border-radius: 20px; cursor: pointer; font-weight:800; margin-bottom: 10px; }
         .datesheet-copyright { display: flex; justify-content: space-between; font-size: 10px; color: #444; border-top: 1.5px solid #333; padding-top: 6px; margin-top: 25px; }
         .list-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         .list-table th, .list-table td { border-bottom: 1px solid #eee; padding: 12px; text-align: left; }
-        .list-table th { color: #666; font-size: 0.9em; text-transform: uppercase; }
-        .action-btn { padding: 5px 10px; border-radius: 4px; font-size: 12px; margin-right: 5px; border: none; cursor: pointer; color: white; }
+        .list-table th { color: var(--p); font-size: 11px; text-transform: uppercase; font-weight:800; }
+        .action-btn { padding: 6px 12px; border-radius: 20px; font-size: 11px; margin-right: 5px; border: none; cursor: pointer; color: white; font-weight:700; }
         .edit-btn { background: #ff9f1c; }
         .delete-btn { background: var(--danger); }
-        #printModal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); overflow-y: auto; }
-        .modal-content { background: white; margin: 2% auto; padding: 40px; width: 95%; max-width: 1100px; border-radius: 10px; position: relative; }
-        .modal-header { display: flex; justify-content: space-between; margin-bottom: 1px; border-bottom: 2px solid #eee; padding-bottom: 2px; }
+        #printModal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(15,23,42,0.8); backdrop-filter:blur(8px); overflow-y: auto; }
+        .modal-content { background: white; margin: 2% auto; padding: 40px; width: 95%; max-width: 1100px; border-radius: 16px; border:2px solid var(--p-border); position: relative; }
+        .modal-header { display: flex; justify-content: space-between; margin-bottom: 1px; border-bottom: 2px solid var(--p-border); padding-bottom: 10px; }
         .print-table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 14px; }
         .print-table th, .print-table td { border: 1px solid #333; padding: 10px; text-align: center; }
-        .print-table th { background-color: #f2f2f2; }
+        .print-table th { background-color: var(--bg); color:var(--p); }
 
-        /* FIXED CONFIRM / ALERT MODALS - NO NATIVE LOCK */
         .custom-modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:10000; align-items:center; justify-content:center; }
         .custom-modal.show { display:flex; }
-        .custom-box { background:white; width:380px; border-radius:12px; overflow:hidden; box-shadow:0 15px 40px rgba(0,0,0,0.3); animation:pop 0.2s ease; }
+        .custom-box { background:white; width:380px; border-radius:16px; overflow:hidden; box-shadow:0 15px 40px rgba(0,0,0,0.3); animation:pop 0.2s ease; border:2px solid var(--p-border); }
         @keyframes pop { from{transform:scale(0.9);opacity:0} to{transform:scale(1);opacity:1} }
-        .custom-head { padding:12px 16px; font-weight:700; border-bottom:1px solid #eee; display:flex; justify-content:space-between; }
+        .custom-head { padding:12px 16px; font-weight:800; border-bottom:2px solid var(--p-border); display:flex; justify-content:space-between; color:var(--p); }
         .custom-body { padding:20px 16px; font-size:14px; line-height:1.6; }
-        .custom-foot { padding:10px 16px; background:#f8f9ff; display:flex; justify-content:flex-end; gap:10px; }
-        .custom-foot button { padding:6px 14px; border-radius:6px; border:1px solid #ddd; cursor:pointer; font-weight:600; }
+        .custom-foot { padding:10px 16px; background:var(--bg); display:flex; justify-content:flex-end; gap:10px; }
+        .custom-foot button { padding:8px 16px; border-radius:20px; border:2px solid #ddd; cursor:pointer; font-weight:700; }
         .btn-del { background:var(--danger)!important; color:white!important; border-color:var(--danger)!important; }
-        .btn-ok { background:var(--primary)!important; color:white!important; border-color:var(--primary)!important; }
+        .btn-ok { background:var(--p)!important; color:white!important; border-color:var(--p)!important; }
 
 @media print {
     #printModal { position: absolute !important; left: 0 !important; top: 0 !important; background: transparent !important; background-color: #ffffff !important; width: 100% !important; height: auto !important; overflow: visible !important; }
@@ -58,7 +61,7 @@
 
 <div class="container no-print"> 
     <button class="refresh-btn" onclick="window.location.href='result_entry.html'">← Dashboard</button>
-    <h2>📅 Date Sheet </h2>
+    <h2 style="color:var(--p); font-weight:900; display:flex; align-items:center; gap:8px;"><span style="width:5px; height:20px; background:var(--p); border-radius:4px; display:inline-block;"></span> 📅 Date Sheet</h2>
     
     <form id="dateSheetForm">
         <input type="hidden" id="editId">
@@ -71,9 +74,9 @@
         </div>
     </form>
 
-    <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+    <hr style="border: 0; border-top: 2px solid var(--p-border); margin: 20px 0;">
     
-    <h3>List of Entered Papers</h3>
+    <h3 style="color:var(--p); font-weight:800;">List of Entered Papers</h3>
     <table class="list-table">
         <thead><tr><th>Date & Day</th><th>Class</th><th>Subject</th><th>Actions</th></tr></thead>
         <tbody id="recordListBody"></tbody>
@@ -85,19 +88,19 @@
 <div id="printModal">
     <div class="modal-content">
         <div class="modal-header no-print">
-            <h3>Preview Datesheet (All Classes)</h3>
-            <div><button onclick="window.print()" class="btn btn-add">Print Now</button><button onclick="closePrintModal()" class="btn" style="background:var(--danger)">Close</button></div>
+            <h3 style="color:var(--p); font-weight:800;">Preview Datesheet (All Classes)</h3>
+            <div style="display:flex; gap:8px;"><button onclick="window.print()" class="btn btn-add">Print Now</button><button onclick="closePrintModal()" class="btn" style="background:var(--danger)">Close</button></div>
         </div>
       <div id="printArea" style="position: relative; overflow: hidden; min-height: 500px;">
     <div class="print-watermark-bg" style="position: absolute; top: 55%; left: 50%; transform: translate(-50%, -50%); width: 320px; height: 320px; background-image: url('../../images/logo.png'); background-repeat: no-repeat; background-position: center; background-size: contain; opacity: 0.08; pointer-events: none; z-index: 0;"></div>
     <div style="position: relative; z-index: 1;">
         <div style="text-align: center; margin-bottom: 15px;">
-            <h2 style="margin: 0; display: inline-flex; align-items: center; justify-content: center; gap: 15px; font-size: 26px;">
+            <h2 style="margin: 0; display: inline-flex; align-items: center; justify-content: center; gap: 15px; font-size: 26px; color:var(--p);">
                 <img src="../../images/logo.png" style="height: 55px; width: auto; object-fit: contain;" alt="School Logo">
                 <span id="institute-name">Loading</span>
             </h2>
             <p style="margin: 5px 0;"><span id="address">Loading</span> || Email: <span id="email-address">Loading</span> || Contact: <span id="contact-number">Loading</span></p>
-            <h3 id="printExamTitle" style="margin-top: 15px; font-weight: bold; letter-spacing: 0.5px;">EXAMINATION DATESHEET</h3>
+            <h3 id="printExamTitle" style="margin-top: 15px; font-weight: bold; letter-spacing: 0.5px; color:var(--p);">EXAMINATION DATESHEET</h3>
         </div>
         <table class="print-table"><thead><tr id="tableHeader"><th>Date</th></tr></thead><tbody id="modalTableBody"></tbody></table>
         <div class="datesheet-copyright"><span>© Techinfolab. All Rights Reserved.</span><span>Designed by: Raja Bilal || Contact: 0311-5101738</span></div>
@@ -106,7 +109,6 @@
     </div>
 </div>
 
-<!-- DELETE CONFIRM MODAL -->
 <div id="deleteModal" class="custom-modal">
   <div class="custom-box">
     <div class="custom-head">Date Sheet <span style="cursor:pointer" onclick="closeDeleteModal()">×</span></div>
@@ -115,7 +117,6 @@
   </div>
 </div>
 
-<!-- ALERT MODAL -->
 <div id="alertModal" class="custom-modal">
   <div class="custom-box">
     <div class="custom-head">Date Sheet <span style="cursor:pointer" onclick="closeAlertModal()">×</span></div>
@@ -125,6 +126,28 @@
 </div>
 
 <script>
+// ===== THEME MANAGER ONLY - NO OTHER LOGIC CHANGED =====
+const defaultTheme={primary:"#4361ee",sidebarBg:"#6d3c04",bg:"#fdf0d5"};
+function applyTheme(t){
+  const theme={...defaultTheme,...(t||{})};
+  const r=document.documentElement;
+  r.style.setProperty('--p',theme.primary);
+  r.style.setProperty('--sidebar-bg',theme.sidebarBg);
+  r.style.setProperty('--bg',theme.bg);
+  r.style.setProperty('--p-border',theme.primary+'30');
+  r.style.setProperty('--primary',theme.primary);
+  document.body.style.background=theme.sidebarBg;
+}
+async function loadAndApplyTheme(){
+  try{
+    let saved=null;
+    if(window.api&&window.api.getThemeDetails){try{saved=await window.api.getThemeDetails();}catch(e){}}
+    if(!saved) saved=JSON.parse(localStorage.getItem('eduPulseTheme')||'null');
+    applyTheme(saved||defaultTheme);
+  }catch(e){applyTheme(defaultTheme);}
+}
+loadAndApplyTheme();
+
 let availableClasses = [];
 let editingMode = false;
 let pendingDeleteId = null;
@@ -276,7 +299,6 @@ function closePrintModal() {
   window.focus();
 }
 
-// Close modals on overlay click
 document.getElementById('deleteModal').addEventListener('click', e => { if(e.target.id==='deleteModal') closeDeleteModal(); });
 document.getElementById('alertModal').addEventListener('click', e => { if(e.target.id==='alertModal') closeAlertModal(); });
 </script>

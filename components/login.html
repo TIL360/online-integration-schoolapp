@@ -1,208 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | Education Pulse</title>
-    <style>
-        :root {
-            /* Colors sampled directly from your dashboard image */
-            --bg-page: #f4f6f9;         /* Light grey background */
-            --sidebar-dark: #2c3e50;    /* Dark navy/charcoal from sidebar */
-            --accent-orange: #e67e22;   /* Orange from "Auto-Generate Order" */
-            --text-white: #ffffff;
-            --text-muted: #666;
-            --error: #e74c3c;
-            --border: #dee2e6;
-        }
-
-        body { 
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
-            background-color: var(--bg-page);
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-
-        .login-card { 
-            background: var(--sidebar-dark); /* Using the dashboard sidebar color */
-            padding: 40px;
-            width: 380px;
-            border-radius: 8px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-            text-align: center;
-            color: var(--text-white);
-        }
-
-        h2 { 
-            margin-bottom: 5px; 
-            color: var(--text-white);
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .sub-title {
-            color: #bdc3c7;
-            font-size: 14px;
-            margin-bottom: 30px;
-        }
-
-        .input-group {
-            margin-bottom: 20px;
-            text-align: left;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 12px;
-            font-weight: bold;
-            color: #bdc3c7;
-            text-transform: uppercase;
-        }
-
-        input { 
-            width: 100%;
-            padding: 12px;
-            background-color: #34495e; /* Slightly lighter than card for depth */
-            border: 1px solid #455a64;
-            border-radius: 4px;
-            box-sizing: border-box;
-            font-size: 16px;
-            color: white;
-            transition: border-color 0.3s ease;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: var(--accent-orange);
-        }
-
-        input::placeholder {
-            color: #7f8c8d;
-        }
-
-        button { 
-            width: 100%;
-            padding: 14px;
-            background-color: var(--accent-orange); /* Matching the dashboard highlight */
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background 0.2s, transform 0.1s;
-            margin-top: 10px;
-            text-transform: uppercase;
-        }
-
-        button:hover { 
-            background-color: #d35400; /* Darker orange on hover */
-        }
-
-        button:active { 
-            transform: scale(0.98); 
-        }
-
-        #error-msg { 
-            color: var(--error); 
-            font-size: 14px; 
-            margin-top: 15px;
-            min-height: 20px; 
-        }
-
-        .footer-note {
-            margin-top: 25px;
-            font-size: 11px;
-            color: #7f8c8d;
-        }
-    </style>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login | Education Pulse</title>
+<style>
+:root{ --p:#000080; --sidebar-bg:#6a8a00; --bg:#a66a2a; --p-border:#00008040; --text-white:#fff; --error:#e74c3c; }
+*{box-sizing:border-box} 
+body{font-family:'Segoe UI',Roboto,sans-serif;background:var(--bg);margin:0;display:flex;justify-content:center;align-items:center;height:100vh;transition:background 0.6s ease}
+.login-card{background:#111;padding:40px;width:380px;border-radius:16px;border:2px solid var(--p-border);box-shadow:0 20px 50px rgba(0,0,0,.35);text-align:center;color:var(--text-white);transition:border-color 0.6s}
+h2{margin:0 0 6px 0;font-weight:800;text-transform:uppercase;letter-spacing:1px;display:flex;align-items:center;justify-content:center;gap:8px;color:white}
+.colour-dot{width:12px;height:12px;border-radius:50%;background:var(--p);display:inline-block;box-shadow:0 0 12px var(--p);transition:background 0.6s}
+.sub-title{color:#cbd5e1;font-size:13px;margin-bottom:28px}
+.input-group{margin-bottom:18px;text-align:left} 
+label{display:block;margin-bottom:7px;font-size:11px;font-weight:800;color:#e2e8f0;text-transform:uppercase}
+input{width:100%;padding:13px 14px;background:#1e1e1e;border:1px solid #2e2e2e;border-radius:10px;font-size:14px;color:white;font-weight:600;outline:none;transition:all .4s}
+input:focus{border-color:var(--p);box-shadow:0 0 0 4px var(--p-border)}
+button{width:100%;padding:14px;background:var(--p);color:white;border:none;border-radius:10px;font-size:15px;font-weight:800;cursor:pointer;margin-top:8px;text-transform:uppercase;transition:background 0.6s;box-shadow:0 8px 20px var(--p-border)}
+button:hover{filter:brightness(1.15)}
+#error-msg{color:#fecaca;background:#7f1d1d55;border:1px solid #fecaca33;border-radius:10px;font-size:13px;margin-top:14px;min-height:20px;padding:6px;font-weight:700}
+#error-msg:empty{display:none}
+.footer-note{margin-top:22px;font-size:11px;color:#94a3b8}
+</style>
 </head>
 <body>
-
-    <div class="login-card">
-        <h2 id="institute-name">🔒 Your Institute Name</h2>
-        <div class="sub-title">Secure portal for faculty and administration.</div>
-        
-        <div class="input-group">
-            <label for="username">Staff ID</label>
-            <input type="text" id="username" placeholder="Username">
-        </div>
-
-        <div class="input-group">
-            <label for="password">Password</label>
-            <input type="password" id="password" placeholder="••••••••">
-        </div>
-        
-        <button id="loginBtn">Login</button>
-        
-        <p id="error-msg"></p>
-
-        <div class="footer-note">
-            © 2026 HT Brothers. All Rights Reserved.
-        </div>
-    </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', async () => {
- try {
-      // 1. Invoke the IPC handler exposed in preload.js
-      const details = await window.api.getAppDetails();
-      
-      // 2. Safely populate the text values into your HTML layout elements
-      if (details) {
-        document.getElementById('institute-name').innerText = details.instituteName;
-        document.getElementById('contact-number').innerText = details.contactNumber;
-        document.getElementById('email-address').innerText  = details.email;
-        document.getElementById('address').innerText  = details.address;
-        document.getElementById('footer-text').innerText     = details.footerText;
-      }
-    } catch (error) {
-      console.error("Failed to load application metadata details:", error);
-    }
+<div class="login-card">
+<h2 id="institute-name"><span class="colour-dot"></span> Your Institute Name</h2>
+<div class="sub-title">Secure portal for faculty and administration.</div>
+<div class="input-group"><label>Staff ID</label><input type="text" id="username" placeholder="Username"></div>
+<div class="input-group"><label>Password</label><input type="password" id="password" placeholder="••••••••"></div>
+<button id="loginBtn">Login</button><p id="error-msg"></p>
+<div class="footer-note">© 2026 HT Brothers. All Rights Reserved.</div>
+</div>
+<div style="display:none;"><span id="contact-number"></span><span id="email-address"></span><span id="address"></span><span id="footer-text"></span></div>
+<script>
+const defaultTheme={primary:"#000080",sidebarBg:"#6a8a00",bg:"#a66a2a"};
+function applyTheme(t){
+  const theme={...defaultTheme,...(t||{})};
+  const r=document.documentElement;
+  r.style.setProperty('--p',theme.primary);
+  r.style.setProperty('--sidebar-bg',theme.sidebarBg);
+  r.style.setProperty('--bg',theme.bg);
+  r.style.setProperty('--p-border',theme.primary+'40');
+  document.body.style.background=theme.bg;
+}
+async function loadAndApplyTheme(){
+  let saved=null;
+  try{if(window.api?.getThemeDetails) saved=await window.api.getThemeDetails();}catch(e){}
+  try{if(!saved) saved=JSON.parse(localStorage.getItem('eduPulseTheme')||'null');}catch(e){}
+  try{if(!saved) saved=JSON.parse(localStorage.getItem('theme')||'null');}catch(e){}
+  applyTheme(saved||defaultTheme);
+}
+document.addEventListener('DOMContentLoaded',async()=>{
+  await loadAndApplyTheme();
+  try{const d=await window.api.getAppDetails(); if(d?.instituteName) document.getElementById('institute-name').innerHTML=`<span class="colour-dot"></span> ${d.instituteName}`;}catch(e){}
 });
-        const loginBtn = document.getElementById('loginBtn');
-        const userInp = document.getElementById('username');
-        const passInp = document.getElementById('password');
-        const errorMsg = document.getElementById('error-msg');
+// *** YE 3 LINES ZAROORI HAIN - HAR BAAR CHECK KAREGA ***
+window.addEventListener('focus', loadAndApplyTheme);
+window.addEventListener('storage', loadAndApplyTheme);
+setInterval(loadAndApplyTheme, 1000);
 
-        loginBtn.addEventListener('click', async () => {
-            loginBtn.innerText = "Authenticating...";
-            loginBtn.disabled = true;
-            errorMsg.innerText = "";
-
-            const credentials = {
-                username: userInp.value,
-                password: passInp.value
-            };
-
-            try {
-                // Ensure authAPI is correctly exposed in your Electron/Web environment
-                const result = await window.authAPI.attemptLogin(credentials);
-                
-                if (result.success) {
-                    sessionStorage.setItem('currentUser', JSON.stringify(result.user));
-                    window.location.href = "dashboard.html";
-                } else {
-                    errorMsg.innerText = result.message || "Invalid Credentials";
-                    loginBtn.innerText = "Login";
-                    loginBtn.disabled = false;
-                }
-            } catch (err) {
-                console.error("Login script error:", err);
-                errorMsg.innerText = "Connection Error";
-                loginBtn.innerText = "Login";
-                loginBtn.disabled = false;
-            }
-        });
-
-        window.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') loginBtn.click();
-        });
-    </script>
+const loginBtn=document.getElementById('loginBtn');
+loginBtn.addEventListener('click',async()=>{
+  loginBtn.innerText="Authenticating..."; loginBtn.disabled=true;
+  document.getElementById('error-msg').innerText="";
+  try{
+    const result=await window.authAPI.attemptLogin({username:document.getElementById('username').value,password:document.getElementById('password').value});
+    if(result.success){ sessionStorage.setItem('currentUser',JSON.stringify(result.user)); window.location.href="dashboard.html"; }
+    else{ document.getElementById('error-msg').innerText=result.message||"Invalid"; loginBtn.innerText="Login"; loginBtn.disabled=false; }
+  }catch(err){ document.getElementById('error-msg').innerText="Connection Error"; loginBtn.innerText="Login"; loginBtn.disabled=false; }
+});
+window.addEventListener('keypress',e=>{ if(e.key==='Enter') loginBtn.click(); });
+</script>
 </body>
 </html>

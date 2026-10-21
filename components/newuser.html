@@ -5,37 +5,48 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Add System User | POS CORE</title>
 <style>
-:root { --sidebar-dark:#102a43; --accent-orange:#ea580c; --bg-page:#f0f4f8; --card-white:#fff; --text-main:#1e293b; --danger-red:#ef4444; }
-body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg-page);margin:0;padding:20px;color:var(--text-main);}
-.container{background:var(--card-white);padding:30px;border-radius:12px;box-shadow:0 4px 15px rgba(0,0,0,.05);max-width:650px;margin:auto;}
-h2,h3{color:var(--sidebar-dark);margin-top:0;border-bottom:2px solid var(--bg-page);padding-bottom:10px;text-transform:uppercase;font-weight:800;}
-.form-group{margin-bottom:18px;} label{display:block;margin-bottom:6px;font-weight:bold;color:#334155;font-size:.9rem;}
-input,select{width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:6px;box-sizing:border-box;font-size:.95rem;}
-input:focus,select:focus{outline:none;border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.15);}
-.permissions-box{margin-top:15px;border:1px solid #cbd5e1;padding:20px;border-radius:8px;background:#f8fafc;}
+:root { 
+  --p:#0f766e; --sidebar-bg:#0f766e; --bg:#f0fdfa; --p-border:#0f766e30;
+  --sidebar-dark:#102a43; --accent-orange:#0f766e; --bg-page:#f0fdfa; --card-white:#fff; --text-main:#1e293b; --danger-red:#ef4444; 
+}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);margin:0;padding:20px;color:var(--text-main);}
+.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background:var(--card-white); padding:14px 18px; border-radius:10px; border:2px solid var(--p-border); }
+.header h2 { border:none; padding:0; margin:0; color:var(--p); display:flex; align-items:center; gap:8px; }
+.header h2:before{content:''; width:4px; height:18px; background:var(--p); border-radius:4px; display:inline-block;}
+.container{background:var(--card-white);padding:20px;border-radius:10px; border:2px solid var(--p-border); box-shadow:0 4px 15px rgba(0,0,0,0.05);max-width:650px;margin:auto;}
+h2,h3{color:var(--p);margin-top:0;border-bottom:2px solid var(--bg);padding-bottom:10px;text-transform:uppercase;font-weight:800; display:flex; align-items:center; gap:8px;}
+h2:before, h3:before{content:''; width:4px; height:18px; background:var(--p); border-radius:4px; display:inline-block;}
+.form-group{margin-bottom:18px;} label{display:block;margin-bottom:6px;font-weight:800;color:var(--p);font-size:11px; text-transform:uppercase;}
+input,select{width:100%;padding:11px 12px;border:2px solid var(--p-border);border-radius:20px;box-sizing:border-box;font-size:.9rem; background:#fcfdff; font-weight:600;}
+input:focus,select:focus{outline:none;border-color:var(--p);box-shadow:0 0 0 4px var(--p-border); background:white;}
+.permissions-box{margin-top:15px;border:2px solid var(--p-border);padding:20px;border-radius:10px;background:var(--bg);}
 .permissions-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px;}
-.perm-label{font-weight:500;color:#475569;display:flex;align-items:center;gap:8px;cursor:pointer;} .perm-label input{width:auto;}
-button.save-btn{background:var(--accent-orange);color:#fff;border:none;padding:14px;width:100%;border-radius:6px;cursor:pointer;font-weight:bold;text-transform:uppercase;margin-top:15px;}
-button.cancel-btn{background:#64748b;color:#fff;border:none;padding:14px;width:100%;border-radius:6px;cursor:pointer;font-weight:bold;text-transform:uppercase;margin-top:10px;display:none;}
-table{width:100%;border-collapse:collapse;margin-top:20px;} th{background:var(--sidebar-dark);color:#fff;padding:12px;text-align:left;font-size:.8rem;text-transform:uppercase;}
-td{padding:12px;border-bottom:1px solid #e2e8f0;font-size:.9rem;} tr:hover td{background:#f8fafc;}
-.del-btn{background:var(--danger-red);color:#fff;border:none;padding:6px 12px;border-radius:4px;cursor:pointer;margin-left:5px;}
-.edit-btn{background:#3b82f6;color:#fff;border:none;padding:6px 12px;border-radius:4px;cursor:pointer;}
-.btn-back{background:#fff;border:1px solid #cbd5e1;padding:8px 15px;border-radius:4px;cursor:pointer;margin-bottom:20px;display:inline-block;color:#334155;text-decoration:none;font-size:13px;}
-.badge{background:#e2e8f0;padding:4px 10px;border-radius:4px;font-size:.75rem;font-weight:bold;color:var(--sidebar-dark);}
-.perm-badge{background:#dbeafe;color:#1e40af;padding:2px 6px;border-radius:4px;font-size:.7rem;display:inline-block;margin:1px;}
-.class-badge{background:#fef3c7;color:#92400e;padding:4px 10px;border-radius:4px;font-size:.75rem;font-weight:bold;}
-/* Custom modal - avoids alert/confirm lock */
-#customModal{display:none;position:fixed;z-index:9999;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,0.4);align-items:center;justify-content:center;}
-#customBox{background:#fff;padding:20px;border-radius:8px;min-width:350px;max-width:450px;box-shadow:0 10px 25px rgba(0,0,0,.2);}
+.perm-label{font-weight:600;color:#475569;display:flex;align-items:center;gap:8px;cursor:pointer; background:var(--card-white); padding:8px 10px; border-radius:10px; border:1px solid var(--p-border);} .perm-label input{width:auto;}
+button.save-btn{background:var(--p);color:#fff;border:none;padding:14px;width:100%;border-radius:20px;cursor:pointer;font-weight:bold;text-transform:uppercase;margin-top:15px;}
+button.cancel-btn{background:#64748b;color:#fff;border:none;padding:14px;width:100%;border-radius:20px;cursor:pointer;font-weight:bold;text-transform:uppercase;margin-top:10px;display:none;}
+table{width:100%;border-collapse:collapse;margin-top:20px; border-radius:10px; overflow:hidden; border:2px solid var(--p-border);} th{background:var(--sidebar-bg);color:#fff;padding:14px 10px;text-align:left;font-size:.75rem;text-transform:uppercase;}
+td{padding:12px 10px;border-bottom:1px solid #eee;font-size:.9rem;} tr:hover td{background:var(--bg);}
+.del-btn{background:#fff1f2;color:var(--danger-red);border:2px solid #ffe4e6;padding:6px 12px;border-radius:20px;cursor:pointer;margin-left:5px; font-weight:700;}
+.edit-btn{background:var(--bg);color:var(--p);border:2px solid var(--p-border);padding:6px 12px;border-radius:20px;cursor:pointer; font-weight:700;}
+.btn-back{background:var(--card-white);border:2px solid var(--p-border);padding:8px 15px;border-radius:20px;cursor:pointer;margin-bottom:20px;display:inline-block;color:var(--p);text-decoration:none;font-size:13px; font-weight:700;}
+.badge{background:var(--bg); padding:4px 10px;border-radius:20px;font-size:.75rem;font-weight:bold;color:var(--p); border:1px solid var(--p-border);}
+.perm-badge{background:var(--bg);color:var(--p);padding:3px 8px;border-radius:20px;font-size:.7rem;display:inline-block;margin:1px; border:1px solid var(--p-border); font-weight:700;}
+.class-badge{background:#fef3c7;color:#92400e;padding:4px 10px;border-radius:20px;font-size:.75rem;font-weight:bold;}
+#customModal{display:none;position:fixed;z-index:9999;left:0;top:0;width:100%;height:100%;background:rgba(15,23,42,0.55);backdrop-filter:blur(8px);align-items:center;justify-content:center;}
+#customBox{background:#fff;padding:20px;border-radius:12px;min-width:350px;max-width:450px;box-shadow:0 10px 25px rgba(0,0,0,.2); border:2px solid var(--p-border);}
 #customBox p{font-size:13px;color:#334155;margin:0 0 15px 0;}
 #customBtns{text-align:right;}
-#customBtns button{width:auto;padding:6px 16px;margin-left:8px;}
+#customBtns button{width:auto;padding:8px 16px;margin-left:8px; border-radius:20px;}
 </style>
 </head>
 <body>
-<a href="dashboard.html" class="btn-back">Back to Dashboard</a>
-<div style="display:flex;gap:30px;max-width:1400px;margin:auto;align-items:flex-start;flex-wrap:wrap;">
+
+<div class="header">
+<div><h2>System Users</h2></div>
+<div><a href="dashboard.html" class="btn-back">Dashboard</a></div>
+</div>
+
+<div style="display:flex;gap:20px;max-width:1400px;margin:auto;align-items:flex-start;flex-wrap:wrap;">
   <div class="container" style="flex:1;min-width:450px;margin:0;">
     <h2 id="formTitle">Add System User</h2>
     <form id="userForm">
@@ -60,7 +71,7 @@ td{padding:12px;border-bottom:1px solid #e2e8f0;font-size:.9rem;} tr:hover td{ba
           <label class="perm-label"><input type="checkbox" value="dashattendance" /> ⏱️ Dashboard: Attendance</label>
           <label class="perm-label"><input type="checkbox" value="dashqbank" /> 📄 Dashboard: Question Papers</label>
           <label class="perm-label" style="grid-column: span 2;"><input type="checkbox" value="dashledger" /> 🏢 Dashboard: School Ledger</label>
-          <label class="perm-label" style="grid-column: span 2; border-top:1px dashed #cbd5e1; padding-top:8px; margin-top:4px;"><input type="checkbox" value="dashstatscards" /> 📊 Show Dashboard Metric Stats Cards</label>
+          <label class="perm-label" style="grid-column: span 2; border-top:1px dashed var(--p-border); padding-top:8px; margin-top:4px;"><input type="checkbox" value="dashstatscards" /> 📊 Show Dashboard Metric Stats Cards</label>
         </div>
       </div>
       <button type="submit" id="submitBtn" class="save-btn">Save User Account</button>
@@ -73,9 +84,34 @@ td{padding:12px;border-bottom:1px solid #e2e8f0;font-size:.9rem;} tr:hover td{ba
   </div>
 </div>
 
-<div id="customModal"><div id="customBox"><p id="customMsg">Message</p><div id="customBtns"><button id="customCancel" style="background:#64748b;color:#fff;">Cancel</button><button id="customOk" style="background:#102a43;color:#fff;">OK</button></div></div></div>
+<div id="customModal"><div id="customBox"><p id="customMsg">Message</p><div id="customBtns"><button id="customCancel" style="background:#64748b;color:#fff;">Cancel</button><button id="customOk" style="background:var(--p);color:#fff;">OK</button></div></div></div>
 
 <script>
+// ===== THEME MANAGER - SAME AS FEE LIST =====
+const defaultTheme={primary:"#0f766e",sidebarBg:"#0f766e",bg:"#f0fdfa"};
+function applyTheme(t){
+  const theme={...defaultTheme,...(t||{})};
+  const r=document.documentElement;
+  r.style.setProperty('--p',theme.primary);
+  r.style.setProperty('--sidebar-bg',theme.sidebarBg);
+  r.style.setProperty('--bg',theme.bg);
+  r.style.setProperty('--p-border',theme.primary+'30');
+  r.style.setProperty('--accent-orange',theme.primary);
+  r.style.setProperty('--sidebar-dark',theme.sidebarBg);
+  r.style.setProperty('--bg-page',theme.bg);
+  document.body.style.background=theme.bg;
+}
+async function loadAndApplyTheme(){
+  try{
+    let saved=null;
+    if(window.api&&window.api.getThemeDetails){try{saved=await window.api.getThemeDetails();}catch(e){}}
+    if(!saved) saved=JSON.parse(localStorage.getItem('eduPulseTheme')||'null');
+    if(!saved) saved=JSON.parse(localStorage.getItem('theme')||'null');
+    applyTheme(saved||defaultTheme);
+  }catch(e){applyTheme(defaultTheme);}
+}
+loadAndApplyTheme();
+
 let globalUsersList=[];
 
 function releaseFocusLock(){
@@ -92,7 +128,6 @@ function restoreFocus(){
   }, 80);
 }
 
-// Custom alert/confirm that doesn't lock
 function showAlert(msg){
   document.getElementById('customMsg').innerText = msg;
   document.getElementById('customCancel').style.display='none';
@@ -110,8 +145,8 @@ function showConfirm(msg){
     okBtn.addEventListener('click', onOk); cancelBtn.addEventListener('click', onCancel);
   });
 }
-document.getElementById('customOk').addEventListener('click', ()=>{ /* handled in promise */ });
-document.getElementById('customCancel').addEventListener('click', ()=>{ /* handled in promise */ });
+document.getElementById('customOk').addEventListener('click', ()=>{});
+document.getElementById('customCancel').addEventListener('click', ()=>{});
 document.getElementById('customModal').addEventListener('click', (e)=>{ if(e.target.id==='customModal'){ document.getElementById('customModal').style.display='none'; releaseFocusLock(); restoreFocus(); } });
 
 document.addEventListener('DOMContentLoaded',()=>{
@@ -139,7 +174,6 @@ function togglePermissionsGrid(){
   else{ block.style.opacity='1'; block.style.pointerEvents='auto'; classDiv.style.display='block'; }
 }
 async function loadUsers(){
-  
   try{
     console.log("Calling getAllUsers...");
     const users=await window.authAPI.getAllUsers();

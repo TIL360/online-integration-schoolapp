@@ -7,39 +7,40 @@
 <link rel="stylesheet" href="../../assets/css/all.min.css" />
 <style>
 :root {
---primary: #4f46e5; --bg-gray: #f8fafc; --border: #e2e8f0; --dark: #1e293b; --gray: #64748b;
---card-primary: #02245a; --card-header-text: #ffffff; --card-small-text: #ffffff;
---card-footer-bg: #02245a; --heading-color: #0D47A1; --top-nav-heading: #1e293b;
+--p:#0a7a0a; --sidebar-bg:#6f42c1; --bg:#fef9e7; --p-border:#0a7a0a30;
+--primary: #0a7a0a; --bg-gray: #f8fafc; --border: #e2e8f0; --dark: #1e293b; --gray: #64748b;
+--card-primary: #0a7a0a; --card-header-text: #ffffff; --card-small-text: #ffffff;
+--card-footer-bg: #0a7a0a; --heading-color: #0a7a0a; --top-nav-heading: #1e293b;
 }
-body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg-gray); margin: 0; padding: 20px; color: var(--dark); }
+body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); margin: 0; padding: 20px; color: var(--dark); }
 .id-card::before { content: ""; position: absolute; top: 55%; left: 50%; transform: translate(-50%, -50%); width: 140px; height: 140px; background-image: url('../../images/logo.png'); background-repeat: no-repeat; background-position: center; background-size: contain; opacity: 0.06; z-index: 0; pointer-events: none; }
 .page-container { max-width: 1200px; margin: 0 auto; }
-.top-nav { display: flex; justify-content: space-between; align-items: center; background: white; padding: 15px 25px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 20px; }
-.top-nav h2 { margin: 0; font-size: 20px; color: var(--top-nav-heading); }
-.top-nav h2 i { color: var(--primary) !important; }
-.btn { height: 42px; padding: 0 20px; border-radius: 6px; border: none; font-weight: 600; cursor: pointer; font-size: 13px; display: inline-flex; align-items: center; gap: 8px; }
-.btn-portal { background: #64748b; color: white; text-decoration: none; }
-.btn-print { background: var(--primary); color: white; }
-.filter-card { background: white; padding: 20px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 20px; display: flex; align-items: center; gap: 15px; }
+.top-nav { display: flex; justify-content: space-between; align-items: center; background: white; padding: 15px 25px; border-radius: 12px; border:2px solid var(--p-border); box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 20px; }
+.top-nav h2 { margin: 0; font-size: 20px; color: var(--p); font-weight:900; display:flex; align-items:center; gap:8px; }
+.top-nav h2:before{content:''; width:5px; height:18px; background:var(--p); border-radius:4px; display:inline-block;}
+.btn { height: 42px; padding: 0 20px; border-radius: 20px; border: none; font-weight: 800; cursor: pointer; font-size: 12px; display: inline-flex; align-items: center; gap: 8px; }
+.btn-portal { background: var(--bg); color: var(--p); border:2px solid var(--p-border); text-decoration: none; }
+.btn-print { background: var(--p); color: white; }
+.filter-card { background: white; padding: 20px; border-radius: 12px; border: 2px solid var(--p-border); margin-bottom: 20px; display: flex; align-items: center; gap: 15px; flex-wrap:wrap; }
 .form-group { display: flex; flex-direction: column; gap: 6px; }
-.form-group label { font-size: 12px; font-weight: bold; color: var(--gray); text-transform: uppercase; }
-.form-select { height: 40px; padding: 0 12px; border: 1px solid var(--border); border-radius: 6px; outline: none; font-size: 14px; }
+.form-group label { font-size: 11px; font-weight: 800; color: var(--p); text-transform: uppercase; }
+.form-select { height: 40px; padding: 0 14px; border: 2px solid var(--p-border); border-radius: 20px; outline: none; font-size: 14px; font-weight:600; }
 .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 25px; margin-top: 10px; }
-.id-card { background: white; border: 2px solid var(--card-primary); border-radius: 12px; width: 400px; height: 245px; position: relative; box-shadow: 0 4px 10px rgba(0,0,0,0.08); box-sizing: border-box; overflow: hidden; display: flex; flex-direction: column; }
-.card-header { background: var(--card-primary) !important; padding: 10px; text-align: center; }
-.card-header h3 { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 0; font-size: 15px; letter-spacing: 0.5px; text-transform: uppercase; font-weight: 700; color: var(--card-header-text) !important; }
-.card-header p { margin: 2px 0 0 0; font-size: 10px; color: var(--card-small-text) !important; letter-spacing: 1px; }
+.id-card { background: white; border: 2px solid var(--p); border-radius: 12px; width: 400px; height: 245px; position: relative; box-shadow: 0 4px 10px rgba(0,0,0,0.08); box-sizing: border-box; overflow: hidden; display: flex; flex-direction: column; }
+.card-header { background: var(--p) !important; padding: 10px; text-align: center; }
+.card-header h3 { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 0; font-size: 15px; letter-spacing: 0.5px; text-transform: uppercase; font-weight: 800; color: white !important; }
+.card-header p { margin: 2px 0 0 0; font-size: 10px; color: white !important; letter-spacing: 1px; font-weight:700; }
 .card-body { display: flex; padding: 12px 15px; gap: 12px; flex: 1; align-items: center; justify-content: space-between; position: relative; z-index: 1; }
 .info-area { flex: 1; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
-.staff-name-title { font-size: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; color: #0D47A1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.staff-name-title { font-size: 15px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; color: var(--p); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .info-row { font-size: 11.5px; color: #334155; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.info-label { font-weight: bold; color: var(--gray); display: inline-block; width: 75px; }
-.staff-photo-wrap { width: 75px; height: 85px; border-radius: 8px; overflow: hidden; border: 2px solid var(--border); flex-shrink: 0; background: #f1f5f9; }
+.info-label { font-weight: 800; color: var(--p); display: inline-block; width: 75px; }
+.staff-photo-wrap { width: 75px; height: 85px; border-radius: 8px; overflow: hidden; border: 2px solid var(--p-border); flex-shrink: 0; background: #f1f5f9; }
 .staff-photo-wrap img { width: 100%; height: 100%; object-fit: cover; }
-.qrcode-area { width: 75px; height: 75px; display: flex; align-items: center; justify-content: center; border: 1px solid #e2e8f0; border-radius: 6px; padding: 4px; background: white; flex-shrink: 0; }
+.qrcode-area { width: 75px; height: 75px; display: flex; align-items: center; justify-content: center; border: 2px solid var(--p-border); border-radius: 8px; padding: 4px; background: white; flex-shrink: 0; }
 .qrcode-area img { width: 100%; height: 100%; object-fit: contain; }
-.card-footer { background: var(--card-footer-bg) !important; color: white; font-size: 10px; text-align: center; padding: 6px; font-weight: 500; margin-top: auto; }
-.no-data { grid-column: 1 / -1; background: white; padding: 40px; text-align: center; border-radius: 12px; border: 1px solid var(--border); color: var(--gray); font-weight: 500; }
+.card-footer { background: var(--p) !important; color: white; font-size: 10px; text-align: center; padding: 6px; font-weight: 700; margin-top: auto; }
+.no-data { grid-column: 1 / -1; background: white; padding: 40px; text-align: center; border-radius: 12px; border: 2px solid var(--p-border); color: var(--p); font-weight: 800; }
 @media print {
 body { background: white; padding: 0; margin: 0; }
 .top-nav, .filter-card { display: none !important; }
@@ -53,7 +54,7 @@ body { background: white; padding: 0; margin: 0; }
 <div class="page-container">
 <div class="top-nav">
 <h2><i class="fas fa-user-tie"></i> Staff ID Cards Generator</h2>
-<div>
+<div style="display:flex; gap:10px;">
 <button class="btn btn-portal" onclick="window.api.changePage('components/staff/staff.html')"><i class="fas fa-th-large"></i> Management Portal</button>
 <button class="btn btn-print" onclick="window.print()"><i class="fas fa-print"></i> Print Cards</button>
 </div>
@@ -71,39 +72,51 @@ body { background: white; padding: 0; margin: 0; }
 <div id="cardsContainer" class="cards-grid"><div class="no-data">Loading application staff records...</div></div>
 </div>
 <script>
+// ===== THEME MANAGER - PRIMARY COLOR = CARD HEADER =====
+const defaultTheme={primary:"#0a7a0a",sidebarBg:"#6f42c1",bg:"#fef9e7"};
+function applyDashboardTheme(t){
+  const theme={...defaultTheme,...(t||{})};
+  const r=document.documentElement;
+  const primary = theme.primary || theme.cardPrimary || "#0a7a0a";
+  const bg = theme.bg || theme.backgroundColor || "#fef9e7";
+  const sidebar = theme.sidebarBg || theme.sidebarColor || "#6f42c1";
+
+  r.style.setProperty('--p',primary);
+  r.style.setProperty('--primary',primary);
+  r.style.setProperty('--card-primary',primary); // <-- CARD HEADER = PRIMARY
+  r.style.setProperty('--card-footer-bg',primary); // <-- CARD FOOTER = PRIMARY
+  r.style.setProperty('--heading-color',primary);
+  r.style.setProperty('--sidebar-bg',sidebar);
+  r.style.setProperty('--bg',bg);
+  r.style.setProperty('--p-border',primary+'30');
+  r.style.setProperty('--bg-gray',bg);
+  document.body.style.background=bg;
+}
+async function loadDashboardTheme(){
+  try{
+    let saved=null;
+    if(window.api&&window.api.getThemeDetails){try{saved=await window.api.getThemeDetails();}catch(e){}}
+    if(!saved) saved=JSON.parse(localStorage.getItem('eduPulseTheme')||'null');
+    if(!saved) saved=JSON.parse(localStorage.getItem('theme')||'null');
+    applyDashboardTheme(saved||defaultTheme);
+  }catch(e){applyDashboardTheme(defaultTheme);}
+}
+
 let rawStaffMasterCache = [];
 let applicationMeta = {};
 const FALLBACK_IMG = '../../images/logo.png';
 
 window.onload = async () => { 
   window.focus();
+  await loadDashboardTheme();
   await loadInitialData(); 
-  await applyTheme(); // same as student card
 };
-
-async function applyTheme(){
-  try{
-    let theme = null;
-    if(applicationMeta && applicationMeta.theme) theme = applicationMeta.theme;
-    if(!theme && window.api.getTheme) theme = await window.api.getTheme();
-    if(theme){
-      const r = document.documentElement;
-      // STAFF CARD THEME - FROM main.js appTheme
-      r.style.setProperty('--card-primary', theme.staffCardHeaderBg || theme.cardPrimary || '#02245a');
-      r.style.setProperty('--card-header-text', theme.staffCardHeaderText || theme.heading1 || '#ffffff');
-      r.style.setProperty('--card-small-text', theme.staffCardSmallText || theme.studentCardSmallText || '#ffffff');
-      r.style.setProperty('--card-footer-bg', theme.staffCardFooterBg || theme.studentCardFooterBg || theme.cardFooterBg || '#02245a');
-      r.style.setProperty('--primary', theme.primary || '#4f46e5');
-      r.style.setProperty('--top-nav-heading', theme.topNavHeading || theme.heading1 || '#1e293b');
-      // For name color you can also use heading1
-      document.documentElement.style.setProperty('--heading-color', theme.staffCardNameColor || '#0D47A1');
-    }
-  }catch(e){ console.log("Theme error", e); }
-}
 
 async function loadInitialData() {
     try {
         applicationMeta = await window.api.getAppDetails() || {};
+        // theme from appDetails also
+        if(applicationMeta.theme) applyDashboardTheme(applicationMeta.theme);
         rawStaffMasterCache = await window.api.getStaff() || [];
         renderStaffCards(rawStaffMasterCache);
     } catch (error) {
@@ -127,15 +140,12 @@ function renderStaffCards(staffList) {
         const designation = member.designation || member.role || '-';
         const mobile = member.contact || member.phone || member.mobile || '-';
         const cnic = member.cnic || '-';
-
         let photoSrc = member.photoDisplay || member.photo || '';
         if(!photoSrc || (!photoSrc.startsWith('data:') && !photoSrc.startsWith('../../') && !photoSrc.startsWith('file:'))){
-          // If photoDisplay is base64 from new main.js handler, use it
           if(member.photoDisplay && member.photoDisplay.startsWith('data:')) photoSrc = member.photoDisplay;
           else if(member.photo && member.photo.startsWith('data:')) photoSrc = member.photo;
           else photoSrc = FALLBACK_IMG;
         }
-
         const cardMarkupLayout = `
         <div class="id-card">
             <div class="card-header">

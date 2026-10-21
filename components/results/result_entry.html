@@ -6,6 +6,7 @@
 <title>Exam & Marks Management</title>
 <style>
 :root {
+--p:#003049; --sidebar-bg:#003049; --bg:#f4f6f9; --p-border:#00304930;
 --bg-color: #f4f6f9;
 --container-bg: #ffffff;
 --primary: #003049;
@@ -21,10 +22,9 @@
 --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
 --shadow-md: 0 10px 25px rgba(0,0,0,0.08);
 }
-
 body {
 font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-background-color: var(--bg-color);
+background-color: var(--bg);
 margin: 0;
 padding: 30px 20px;
 color: var(--text-main);
@@ -32,268 +32,56 @@ display: flex;
 flex-direction: column;
 align-items: center;
 }
-
-.container { 
-width: 100%;
-max-width: 1100px; 
-box-sizing: border-box;
-}
-
-.top-nav {
-width: 100%;
-display: flex;
-justify-content: flex-end;
-gap: 12px;
-margin-bottom: 20px;
-}
-
+.container { width: 100%; max-width: 1100px; box-sizing: border-box; }
+.top-nav { width: 100%; display: flex; justify-content: flex-end; gap: 12px; margin-bottom: 20px; }
 .nav-btn {
-display: inline-flex;
-align-items: center;
-justify-content: center;
-padding: 10px 20px;
-font-size: 14px;
-font-weight: 600;
-text-decoration: none;
-color: var(--primary);
-background: var(--container-bg);
-border: 1px solid var(--border-color);
-border-radius: 6px;
-box-shadow: var(--shadow-sm);
-transition: all 0.2s ease-in-out;
-cursor: pointer;
+display: inline-flex; align-items: center; justify-content: center; padding: 10px 20px; font-size: 14px; font-weight: 700;
+text-decoration: none; color: var(--p); background: var(--container-bg); border: 2px solid var(--p-border);
+border-radius: 20px; box-shadow: var(--shadow-sm); transition: all 0.2s ease-in-out; cursor: pointer;
 }
-
-.nav-btn:hover {
-color: white;
-background-color: var(--primary);
-border-color: var(--primary);
-transform: translateY(-1px);
-}
-
-.nav-btn-premium {
-background-color: var(--primary);
-color: white;
-border-color: var(--primary);
-}
-
-.nav-btn-premium:hover {
-background-color: var(--primary-hover);
-border-color: var(--primary-hover);
-}
-
-h1.main-title {
-text-align: center; 
-color: var(--primary); 
-font-size: 28px;
-font-weight: 800;
-margin-bottom: 10px;
-letter-spacing: 0.5px;
-}
-
-.header { 
-display: flex; 
-justify-content: space-between; 
-align-items: center; 
-margin-bottom: 15px; 
-width: 100%;
-}
-
-.header h2 { 
-font-size: 22px; 
-margin: 0; 
-color: var(--primary); 
-font-weight: 700;
-}
-
+.nav-btn:hover { color: white; background-color: var(--p); border-color: var(--p); transform: translateY(-1px); }
+.nav-btn-premium { background-color: var(--p); color: white; border-color: var(--p); }
+.nav-btn-premium:hover { background-color: var(--sidebar-bg); border-color: var(--sidebar-bg); }
+h1.main-title { text-align: center; color: var(--p); font-size: 28px; font-weight: 900; margin-bottom: 10px; letter-spacing: 0.5px; display:flex; align-items:center; justify-content:center; gap:10px; }
+h1.main-title:before{content:''; width:6px; height:24px; background:var(--p); border-radius:4px; display:inline-block;}
+.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; width: 100%; }
+.header h2 { font-size: 22px; margin: 0; color: var(--p); font-weight: 800; }
 .card {
-background: var(--container-bg);
-padding: 24px;
-border-radius: 12px;
-box-shadow: var(--shadow-sm);
-margin-bottom: 20px;
-border: 1px solid var(--border-color);
+background: var(--container-bg); padding: 24px; border-radius: 16px; box-shadow: var(--shadow-sm);
+margin-bottom: 20px; border: 2px solid var(--p-border);
 }
-
-h3 { 
-font-size: 16px; 
-font-weight: 700;
-margin: 0 0 15px 0; 
-color: var(--primary); 
-border-bottom: 1px solid var(--border-color); 
-padding-bottom: 8px; 
-text-transform: uppercase;
-letter-spacing: 0.5px;
-}
-
-.grid-2 { 
-display: grid; 
-grid-template-columns: 1fr 1fr; 
-gap: 20px; 
-}
-
-.form-group { 
-display: flex;
-flex-direction: column;
-gap: 6px;
-margin-bottom: 12px; 
-}
-
-label { 
-font-size: 13px; 
-font-weight: 600; 
-color: var(--text-muted);
-text-transform: uppercase;
-letter-spacing:  0.5px;
-display: block; 
-}
-
+h3 { font-size: 14px; font-weight: 800; margin: 0 0 15px 0; color: var(--p); border-bottom: 2px solid var(--p-border); padding-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+label { font-size: 11px; font-weight: 800; color: var(--p); text-transform: uppercase; letter-spacing:0.5px; display: block; }
 input, select {
-padding: 10px 14px;
-border: 1px solid var(--border-color);
-border-radius: 6px;
-font-size: 14px;
-background-color: var(--input-bg);
-color: var(--text-main);
-outline: none;
-transition: border-color 0.2s ease, box-shadow 0.2s ease;
-width: 100%;
-box-sizing: border-box;
+padding: 10px 14px; border: 2px solid var(--p-border); border-radius: 20px; font-size: 14px; font-weight:600;
+background-color: var(--input-bg); color: var(--text-main); outline: none; transition: 0.2s ease; width: 100%; box-sizing: border-box;
 }
-
-select:focus, input[type="text"]:focus, input[type="number"]:focus {
-border-color: var(--primary);
-box-shadow: 0 0 0 3px rgba(0, 48, 73, 0.15);
-}
-
-/* Checkbox Area */
+select:focus, input[type="text"]:focus, input[type="number"]:focus { border-color: var(--p); box-shadow: 0 0 0 4px var(--p-border); }
 .class-box {
-background: #f8f9fa;
-border: 1px solid var(--border-color);
-padding: 15px;
-border-radius: 8px;
-max-height: 150px;
-overflow-y: auto;
-display: grid;
-grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-gap: 10px;
+background: var(--bg); border: 2px solid var(--p-border); padding: 15px; border-radius: 12px; max-height: 150px;
+overflow-y: auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px;
 }
-
-.checkbox-item { 
-display: flex; 
-align-items: center; 
-gap: 8px; 
-font-size: 13px; 
-font-weight: 500;
-}
-
-.checkbox-item input { 
-width: auto; 
-accent-color: var(--primary);
-}
-
-/* SUBJECTS GRID: COMPACT LAYOUT WITH MODERN ACENTING */
-.subjects-grid {
-display: grid;
-grid-template-columns: repeat(4, 1fr);
-gap: 12px 20px;
-background: #f8f9fa;
-padding: 20px;
-border-radius: 10px;
-border: 1px solid var var(--border-color);
-}
-
-.sub-item {
-display: flex;
-align-items: center;
-justify-content: space-between;
-gap: 10px;
-}
-
-.sub-item {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start; /* Changed from space-between to keep input next to label */
-    gap: 12px;                  /* Clean spacing between the label and input box */
-}
-
-.sub-item label {
-    margin: 0;
-    white-space: normal; /* Allows very long text to wrap cleanly to a new line if needed */
-    width: 140px;        /* Substantially increased width to fit long names */
-    font-size: 12px;     /* Slightly reduced font size to keep long words compact */
-    line-height: 1.2;
-}
-
-
-.sub-item input {
-    text-align: center;
-    width: 70px;                /* Clean, standardized width for the mark numbers */
-}
-
-
-.total-banner {
-display: flex;
-justify-content: flex-end;
-align-items: center;
-gap: 20px;
-margin-top: 25px;
-padding-top: 20px;
-border-top: 1px solid var(--border-color);
-}
-
-#displayTotal { 
-font-size: 22px; 
-color: var(--primary); 
-font-weight: 800; 
-}
-
-/* Standardized Buttons */
+.checkbox-item { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; background:white; padding:6px 8px; border-radius:8px; border:1px solid var(--p-border); }
+.checkbox-item input { width: auto; accent-color: var(--p); }
+.subjects-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px 20px; background: var(--bg); padding: 20px; border-radius: 12px; border: 2px solid var(--p-border); }
+.sub-item { display: flex; align-items: center; justify-content: flex-start; gap: 12px; }
+.sub-item label { margin: 0; white-space: normal; width: 140px; font-size: 11px; line-height: 1.2; }
+.sub-item input { text-align: center; width: 70px; }
+.total-banner { display: flex; justify-content: flex-end; align-items: center; gap: 20px; margin-top: 25px; padding-top: 20px; border-top: 2px solid var(--p-border); }
+#displayTotal { font-size: 22px; color: var(--p); font-weight: 900; }
 .btn {
-padding: 11px 20px;
-color: white;
-border: none;
-border-radius: 6px;
-cursor: pointer;
-font-weight: 600;
-font-size: 14px;
-transition: background-color 0.2s ease, transform 0.1s ease;
-white-space: nowrap;
-height: 40px;
-display: inline-flex;
-align-items: center;
-justify-content: center;
-box-sizing: border-box;
+padding: 11px 20px; color: white; border: none; border-radius: 20px; cursor: pointer; font-weight: 800; font-size: 13px;
+transition: 0.2s ease; white-space: nowrap; height: 40px; display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box;
 }
-
-.btn:active {
-transform: scale(0.98);
-}
-
-.btn-primary { 
-background-color: var(--accent-red); 
-}
-
-.btn-primary:hover { 
-background-color: var(--accent-red-hover); 
-}
-
-.btn-success { 
-background-color: var(--accent-green); 
-width: 100%; 
-}
-
-.btn-success:hover { 
-background-color: var(--accent-green-hover); 
-}
-
-.btn-view {
-background-color: var(--primary);
-}
-
-.btn-view:hover {
-background-color: var(--primary-hover);
-}
+.btn:active { transform: scale(0.97); }
+.btn-primary { background-color: var(--p); }
+.btn-primary:hover { filter:brightness(0.9); }
+.btn-success { background-color: var(--p); width: 100%; }
+.btn-success:hover { filter:brightness(0.9); }
+.btn-view { background-color: var(--sidebar-bg); }
+.btn-view:hover { filter:brightness(1.2); }
 </style>
 </head>
 <body>
@@ -303,7 +91,6 @@ background-color: var(--primary-hover);
 <div class="container">
 <div class="header">
 <div class="top-nav">
-<!-- Change from exam_configuration.html to exam_configurations.html -->
 <button class="nav-btn" onclick="window.location.href='exam_configurations.html'">⚙️ Exam Configurations</button>
 <button class="nav-btn" onclick="window.location.href='../dashboard.html'">📊 Dashboard</button>
 <button class="nav-btn nav-btn-premium" onclick="window.location.href='datesheet.html'">📅 <strong>Date Sheet</strong></button>
@@ -312,7 +99,6 @@ background-color: var(--primary-hover);
 
 <!-- ROW 1: PREPARATION -->
 <div class="grid-2">
-<!-- Step 1 -->
 <div class="card">
 <h3>Step 1: Create New Exam</h3>
 <p style="font-size: 13px; color: var(--text-muted); margin-top: 0; margin-bottom: 15px;">Enter a unique name for the exam (e.g. Final Term 2026).</p>
@@ -320,8 +106,7 @@ background-color: var(--primary-hover);
 <input type="text" id="newExamName" placeholder="Exam Name">
 </div>
 <button class="btn btn-primary" onclick="createNewExam()">Create Exam</button>
- <!-- 🗑️ INSERT THIS NEW SECTION FOR EXAM DELETION -->
-    <div style="margin-top: 25px; padding-top: 15px; border-top: 1px dashed var(--border-color);">
+    <div style="margin-top: 25px; padding-top: 15px; border-top: 2px dashed var(--p-border);">
         <label style="font-size: 11px; margin-bottom: 8px;">Or Delete Existing Exam Registry</label>
         <div style="display: flex; gap: 8px;">
             <select id="deleteExamSelect" style="flex: 1; padding: 6px 10px; font-size: 13px;"></select>
@@ -330,7 +115,6 @@ background-color: var(--primary-hover);
     </div>
 </div>
 
-<!-- Step 2 -->
 <div class="card">
 <h3>Step 2: Add Students</h3>
 <div class="form-group">
@@ -339,9 +123,7 @@ background-color: var(--primary-hover);
 </div>
 <div class="form-group">
 <label>2. Select Classes</label>
-<div id="classCheckboxContainer" class="class-box">
-<!-- Loaded via Script -->
-</div>
+<div id="classCheckboxContainer" class="class-box"></div>
 </div>
 <button class="btn btn-success" onclick="generateMarkSheets()">Initiate Exam for Selected Classes</button>
 </div>
@@ -361,13 +143,7 @@ background-color: var(--primary-hover);
 </div>
 </div>
 
-
-<!-- 📌 PASTE THIS CLEAN DYNAMIC HOLDER GRID INSTEAD: -->
-<div id="dynamicSubjectsMarksGrid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; background: #fff; padding: 20px; border-radius: 8px;">
-    <!-- Elements will be generated dynamically on the fly by Javascript -->
-</div>
-
-
+<div id="dynamicSubjectsMarksGrid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; background: #fff; padding: 20px; border-radius: 12px; border:2px solid var(--p-border);"></div>
 
 <div class="total-banner">
 <div style="font-weight: bold; font-size: 16px; color: var(--text-main);">Grand Total: <span id="displayTotal">2200</span></div>
@@ -377,130 +153,83 @@ background-color: var(--primary-hover);
 </div>
 </div>
 
-
 <script>
-    // Helper to normalize subject custom code names to match your exact SQLite database column prefixes
-function getNormalizedKey(code) {
-    return String(code).toLowerCase().trim().replace(/[^a-z0-9]+/g, '_');
+// ===== THEME MANAGER ONLY - NO OTHER LOGIC CHANGED =====
+const defaultTheme={primary:"#003049",sidebarBg:"#003049",bg:"#f4f6f9"};
+function applyTheme(t){
+  const theme={...defaultTheme,...(t||{})};
+  const r=document.documentElement;
+  r.style.setProperty('--p',theme.primary);
+  r.style.setProperty('--sidebar-bg',theme.sidebarBg);
+  r.style.setProperty('--bg',theme.bg);
+  r.style.setProperty('--p-border',theme.primary+'30');
+  r.style.setProperty('--primary',theme.primary);
+  r.style.setProperty('--bg-color',theme.bg);
+  document.body.style.background=theme.bg;
 }
-function getNormalizedKeyForSaving(code) {
-    return String(code).toLowerCase().trim().replace(/[^a-z0-9]+/g, '_');
+async function loadAndApplyTheme(){
+  try{
+    let saved=null;
+    if(window.api&&window.api.getThemeDetails){try{saved=await window.api.getThemeDetails();}catch(e){}}
+    if(!saved) saved=JSON.parse(localStorage.getItem('eduPulseTheme')||'null');
+    applyTheme(saved||defaultTheme);
+  }catch(e){applyTheme(defaultTheme);}
 }
-// Single consolidated page initialization routine
+loadAndApplyTheme();
+
+function getNormalizedKey(code) { return String(code).toLowerCase().trim().replace(/[^a-z0-9]+/g, '_'); }
+function getNormalizedKeyForSaving(code) { return String(code).toLowerCase().trim().replace(/[^a-z0-9]+/g, '_'); }
 window.addEventListener('DOMContentLoaded', async () => {
-    loadDropdowns();
-    loadClassCheckboxes();
-    loadDynamicSubjectsForm();
-
-    // --- CENTRAL FIX FUNCTION ---
+    loadDropdowns(); loadClassCheckboxes(); loadDynamicSubjectsForm();
     function releaseFocusLock() {
-        if (window.authAPI && typeof window.authAPI.send === 'function') {
-            window.authAPI.send('fix-focus');
-        }
-        // 200ms baad pehle input ko force focus
-        setTimeout(() => {
-            const firstInput = document.querySelector('#examNameInput, input[type="text"]');
-            if (firstInput) firstInput.focus();
-        }, 200);
+        if (window.authAPI && typeof window.authAPI.send === 'function') { window.authAPI.send('fix-focus'); }
+        setTimeout(() => { const firstInput = document.querySelector('#examNameInput, input[type="text"]'); if (firstInput) firstInput.focus(); }, 200);
     }
-
-    // 1. SELECT ka purana fix
     document.body.addEventListener('change', (event) => {
-        if (event.target.tagName === 'SELECT') {
-            event.target.blur();
-            releaseFocusLock();
-        }
+        if (event.target.tagName === 'SELECT') { event.target.blur(); releaseFocusLock(); }
     });
-
-    // 2. CONFIRM aur ALERT ko hijack karo - ye Delete Exam wala lock khatam karega
     const _confirm = window.confirm;
-    window.confirm = function(msg) {
-        const result = _confirm(msg);
-        releaseFocusLock();
-        return result;
-    };
-
+    window.confirm = function(msg) { const result = _confirm(msg); releaseFocusLock(); return result; };
     const _alert = window.alert;
-    window.alert = function(msg) {
-        _alert(msg);
-        releaseFocusLock();
-    };
+    window.alert = function(msg) { _alert(msg); releaseFocusLock(); };
 });
 async function loadDropdowns() {
     const res = await window.api.getDropdownData();
     if (res.success) {
-        const selects = [
-            document.getElementById('selectExamInit'), 
-            document.getElementById('selectExamSettings'),
-            document.getElementById('deleteExamSelect')
-        ];
+        const selects = [document.getElementById('selectExamInit'), document.getElementById('selectExamSettings'), document.getElementById('deleteExamSelect')];
         const classSelect = document.getElementById('selectClassSettings');
-        
-        // Clear and fill exams dropdowns
-        selects.forEach(s => {
-            if (!s) return;
-            s.innerHTML = '<option value="">-- Choose Exam --</option>';
-            res.exams.forEach(e => s.add(new Option(e.exam_name, e.exam_id)));
-        });
-
-        // Fill class settings dropdown
-        if (classSelect) {
-            classSelect.innerHTML = '<option value="">-- Choose Class --</option>';
-            res.classes.forEach(c => classSelect.add(new Option(c.class_name, c.class_name)));
-        }
+        selects.forEach(s => { if (!s) return; s.innerHTML = '<option value="">-- Choose Exam --</option>'; res.exams.forEach(e => s.add(new Option(e.exam_name, e.exam_id))); });
+        if (classSelect) { classSelect.innerHTML = '<option value="">-- Choose Class --</option>'; res.classes.forEach(c => classSelect.add(new Option(c.class_name, c.class_name))); }
     }
 }
-
 async function loadClassCheckboxes() {
     const classes = await window.api.getActiveClasses();
     const container = document.getElementById('classCheckboxContainer');
     if (!container) return;
-    if (!classes || classes.length === 0) {
-        container.innerHTML = "No active students found.";
-        return;
-    }
-    container.innerHTML = classes.map(c =>
-        `<div class="checkbox-item">
-            <input type="checkbox" name="classCheck" value="${c.current_class}" id="class_${c.current_class}">
-            <label for="class_${c.current_class}">${c.current_class}</label>
-        </div>`
-    ).join('');
+    if (!classes || classes.length === 0) { container.innerHTML = "No active students found."; return; }
+    container.innerHTML = classes.map(c => `<div class="checkbox-item"><input type="checkbox" name="classCheck" value="${c.current_class}" id="class_${c.current_class}"><label for="class_${c.current_class}">${c.current_class}</label></div>`).join('');
 }
-// Fetches configured subjects dynamically from database and builds form fields
 async function loadDynamicSubjectsForm() {
     const grid = document.getElementById('dynamicSubjectsMarksGrid');
     if (!grid) return;
-    
     try {
         const dynamicSubjects = await window.api.getAllSubjects();
-        
         if (!dynamicSubjects || dynamicSubjects.length === 0) {
-            grid.innerHTML = `<p style="grid-column: span 4; text-align: center; color: var(--text-muted); padding: 20px;">
-                ⚠️ No subjects configured yet. Go to Exam Configurations to add your subjects.</p>`;
+            grid.innerHTML = `<p style="grid-column: span 4; text-align: center; color: var(--text-muted); padding: 20px;">⚠️ No subjects configured yet. Go to Exam Configurations to add your subjects.</p>`;
             return;
         }
-        
         grid.innerHTML = dynamicSubjects.map(sub => `
-            <div style="display: flex; align-items: center; justify-content: space-between; border: 1px solid #dee2e6; padding: 10px; border-radius: 6px; background: #f8f9fa;">
-                <label style="margin: 0; font-size: 12px; font-weight: bold; color: #333; text-transform: uppercase;">${sub.subject_display_name}</label>
-                <input type="number" id="${sub.subject_code}_setmarks" data-code="${sub.subject_code}" value="100" class="subject-weight-input" 
-                    style="width: 75px; text-align: center; padding: 5px; border: 1px solid #ccc; border-radius: 4px;" 
-                    oninput="calculateDynamicGrandTotal()">
+            <div style="display: flex; align-items: center; justify-content: space-between; border: 2px solid var(--p-border); padding: 10px; border-radius: 10px; background: var(--bg);">
+                <label style="margin: 0; font-size: 11px; font-weight: 800; color: var(--p); text-transform: uppercase;">${sub.subject_display_name}</label>
+                <input type="number" id="${sub.subject_code}_setmarks" data-code="${sub.subject_code}" value="100" class="subject-weight-input" style="width: 75px; text-align: center; padding: 5px; border-radius: 20px;" oninput="calculateDynamicGrandTotal()">
             </div>
         `).join('');
-        
-        calculateDynamicGrandTotal(); // Initial weight evaluation
-    } catch (err) {
-        console.error("Failed to build dynamic marks layout:", err);
-    }
+        calculateDynamicGrandTotal();
+    } catch (err) { console.error("Failed to build dynamic marks layout:", err); }
 }
-
-// Automatically loops through inputs to calculate live total weights banner
 function calculateDynamicGrandTotal() {
     let grandTotal = 0;
-    document.querySelectorAll('.subject-weight-input').forEach(input => {
-        grandTotal += parseFloat(input.value) || 0;
-    });
+    document.querySelectorAll('.subject-weight-input').forEach(input => { grandTotal += parseFloat(input.value) || 0; });
     const totalDisplay = document.getElementById('displayTotal');
     if (totalDisplay) totalDisplay.innerText = grandTotal;
 }
@@ -508,98 +237,43 @@ async function createNewExam() {
     const name = document.getElementById('newExamName').value.trim();
     if (!name) return alert("Enter exam name");
     const res = await window.api.createExamName(name);
-    if (res.success) {
-        alert("Exam Created!");
-        document.getElementById('newExamName').value = "";
-        loadDropdowns();
-    } else alert(res.error);
+    if (res.success) { alert("Exam Created!"); document.getElementById('newExamName').value = ""; loadDropdowns(); } else alert(res.error);
 }
-
 async function generateMarkSheets() {
     const examId = document.getElementById('selectExamInit').value;
     const selected = Array.from(document.querySelectorAll('input[name="classCheck"]:checked')).map(cb => cb.value);
     if (!examId || selected.length === 0) return alert("Select Exam and at least one Class");
-
     const res = await window.api.initiateExamLogic({ examId, selectedClasses: selected });
     if (!res.success) return alert("❌ Database Error: " + res.error);
-
-    if (res.newlyAdded === 0) {
-        alert("Students from these classes are already in this exam sheet.");
-    } else {
-        alert(`Success! Added ${res.newlyAdded} students.`);
-    }
+    if (res.newlyAdded === 0) { alert("Students from these classes are already in this exam sheet."); } else { alert(`Success! Added ${res.newlyAdded} students.`); }
 }
-
 async function updateTotalMarks() {
     const examId = document.getElementById('selectExamSettings').value;
     const className = document.getElementById('selectClassSettings').value;
     if (!examId || !className) return alert("Select Exam and Class for settings");
-    
-    // Core structural payload object package templates
-    const dynamicData = {
-        exam_id: examId,
-        current_class: className,
-        total: document.getElementById('displayTotal').innerText
-    };
-    
-    // Normalize custom string inputs into exact SQLite prefix tokens to prevent 0 overrides
+    const dynamicData = { exam_id: examId, current_class: className, total: document.getElementById('displayTotal').innerText };
     document.querySelectorAll('.subject-weight-input').forEach(input => {
         const rawCode = input.getAttribute('data-code');
         const normalCode = getNormalizedKeyForSaving(rawCode);
         dynamicData[normalCode] = input.value;
     });
-    
-    console.log("🚀 Dispatched payload values array sent to main.js database pipeline:", dynamicData);
-    
     const res = await window.api.updateSetMarks(dynamicData);
-    if (res.success) {
-        alert(`✨ Successfully saved total marks settings for ${res.changes} records!`);
-    } else {
-        alert("Error saving: " + res.error);
-    }
+    if (res.success) { alert(`✨ Successfully saved total marks settings for ${res.changes} records!`); } else { alert("Error saving: " + res.error); }
 }
-
 async function deleteSelectedExam() {
     const examSelect = document.getElementById('deleteExamSelect');
     const examId = examSelect.value;
     const examName = examSelect.options[examSelect.selectedIndex]?.text;
-    
-    if (!examId) {
-        alert("Please pick an existing exam to delete first!");
-        if (window.authAPI) window.authAPI.send('fix-focus');
-        return;
-    }
-
-    // SELECT ko pehle blur karo - ye Windows ka main glitch hai
+    if (!examId) { alert("Please pick an existing exam to delete first!"); if (window.authAPI) window.authAPI.send('fix-focus'); return; }
     examSelect.blur();
-
-    const confirm1 = confirm(`🚨 CRITICAL WARNING:\nYou are about to completely delete the exam: "${examName}"\nAre you sure you want to proceed?`);
-    
-    // confirm band hote hi focus wapas lao
+    const confirm1 = confirm(`🚨 CRITICAL WARNING:\nYou are about to completely delete the exam: "${examName}"\nAre you sure?`);
     if (window.authAPI) window.authAPI.send('fix-focus');
-    
     if (!confirm1) return;
-
     try {
         const result = await window.api.deleteExamCascade({ examId: parseInt(examId), examName: examName });
-        if (result && result.success) {
-            alert(`✨ Success! "${examName}" has been completely wiped out.`);
-            await loadDropdowns();
-        } else {
-            alert("Database Error: " + (result.error || "Operation failed."));
-        }
-    } catch (err) {
-        console.error("IPC path error:", err);
-        alert("Error: " + err.message);
-    } finally {
-        // Ye finally block sab se zaroori hai - delete ke baad input lock khatam karega
-        setTimeout(() => {
-            if (window.authAPI) window.authAPI.send('fix-focus');
-            const firstInput = document.querySelector('input[type="text"]');
-            if(firstInput) {
-                firstInput.focus();
-            }
-        }, 150);
+        if (result && result.success) { alert(`✨ Success! "${examName}" has been completely wiped out.`); await loadDropdowns(); } else { alert("Database Error: " + (result.error || "Operation failed.")); }
+    } catch (err) { console.error(err); alert("Error: " + err.message); } finally {
+        setTimeout(() => { if (window.authAPI) window.authAPI.send('fix-focus'); const firstInput = document.querySelector('input[type="text"]'); if(firstInput) firstInput.focus(); }, 150);
     }
 }
 </script>

@@ -192,8 +192,7 @@ getDateWiseReport: (date) => ipcRenderer.invoke('get-date-wise-report', date),
     // Replace the old updateSalaryStatus line with this:
 updateSalaryStatus: (payload) => ipcRenderer.invoke('update-salary-status', payload),
 
-
-     getDashboardStats: () => ipcRenderer.invoke('get-dashboard-stats'),
+getDashboardStats: (filters) => ipcRenderer.invoke('get-dashboard-stats', filters),
        getStudentFeeHistory: (id) => ipcRenderer.invoke('get-student-fee-history', id),
        // Add this inside the contextBridge.exposeInMainWorld('api', { ... }) block
 

@@ -6,43 +6,44 @@
   <title>Question Bank Dashboard - Rahbar Public School</title>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
+    :root{ --p:#0f766e; --sidebar-bg:#115e59; --bg:#f0fdfa; --p-border:#0f766e40; --primary:var(--p); }
     *{margin:0;padding:0;box-sizing:border-box}
-    body { font-family: 'Outfit', sans-serif; background: #f1f5f9; min-height:100vh; color: #0f172a; }
-    .header-bar { background: linear-gradient(135deg,#0f172a 0%, #1e293b 100%); padding: 18px 28px; display:flex; justify-content:space-between; align-items:center; color:white; position:sticky; top:0; z-index:10; box-shadow: 0 8px 24px rgba(15,23,42,0.2); }
+    body { font-family: 'Outfit', sans-serif; background: var(--bg) !important; background-color: var(--bg) !important; min-height:100vh; color: #0f172a; transition: background 0.6s ease; }
+    .header-bar { background: linear-gradient(135deg,var(--p) 0%, var(--sidebar-bg) 100%); padding: 18px 28px; display:flex; justify-content:space-between; align-items:center; color:white; position:sticky; top:0; z-index:10; box-shadow: 0 8px 24px rgba(15,23,42,0.2); transition: background 0.6s ease; }
     .header-bar h2{ font-size:20px; font-weight:800; display:flex; align-items:center; gap:10px; }
-    .header-bar h2 span{ background: linear-gradient(135deg,#f84040,#ff8a5b); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
-    .nav-btn { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border:1px solid rgba(255,255,255,0.15); color:white; padding:9px 16px; border-radius:999px; font-weight:600; font-size:12px; text-decoration:none; transition:0.2s; }
-    .nav-btn:hover{ background:white; color:#0f172a; }
+    .header-bar h2 span{ background: linear-gradient(135deg,#ffffff,#d1fff8); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+    .nav-btn { background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); border:1px solid rgba(255,255,255,0.2); color:white; padding:9px 16px; border-radius:999px; font-weight:600; font-size:12px; text-decoration:none; transition:0.2s; }
+    .nav-btn:hover{ background:white; color:var(--p); }
     .page-wrap{ max-width:1050px; margin:30px auto; padding:0 20px 40px; }
-    .sync-hero{ background: linear-gradient(135deg,#0f172a 0%, #334155 100%); border-radius:20px; padding:22px 26px; display:flex; justify-content:space-between; align-items:center; color:white; position:relative; overflow:hidden; box-shadow: 0 20px 40px rgba(15,23,42,0.2); margin-bottom:28px; }
-    .sync-hero::before{ content:''; position:absolute; right:-30px; top:-30px; width:180px; height:180px; background: radial-gradient(circle, rgba(248,64,64,0.3) 0%, transparent 70%); border-radius:50%; }
+    .sync-hero{ background: linear-gradient(135deg,var(--p) 0%, var(--sidebar-bg) 100%); border-radius:20px; padding:22px 26px; display:flex; justify-content:space-between; align-items:center; color:white; position:relative; overflow:hidden; box-shadow: 0 20px 40px rgba(15,23,42,0.2); margin-bottom:28px; }
+    .sync-hero::before{ content:''; position:absolute; right:-30px; top:-30px; width:180px; height:180px; background: radial-gradient(circle, rgba(255,255,255,0.25) 0%, transparent 70%); border-radius:50%; }
     .sync-left b{ font-size:16px; font-weight:800; display:flex; align-items:center; gap:8px; }
-    .sync-left small{ display:block; margin-top:6px; color:#94a3b8; font-size:12px; font-weight:500; }
+    .sync-left small{ display:block; margin-top:6px; color:#e2fffa; font-size:12px; font-weight:500; }
     .sync-actions{ display:flex; gap:10px; z-index:2; }
     .sync-btn{ border:none; padding:11px 18px; border-radius:12px; font-weight:800; font-size:12px; cursor:pointer; transition:0.2s; display:flex; align-items:center; gap:6px; }
-    .sync-btn.push{ background: linear-gradient(135deg,#22c55e,#16a34a); color:white; box-shadow: 0 8px 16px rgba(34,197,94,0.3); }
-    .sync-btn.pull{ background: linear-gradient(135deg,#3b82f6,#2563eb); color:white; box-shadow: 0 8px 16px rgba(59,130,246,0.3); }
+    .sync-btn.push{ background: white; color:var(--p); box-shadow: 0 8px 16px rgba(0,0,0,0.15); }
+    .sync-btn.pull{ background: rgba(255,255,255,0.15); color:white; border:1px solid rgba(255,255,255,0.3); box-shadow: 0 8px 16px rgba(0,0,0,0.15); }
     .sync-btn:hover{ transform:translateY(-2px); }
     .sync-btn:disabled{ opacity:0.6; }
     .section-head{ display:flex; align-items:center; gap:12px; margin:30px 0 18px; }
-    .section-head h3{ font-size:18px; font-weight:800; color:#0f172a; }
-    .section-head .line{ flex:1; height:1px; background: linear-gradient(90deg,#e2e8f0,transparent); }
+    .section-head h3{ font-size:18px; font-weight:800; color:var(--p); }
+    .section-head .line{ flex:1; height:1px; background: linear-gradient(90deg,var(--p-border),transparent); }
     .button-grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap:18px; }
-    .menu-card{ background:white; border-radius:18px; padding:24px 22px; text-decoration:none; border:1px solid #e2e8f0; position:relative; overflow:hidden; transition: all 0.3s; display:flex; flex-direction:column; gap:10px; }
-    .menu-card::before{ content:''; position:absolute; top:0; left:0; right:0; height:4px; }
-    .menu-card:hover{ transform:translateY(-6px); box-shadow: 0 20px 40px rgba(0,0,0,0.08); }
+    .menu-card{ background:white; border-radius:18px; padding:24px 22px; text-decoration:none; border:1px solid var(--p-border); position:relative; overflow:hidden; transition: all 0.3s; display:flex; flex-direction:column; gap:10px; }
+    .menu-card::before{ content:''; position:absolute; top:0; left:0; right:0; height:4px; background: var(--p); }
+    .menu-card:hover{ transform:translateY(-6px); box-shadow: 0 20px 40px rgba(0,0,0,0.08); border-color: var(--p); }
     .menu-card .top{ display:flex; justify-content:space-between; align-items:center; }
-    .menu-card .icon-box{ width:48px; height:48px; border-radius:14px; display:grid; place-items:center; font-size:22px; }
+    .menu-card .icon-box{ width:48px; height:48px; border-radius:14px; display:grid; place-items:center; font-size:22px; background:var(--bg); border:1px solid var(--p-border); }
     .menu-card h4{ font-size:15px; font-weight:800; color:#0f172a; }
     .menu-card p{ font-size:12.5px; line-height:1.5; color:#64748b; font-weight:500; }
-    .c1::before{ background: linear-gradient(90deg,#0f172a,#334155); } .c1 .icon-box{ background:#f1f5f9; }
-    .c2::before{ background: linear-gradient(90deg,#f84040,#ff5a5a); } .c2 .icon-box{ background:#fef2f2; }
-    .c3::before{ background: linear-gradient(90deg,#22c55e,#16a34a); } .c3 .icon-box{ background:#f0fdf4; }
-    .c4::before{ background: linear-gradient(90deg,#8b5cf6,#7c3aed); } .c4 .icon-box{ background:#f5f3ff; }
-    .c5::before{ background: linear-gradient(90deg,#06b6d4,#0891b2); } .c5 .icon-box{ background:#ecfeff; }
-    .c6::before{ background: linear-gradient(90deg,#f59e0b,#d97706); } .c6 .icon-box{ background:#fffbeb; }
-    .badge{ font-size:10px; font-weight:800; letter-spacing:0.8px; padding:5px 10px; border-radius:999px; background:#f8fafc; border:1px solid #e2e8f0; color:#64748b; }
-    .footer-note{ text-align:center; margin-top:36px; color:#94a3b8; font-size:11px; font-weight:600; letter-spacing:0.5px; }
+    .c1::before{ background: var(--p); } .c1 .icon-box{ background:var(--bg); }
+    .c2::before{ background: var(--p); } .c2 .icon-box{ background:var(--bg); }
+    .c3::before{ background: var(--p); } .c3 .icon-box{ background:var(--bg); }
+    .c4::before{ background: var(--p); } .c4 .icon-box{ background:var(--bg); }
+    .c5::before{ background: var(--p); } .c5 .icon-box{ background:var(--bg); }
+    .c6::before{ background: var(--p); } .c6 .icon-box{ background:var(--bg); }
+    .badge{ font-size:10px; font-weight:800; letter-spacing:0.8px; padding:5px 10px; border-radius:999px; background:var(--bg); border:1px solid var(--p-border); color:var(--p); }
+    .footer-note{ text-align:center; margin-top:36px; color:var(--p); opacity:0.7; font-size:11px; font-weight:600; letter-spacing:0.5px; }
   </style>
 </head>
 <body>
@@ -62,14 +63,14 @@
       </div>
     </div>
 
-    <div class="section-head"><h3>Senior Exam Engine</h3><div class="line"></div><span style="font-size:11px; font-weight:700; color:#64748b; background:white; border:1px solid #e2e8f0; padding:4px 10px; border-radius:999px;">CLASS 1 TO 10</span></div>
+    <div class="section-head"><h3>Senior Exam Engine</h3><div class="line"></div><span style="font-size:11px; font-weight:700; color:var(--p); background:white; border:1px solid var(--p-border); padding:4px 10px; border-radius:999px;">CLASS 1 TO 10</span></div>
     <div class="button-grid">
       <a href="addq.html" class="menu-card c1"><div class="top"><div class="icon-box">📝</div><span class="badge">STEP 01</span></div><h4>Add Question</h4><p>MCQs, Short, Long & Fill in the blanks ko bank me save karein. Smart duplicate protection ke sath.</p></a>
       <a href="build-paper.html" class="menu-card c2"><div class="top"><div class="icon-box">🛠️</div><span class="badge">STEP 02</span></div><h4>Build Exam Paper</h4><p>Class, subject, lesson filter karke professional exam paper auto-generate karein.</p></a>
       <a href="viewpaper.html" class="menu-card c3"><div class="top"><div class="icon-box">👁️</div><span class="badge">STEP 03</span></div><h4>View & Print Paper</h4><p>Ready papers ka preview, marks editing aur one-click PDF print.</p></a>
     </div>
 
-    <div class="section-head"><h3>Junior Worksheet Engine</h3><div class="line"></div><span style="font-size:11px; font-weight:700; color:#8b5cf6; background:#f5f3ff; border:1px solid #ddd6fe; padding:4px 10px; border-radius:999px;">PLAYGROUP - KG</span></div>
+    <div class="section-head"><h3>Junior Worksheet Engine</h3><div class="line"></div><span style="font-size:11px; font-weight:700; color:var(--p); background:var(--bg); border:1px solid var(--p-border); padding:4px 10px; border-radius:999px;">PLAYGROUP - KG</span></div>
     <div class="button-grid">
       <a href="prepare-worksheet.html" class="menu-card c4"><div class="top"><div class="icon-box">✏️</div><span class="badge">WORKSHEET</span></div><h4>Add Worksheet Qs</h4><p>Alfaaz Jor/Tor, CVC Words, Tracing, Drawing exercises create karein.</p></a>
       <a href="build-worksheet.html" class="menu-card c5"><div class="top"><div class="icon-box">🧩</div><span class="badge">BUILDER</span></div><h4>Build Worksheet</h4><p>Junior classes ke liye colorful worksheets ka builder.</p></a>
@@ -79,6 +80,33 @@
   </div>
 
 <script>
+// === THEME MANAGER SYNC - JO BACKGROUND CHOOSE KARO WOHI YAHAN AYEGA ===
+const defaultTheme={primary:"#0f766e",sidebarBg:"#115e59",bg:"#f0fdfa"};
+function applyTheme(t){
+  const theme={...defaultTheme,...(t||{})};
+  const r=document.documentElement;
+  r.style.setProperty('--p',theme.primary);
+  r.style.setProperty('--sidebar-bg',theme.sidebarBg);
+  r.style.setProperty('--bg',theme.bg);
+  r.style.setProperty('--primary',theme.primary);
+  r.style.setProperty('--p-border',theme.primary+'30');
+  document.body.style.setProperty('background',theme.bg,'important');
+  document.body.style.setProperty('background-color',theme.bg,'important');
+}
+async function loadAndApplyTheme(){
+  let saved=null;
+  try{ saved=JSON.parse(localStorage.getItem('eduPulseTheme')||'null'); }catch(e){}
+  try{ if(!saved) saved=JSON.parse(localStorage.getItem('theme')||'null'); }catch(e){}
+  try{ if(!saved && window.api?.getThemeDetails) saved=await window.api.getThemeDetails(); }catch(e){}
+  try{ if(!saved && window.api?.getAppDetails){ const a=await window.api.getAppDetails(); if(a?.theme) saved=a.theme; } }catch(e){}
+  applyTheme(saved||defaultTheme);
+}
+loadAndApplyTheme();
+window.addEventListener('focus',loadAndApplyTheme);
+window.addEventListener('storage',loadAndApplyTheme);
+setInterval(loadAndApplyTheme,800);
+// === END THEME ===
+
 const SCHOOL_CODE = 'TECHINFO_2026';
 
 function getApi(){ 
@@ -89,7 +117,7 @@ function setStatus(msg, color){
   const el = document.getElementById('syncStatus');
   if(!el) return;
   el.innerText = msg;
-  el.style.color = color || '#94a3b8';
+  el.style.color = color || '#e2fffa';
 }
 
 function setButtons(disabled, pushText, pullText){
@@ -104,7 +132,7 @@ async function handlePushQB(){
   if(!api){ setStatus('❌ API not found - restart app', '#ef4444'); return; }
 
   setButtons(true, '⏳ Pushing...', '⬇️ Pull');
-  setStatus(`Pushing offline → online for ${SCHOOL_CODE} (Merge Safe)...`, '#94a3b8');
+  setStatus(`Pushing offline → online for ${SCHOOL_CODE} (Merge Safe)...`, '#e2fffa');
 
   try{
     let res;
@@ -114,30 +142,29 @@ async function handlePushQB(){
     else throw new Error('No push function in preload');
 
     if(res && res.success === false){
-      setStatus('❌ Push Failed: '+(res.error||'Unknown'), '#ef4444');
+      setStatus('❌ Push Failed: '+(res.error||'Unknown'), '#fecaca');
     } else {
-      setStatus('✅ Push Complete — Teacher data safe! No wipe.', '#22c55e');
+      setStatus('✅ Push Complete — Teacher data safe! No wipe.', '#bbf7d0');
     }
   }catch(e){
-    setStatus('❌ '+e.message, '#ef4444');
+    setStatus('❌ '+e.message, '#fecaca');
   } finally {
     setButtons(false, '⬆️ Push', '⬇️ Pull');
-    setTimeout(()=> setStatus('No wipe • No duplicate • Online + Offline merged', '#94a3b8'), 6000);
+    setTimeout(()=> setStatus('No wipe • No duplicate • Online + Offline merged', '#e2fffa'), 6000);
   }
 }
 
 async function handlePullQB(){
   const api = getApi();
   if(!api || !api.pullQuestionBank || !api.pullExamPapers){
-    setStatus('❌ pull functions missing in preload.js', '#ef4444');
+    setStatus('❌ pull functions missing in preload.js', '#fecaca');
     return;
   }
 
   setButtons(true, '⬆️ Push', '⏳ Pulling...');
-  setStatus(`🔄 Full Sync for ${SCHOOL_CODE} — Pulling...`, '#3b82f6');
+  setStatus(`🔄 Full Sync for ${SCHOOL_CODE} — Pulling...`, '#93c5fd');
 
   try{
-    // STEP 1: PULL first (Online -> Offline)
     const [qb, papers] = await Promise.all([
       api.pullQuestionBank(),
       api.pullExamPapers()
@@ -146,25 +173,24 @@ async function handlePullQB(){
     const qc = qb?.count ?? 0;
     const pc = papers?.count ?? 0;
 
-    setStatus(`✅ Pulled: ${qc} Qs + ${pc} Papers. Now pushing offline new...`, '#f59e0b');
+    setStatus(`✅ Pulled: ${qc} Qs + ${pc} Papers. Now pushing offline new...`, '#fde68a');
 
-    // STEP 2: AUTO PUSH after Pull (Offline -> Online) - YOUR REQUESTED LOGIC
     let pushRes = { success: true };
     if(api.pushMasters) pushRes = await api.pushMasters();
     else if(api.pushAllMasters) pushRes = await api.pushAllMasters();
     else if(api.pushQuestionBank) pushRes = await api.pushQuestionBank();
 
     if(pushRes?.success !== false){
-      setStatus(`✅ Full Sync Done: Pulled ${qc} Qs + ${pc} Papers & Pushed offline → Online | All 7+ synced!`, '#22c55e');
+      setStatus(`✅ Full Sync Done: Pulled ${qc} Qs + ${pc} Papers & Pushed offline → Online | All 7+ synced!`, '#bbf7d0');
     } else {
-      setStatus(`⚠️ Pulled ${qc}+${pc} but Push failed: ${pushRes.error}`, '#ef4444');
+      setStatus(`⚠️ Pulled ${qc}+${pc} but Push failed: ${pushRes.error}`, '#fecaca');
     }
 
   }catch(e){
-    setStatus('❌ '+e.message, '#ef4444');
+    setStatus('❌ '+e.message, '#fecaca');
   } finally {
     setButtons(false, '⬆️ Push', '⬇️ Pull');
-    setTimeout(()=> setStatus('No wipe • No duplicate • Online + Offline merged', '#94a3b8'), 7000);
+    setTimeout(()=> setStatus('No wipe • No duplicate • Online + Offline merged', '#e2fffa'), 7000);
   }
 }
 </script>

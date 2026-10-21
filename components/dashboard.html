@@ -3,50 +3,41 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' http://localhost; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:;">
 <title>EduPulse || 2026</title>
 <style>
-:root {
-  --sidebar-bg: #1b4332;
-  --sidebar-text: #e0e7ff;
-  --sidebar-active: #d4a373;
-  --primary: #d4a373;
-  --bg-body: #f1f5f9;
-  --card-bg: #ffffff;
-  --text-main: #1e293b;
-  --text-muted: #64748b;
-  --heading-color: #1b4332;
-  --heading-border: #d4a373;
-  --card-primary: #f88940;
-  --card-secondary: #111213;
-  --card-footer-bg: #02245a;
+:root{
+  --p:#0f766e; --p-light:#0f766e; --bg:#f0fdfa; --p-border:#ccfbf1;
+  --card:#ffffff; --text:#0f172a; --muted:#475569; --border:#e2e8f0;
+  --sidebar-bg:#0f766e;
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg-body); display: flex; min-height: 100vh; color: var(--text-main); overflow-x: hidden; }
-.sidebar { width: 260px; min-width: 260px; background: var(--sidebar-bg); color: var(--sidebar-text); padding: 25px 16px; display: flex; flex-direction: column; height: 100vh; position: sticky; top: 0; overflow-y: auto; }
-.sidebar h1 { font-size: 1.4rem; font-weight: 800; color: #fff; margin-bottom: 30px; text-align: center; letter-spacing: 0.8px; }
-.nav-btn { display: flex; align-items: center; gap: 12px; padding: 11px 14px; margin-bottom: 6px; border-radius: 10px; color: var(--sidebar-text); text-decoration: none; font-size: 0.93rem; font-weight: 600; transition: 0.2s; border: none; background: transparent; cursor: pointer; width: 100%; text-align: left; }
-.nav-btn:hover { background: rgba(255, 255, 255, 0.08); color: #fff; }
-.nav-btn.active { background: var(--sidebar-active)!important; color: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.2); font-weight: 700; }
-.nav-group { flex: 1; overflow-y: auto; }
-.nav-group::-webkit-scrollbar { width: 4px; }
-.nav-group::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
-.logout-btn { margin-top: 20px; color: #fb7185!important; background: rgba(244, 63, 94, 0.1)!important; }
-.logout-btn:hover { background: rgba(244, 63, 94, 0.2)!important; }
-.main { flex: 1; padding: 22px 24px; display: flex; flex-direction: column; gap: 18px; overflow-y: auto; height: 100vh; min-width: 0; }
-.header-row { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px; }
-.welcome-header h2 { font-size: 1.7rem; font-weight: 800; }
-.welcome-header p { margin-top: 4px; color: var(--text-muted); font-size: 0.88rem; }
-.status-badge { background: white; padding: 8px 14px; border-radius: 10px; font-weight: 600; box-shadow: 0 2px 10px rgba(0,0,0,0.05); font-size: 0.82rem; border: 1px solid #e2e8f0; }
-.stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
-.stat-card { background: var(--card-bg); padding: 14px; border-radius: 14px; box-shadow: 0 4px 15px rgba(0,0,0,0.04); display: flex; align-items: center; gap: 12px; border: 1px solid #e2e8f0; }
-.icon-box { width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; background: #e0e7ff; }
-.stat-info small { color: var(--text-muted); font-size: 0.68rem; font-weight: 700; text-transform: uppercase; display: block; }
-.stat-info div { font-size: 1.25rem; font-weight: 800; }
-.action-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; padding-bottom: 20px; }
-.action-card { background: white; padding: 22px 16px; border-radius: 16px; text-align: center; text-decoration: none; color: var(--text-main); border: 1px solid #e2e8f0; transition: 0.2s; display: flex; flex-direction: column; align-items: center; gap: 10px; }
-.action-card:hover { border-color: var(--primary); background: #fffaf5; transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.06); }
-.action-card span { font-weight: 700; font-size: 0.95rem; color: var(--primary); }
+*{box-sizing:border-box; margin:0; padding:0;}
+body{font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); display:flex; min-height:100vh; color:var(--text); overflow:hidden;}
+.sidebar{width:270px; min-width:270px; background:var(--sidebar-bg); color:#fff; padding:20px 14px; display:flex; flex-direction:column; height:100vh; overflow-y:auto;}
+.sidebar h1{font-size:16px; font-weight:900; text-align:center; margin-bottom:20px; padding-bottom:14px; border-bottom:1px solid rgba(255,255,255,.2);}
+.nav-btn{display:flex; align-items:center; gap:10px; padding:11px 14px; margin-bottom:7px; border-radius:11px; color:rgba(255,255,255,.9); text-decoration:none; font-size:13px; font-weight:700; border:1px solid rgba(255,255,255,.15); background:rgba(255,255,255,.12); cursor:pointer; width:100%; text-align:left;}
+.nav-btn:hover{background:#fff; color:var(--p);}
+.nav-btn.active{background:#fff!important; color:var(--p)!important; font-weight:800;}
+.nav-group{flex:1; overflow-y:auto;}
+.logout-btn{margin-top:6px; background:#fff1f2!important; color:#e11d48!important; border:2px solid #ffe4e6!important;}
+.main{flex:1; padding:18px 22px; display:flex; flex-direction:column; gap:16px; overflow-y:auto; height:100vh; min-width:0;}
+.header-row{display:flex; justify-content:space-between; align-items:flex-start; gap:12px; background:var(--card); border:2px solid var(--p-border); border-radius:18px; padding:16px 18px;}
+.welcome-header h1{font-size:22px!important; font-weight:900!important; display:flex; align-items:center; gap:8px; margin-bottom:6px;}
+.welcome-header h1:before{content:''; width:5px; height:22px; background:var(--p); border-radius:4px; display:inline-block;}
+.welcome-header h2{font-size:15px; font-weight:800;}
+.welcome-header p{font-size:12px; color:var(--muted); font-weight:600;}
+.status-badge{background:var(--bg); padding:7px 12px; border-radius:20px; font-weight:800; font-size:11px; border:2px solid var(--p-border); color:var(--p);}
+.period-filter{display:flex; align-items:center; gap:8px; background:var(--bg); padding:8px 12px; border-radius:12px; border:2px solid var(--p-border);}
+.stats-row{display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr)); gap:12px;}
+.stat-card{background:var(--card); padding:14px 16px; border-radius:16px; display:flex; align-items:center; gap:12px; border:2px solid var(--p-border); border-left:5px solid var(--p);}
+.icon-box{width:42px; height:42px; border-radius:10px; display:flex; align-items:center; justify-content:center; background:var(--bg); border:2px solid var(--p-border); font-size:18px;}
+.stat-info small{color:var(--p); font-size:10px; font-weight:800; text-transform:uppercase; display:block;}
+.stat-info div{font-size:18px; font-weight:900;}
+#quickActionsTitle{font-size:15px; font-weight:900; display:flex; align-items:center; gap:8px;}
+#quickActionsTitle:before{content:''; width:4px; height:16px; background:var(--p); border-radius:4px; display:inline-block;}
+.action-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(170px,1fr)); gap:12px;}
+.action-card{background:var(--card); padding:18px 14px; border-radius:16px; text-align:center; text-decoration:none; color:var(--text); border:2px solid var(--p-border); display:flex; flex-direction:column; align-items:center; gap:6px; transition:.2s;}
+.action-card:hover{transform:translateY(-4px); box-shadow:0 12px 24px rgba(0,0,0,.08); border-color:var(--p);}
+.action-card span{font-weight:800; font-size:13px; color:var(--text);}
 </style>
 </head>
 <body>
@@ -54,191 +45,249 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg-body
 <h1>🎓 EDUPULSE</h1>
 <div class="nav-group">
 <a href="#" class="nav-btn active">🏠 Dashboard</a>
-<a href="classes/classes.html" class="nav-btn" id="navClasses">🏫 Add Classes</a>
-<a href="student/student_list.html" class="nav-btn" id="navStudents">👨‍🎓 Students</a>
-<a href="fee/feelist.html" class="nav-btn" id="navFee">💰 Fee</a>
-<a href="results/result_entry.html" class="nav-btn" id="navExams">📝 Exams</a>
-<a href="staff/staff.html" class="nav-btn" id="navStaff">👔 Staff</a>
-<a href="expenses/expense.html" class="nav-btn" id="navExpenses">💸 Expenses</a>
-<a href="newuser.html" class="nav-btn" id="navRoles">⚙️ Roles</a>
-
-<div style="margin:18px 0 8px 0; padding-top:12px; border-top:1px solid rgba(255,255,255,0.15);">
-  <small style="color:rgba(255,255,255,0.6); font-size:0.65rem; letter-spacing:1px; padding-left:10px; font-weight:700;">CLOUD SYNC</small>
-  <button onclick="manualPush()" id="btnPush" class="nav-btn" style="background: rgba(34,197,94,0.15); color:#86efac; margin-top:8px;">
-    <span>⬆️</span> Push to Online
-  </button>
-  <button onclick="manualWipe()" id="btnWipe" class="nav-btn" style="background: rgba(239,68,68,0.15); color:#fca5a5;">
-    <span>🗑️</span> Delete Online Data
-  </button>
-  <div id="cloudStatus" style="font-size:0.7rem; color:rgba(255,255,255,0.7); padding:8px 10px; text-align:left; white-space:pre-line; line-height:1.3;"></div>
+<a href="classes/classes.html" class="nav-btn">🏫 Add Classes</a>
+<a href="student/student_list.html" class="nav-btn">👨‍🎓 Students</a>
+<a href="fee/feelist.html" class="nav-btn">💰 Fee</a>
+<a href="results/result_entry.html" class="nav-btn">📝 Exams</a>
+<a href="staff/staff.html" class="nav-btn">👔 Staff</a>
+<a href="expenses/expense.html" class="nav-btn">💸 Expenses</a>
+<a href="newuser.html" class="nav-btn">⚙️ Roles</a>
+<div style="margin:18px 0 8px; padding-top:12px; border-top:1px solid rgba(255,255,255,.15);">
+<small style="color:rgba(255,255,255,.7); font-size:10px; font-weight:800; padding-left:10px;">CLOUD SYNC</small>
+<button onclick="manualPush()" id="btnPush" class="nav-btn" style="margin-top:8px;">⬆️ Push to Online</button>
+<button onclick="manualWipe()" id="btnWipe" class="nav-btn">🗑️ Delete Online Data</button>
+<div id="cloudStatus" style="font-size:11px; padding:8px 10px; white-space:pre-line;"></div>
 </div>
-
-<button id="btnPassword" onclick="document.getElementById('passwordModal').style.display='block'" class="nav-btn"><span style="margin-right:8px;">🔒</span> Change Password</button>
+<button onclick="document.getElementById('themeModal').style.display='flex'" class="nav-btn" style="background:rgba(255,255,255,.2);">🎨 Change Theme</button>
+<button onclick="document.getElementById('passwordModal').style.display='block'" class="nav-btn">🔒 Change Password</button>
 </div>
-<button id="btnDB" class="nav-btn logout-btn" onclick="window.authAPI.openDBFolder()">📁 DB Folder</button>
+<button class="nav-btn" onclick="window.authAPI.openDBFolder()">📁 DB Folder</button>
 <button onclick="logout()" class="nav-btn logout-btn">🚪 Logout</button>
 </div>
 
 <div class="main">
 <div class="header-row">
 <div class="welcome-header">
-<h1 id="main-school-heading" style="font-family:'Georgia',serif; font-size:40px; font-weight:800; border-bottom:2px solid #d4a373; display:inline-block; padding-bottom:5px; margin-bottom:15px;"><span id="institute-name">Loading</span></h1>
-<h2 id="welcomeText">Welcome, Administrator</h2>
+<h1 id="main-school-heading"><span id="institute-name">Techinfo</span></h1>
+<h2 id="welcomeText">Welcome, Admin</h2>
 <p id="currentDate"></p>
 </div>
-<div class="status-badge">💻 Offline System</div>
+<div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+  <div class="period-filter">
+    <span style="font-size:11px; font-weight:800; color:var(--p);">📅 PERIOD:</span>
+    <select id="monthSelect" onchange="loadStats()" style="padding:6px 10px; border-radius:8px; border:1px solid var(--p-border); font-weight:700; font-size:12px;">
+      <option value="January">January</option><option value="February">February</option><option value="March">March</option><option value="April">April</option><option value="May">May</option><option value="June">June</option><option value="July">July</option><option value="August">August</option><option value="September">September</option><option value="October">October</option><option value="November">November</option><option value="December">December</option>
+    </select>
+    <select id="yearSelect" onchange="loadStats()" style="padding:6px 10px; border-radius:8px; border:1px solid var(--p-border); font-weight:700; font-size:12px;">
+      
+    </select>
+  </div>
+  <div class="status-badge">💻 Offline System</div>
 </div>
-
+</div>
 <div class="stats-row">
-    <div class="stat-card" id="cardStudents"><div class="icon-box">👥</div><div class="stat-info"><small>Students</small><div id="statStudents">0</div></div></div>
-    <div class="stat-card" id="cardStaff"><div class="icon-box" style="background:#e0f2fe;">👔</div><div class="stat-info"><small>Staff</small><div id="statActiveStaff">0</div></div></div>
-    <div class="stat-card" id="cardProfitLoss"><div class="icon-box" id="iconProfitLoss">📊</div><div class="stat-info"><small id="labelProfitLoss">Net Status</small><div id="statProfitLoss">0</div></div></div>
-    <div class="stat-card" id="cardReceivables"><div class="icon-box" style="background:#dcfce7;">📈</div><div class="stat-info"><small>Receivables</small><div id="statReceivables">0</div></div></div>
-    <div class="stat-card" id="cardBalance"><div class="icon-box" style="background:#ffedd5;">🏦</div><div class="stat-info"><small>Balance</small><div id="statBalance">0</div></div></div>
-    <div class="stat-card" id="cardFeeReceived"><div class="icon-box" style="background:#d1fae5;">💵</div><div class="stat-info"><small>Fee Received</small><div id="statFeeReceived">0</div></div></div>
-    <div class="stat-card" id="cardSalaries"><div class="icon-box" style="background:#fee2e2;">💸</div><div class="stat-info"><small>Salaries</small><div id="statSalaries">0</div></div></div>
-    <div class="stat-card" id="cardExpenses"><div class="icon-box" style="background:#fde68a;">💸</div><div class="stat-info"><small>Expenses</small><div id="statExpenses">0</div></div></div>
+<div class="stat-card"><div class="icon-box">👥</div><div class="stat-info"><small>Students</small><div id="statStudents">0</div></div></div>
+<div class="stat-card"><div class="icon-box">👔</div><div class="stat-info"><small>Staff</small><div id="statActiveStaff">0</div></div></div>
+<div class="stat-card"><div class="icon-box" id="iconProfitLoss">💰</div><div class="stat-info"><small id="labelProfitLoss">Profit</small><div id="statProfitLoss">0</div></div></div>
+<div class="stat-card"><div class="icon-box">📈</div><div class="stat-info"><small>Receivables</small><div id="statReceivables">0</div></div></div>
+<div class="stat-card"><div class="icon-box">🏦</div><div class="stat-info"><small>Balance</small><div id="statBalance">0</div></div></div>
+<div class="stat-card"><div class="icon-box">💵</div><div class="stat-info"><small>Fee Received</small><div id="statFeeReceived">0</div></div></div>
+<div class="stat-card"><div class="icon-box">💸</div><div class="stat-info"><small>Salaries</small><div id="statSalaries">0</div></div></div>
+<div class="stat-card"><div class="icon-box">💸</div><div class="stat-info"><small>Expenses</small><div id="statExpenses">0</div></div></div>
 </div>
-
 <h3 id="quickActionsTitle">Quick Actions</h3>
-<div class="action-grid" id="quickActionsGrid">
-  <a href="results/result_entry.html" class="action-card" id="actionExams"><div style="font-size:2.5rem;">📄</div><span>Exams</span><p style="font-size:0.85rem;color:#64748b;">Manage Marksheets</p></a>
-  <a href="fee/feelist.html" class="action-card" id="actionFees"><div style="font-size:2.5rem;">💳</div><span>Fees</span><p style="font-size:0.85rem;color:#64748b;">Collect Payments</p></a>
-  <a href="student/stu_personal_info.html" class="action-card" id="actionEnroll"><div style="font-size:2.5rem;">👤</div><span>Enroll</span><p style="font-size:0.85rem;color:#64748b;">New Admissions</p></a>
-  <a href="attendance.html" class="action-card" id="actionAttendance"><div style="font-size:2.5rem;">👤</div><span>Attendance</span><p style="font-size:0.85rem;color:#64748b;">Students and Staff</p></a>
-  <a href="./qbank/qbnkdashboard.html" class="action-card" id="actionQBank"><div style="font-size:2.5rem;">📚</div><span>Question Papers</span><p style="font-size:0.85rem;color:#64748b;">Q Bank / Papers</p></a>
-  <a href="shop_ledger.html" class="action-card" id="actionLedger"><div style="font-size:2.5rem;">🏦</div><span>School Ledger</span><p style="font-size:0.85rem;color:#64748b;">All Entries</p></a>
+<div class="action-grid">
+<a href="results/result_entry.html" class="action-card"><div style="font-size:28px;">📄</div><span>Exams</span><p style="font-size:11px; color:var(--muted);">Manage Marksheets</p></a>
+<a href="fee/feelist.html" class="action-card"><div style="font-size:28px;">💳</div><span>Fees</span><p style="font-size:11px; color:var(--muted);">Collect Payments</p></a>
+<a href="student/stu_personal_info.html" class="action-card"><div style="font-size:28px;">👤</div><span>Enroll</span><p style="font-size:11px; color:var(--muted);">New Admissions</p></a>
+<a href="attendance.html" class="action-card"><div style="font-size:28px;">📋</div><span>Attendance</span><p style="font-size:11px; color:var(--muted);">Students and Staff</p></a>
+<a href="./qbank/qbnkdashboard.html" class="action-card"><div style="font-size:28px;">📚</div><span>Question Papers</span><p style="font-size:11px; color:var(--muted);">Q Bank / Papers</p></a>
+<a href="shop_ledger.html" class="action-card"><div style="font-size:28px;">🏦</div><span>School Ledger</span><p style="font-size:11px; color:var(--muted);">All Entries</p></a>
 </div>
 </div>
 
-<div id="passwordModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000;">
-<div style="background:white; width:350px; margin:10% auto; padding:25px; border-radius:8px;">
-<h3>Change Password</h3>
-<label>Current Password:</label><input type="password" id="currentPass" style="width:100%; margin-bottom:15px; padding:8px;">
-<label>New Password:</label><input type="password" id="newPass" style="width:100%; margin-bottom:15px; padding:8px;">
-<label>Confirm New Password:</label><input type="password" id="confirmPass" style="width:100%; margin-bottom:20px; padding:8px;">
-<div style="display:flex; justify-content:space-between;">
-<button onclick="submitPasswordChange()" style="background:#28a745; color:white; border:none; padding:10px 15px; cursor:pointer; border-radius:4px;">Update Password</button>
-<button onclick="document.getElementById('passwordModal').style.display='none'" style="background:#dc3545; color:white; border:none; padding:10px 15px; cursor:pointer; border-radius:4px;">Cancel</button>
+<div id="themeModal" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,.55); backdrop-filter:blur(8px); z-index:9999; align-items:center; justify-content:center;">
+<div style="background:white; width:360px; padding:22px; border-radius:20px; border:2px solid var(--p-border);">
+<h3 style="font-weight:900; margin-bottom:14px;">🎨 Choose Your Theme</h3>
+<label style="font-size:11px; font-weight:800; color:var(--p);">PRIMARY COLOR</label>
+<input type="color" id="pickPrimary" value="#0f766e" style="width:100%; height:44px; border-radius:11px; border:2px solid #e2e8f0; margin-bottom:12px;">
+<label style="font-size:11px; font-weight:800; color:var(--p);">SIDEBAR COLOR</label>
+<input type="color" id="pickSidebar" value="#0f766e" style="width:100%; height:44px; border-radius:11px; border:2px solid #e2e8f0; margin-bottom:12px;">
+<label style="font-size:11px; font-weight:800; color:var(--p);">BACKGROUND COLOR</label>
+<input type="color" id="pickBg" value="#f0fdfa" style="width:100%; height:44px; border-radius:11px; border:2px solid #e2e8f0; margin-bottom:16px;">
+<div style="display:flex; gap:8px;">
+<button onclick="applyCustomTheme()" style="flex:1; background:var(--p); color:white; border:none; padding:11px; border-radius:11px; font-weight:800; cursor:pointer;">Apply</button>
+<button onclick="resetTheme()" style="flex:1; background:var(--bg); border:2px solid var(--p-border); padding:11px; border-radius:11px; font-weight:800; cursor:pointer;">Reset</button>
+<button onclick="document.getElementById('themeModal').style.display='none'" style="flex:1; background:white; border:2px solid #e2e8f0; padding:11px; border-radius:11px; font-weight:800; cursor:pointer;">Close</button>
 </div>
+</div>
+</div>
+
+<div id="passwordModal" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,.55); backdrop-filter:blur(8px); z-index:2000;">
+<div style="background:white; width:360px; margin:10% auto; padding:24px; border-radius:20px; border:2px solid var(--p-border);">
+<h3 style="font-size:16px; font-weight:900; margin-bottom:14px;">🔒 Change Password</h3>
+<input type="password" id="currentPass" placeholder="Current Password" style="width:100%; margin-bottom:10px; padding:11px; border:2px solid #e2e8f0; border-radius:11px;">
+<input type="password" id="newPass" placeholder="New Password" style="width:100%; margin-bottom:10px; padding:11px; border:2px solid #e2e8f0; border-radius:11px;">
+<input type="password" id="confirmPass" placeholder="Confirm New Password" style="width:100%; margin-bottom:16px; padding:11px; border:2px solid #e2e8f0; border-radius:11px;">
+<div style="display:flex; gap:8px;"><button onclick="submitPasswordChange()" style="flex:1; background:var(--p); color:white; border:none; padding:11px; border-radius:11px; font-weight:800;">Update</button><button onclick="document.getElementById('passwordModal').style.display='none'" style="flex:1; background:var(--bg); border:2px solid var(--p-border); padding:11px; border-radius:11px; font-weight:800;">Cancel</button></div>
 </div>
 </div>
 
 <script>
-async function applyGlobalTheme() {
-    try {
-        let theme = null;
-        if (window.api && window.api.getAppDetails) {
-            const details = await window.api.getAppDetails();
-            if(details && details.theme) theme = details.theme;
-            if(details && details.instituteName){ document.getElementById('institute-name').innerText = details.instituteName; }
-        }
-        if(!theme && window.api && window.api.getTheme){ theme = await window.api.getTheme(); }
-        if(theme){
-            const r = document.documentElement;
-            r.style.setProperty('--sidebar-bg', theme.sidebarBg || theme.cardFooterBg || '#1b4332');
-            r.style.setProperty('--sidebar-active', theme.sidebarActive || theme.cardPrimary || '#d4a373');
-            r.style.setProperty('--primary', theme.primary || '#d4a373');
-        }
-    } catch(e){ }
+// ===== EMBEDDED THEME MANAGER - NO EXTERNAL FILE NEEDED =====
+const defaultTheme = { primary: "#0f766e", sidebarBg: "#0f766e", bg: "#f0fdfa" };
+
+function applyTheme(t){
+  const theme = { ...defaultTheme, ...(t||{}) };
+  const r = document.documentElement;
+  r.style.setProperty('--p', theme.primary);
+  r.style.setProperty('--p-light', theme.primary);
+  r.style.setProperty('--p-border', theme.primary + '30');
+  r.style.setProperty('--bg', theme.bg);
+  r.style.setProperty('--sidebar-bg', theme.sidebarBg);
+  document.body.style.background = theme.bg;
 }
-async function loadStats() {
-  try {
-    if (window.api && window.api.getDashboardStats) {
-      const stats = await window.api.getDashboardStats();
-      document.getElementById('statStudents').innerText = stats.activeStudents || 0;
-      document.getElementById('statReceivables').innerText = stats.receivables || 0;
-      document.getElementById('statBalance').innerText = stats.balance || 0;
-      document.getElementById('statSalaries').innerText = stats.salaries || 0;
-      document.getElementById('statFeeReceived').innerText = stats.feeReceived || 0;
-      document.getElementById('statExpenses').innerText = stats.expenses || 0;
-      const staffEl = document.getElementById('statActiveStaff'); if(staffEl) staffEl.innerText = stats.activeStaff || 0;
-      const plVal = document.getElementById('statProfitLoss'); const plLabel = document.getElementById('labelProfitLoss'); const plIcon = document.getElementById('iconProfitLoss'); const plCard = document.getElementById('cardProfitLoss');
-      if(plCard && plVal){ plVal.innerText = Math.abs(stats.financialAmount||0); if(stats.financialStatus==='Profit'){ plLabel.innerText='Profit'; plIcon.innerText='💰'; plCard.style.background='#d1fae5'; } else { plLabel.innerText='Loss'; plIcon.innerText='📉'; plCard.style.background='#fee2e2'; } }
+
+async function loadAndApplyTheme(){
+  try{
+    let saved = null;
+    if(window.api && window.api.getThemeDetails){
+      try{ saved = await window.api.getThemeDetails(); }catch(e){}
     }
-  } catch(e){}
+    if(!saved) saved = JSON.parse(localStorage.getItem('eduPulseTheme')||'null');
+    const finalTheme = saved || defaultTheme;
+    applyTheme(finalTheme);
+    const p1=document.getElementById('pickPrimary');
+    const p2=document.getElementById('pickSidebar');
+    const p3=document.getElementById('pickBg');
+    if(p1) p1.value=finalTheme.primary;
+    if(p2) p2.value=finalTheme.sidebarBg;
+    if(p3) p3.value=finalTheme.bg;
+  }catch(e){ applyTheme(defaultTheme); }
 }
-function logout() { sessionStorage.clear(); window.location.href = "login.html"; }
-document.addEventListener('DOMContentLoaded', async () => {
-  await applyGlobalTheme();
-  const user = JSON.parse(sessionStorage.getItem('currentUser') || '{"username":"Admin"}');
-  document.getElementById('welcomeText').innerText = `Welcome, ${user.username}`;
-  document.getElementById('currentDate').innerText = new Date().toDateString();
+
+function applyCustomTheme(){
+  const theme = {
+    primary: document.getElementById('pickPrimary').value,
+    sidebarBg: document.getElementById('pickSidebar').value,
+    bg: document.getElementById('pickBg').value,
+  };
+  localStorage.setItem('eduPulseTheme', JSON.stringify(theme));
+  if(window.api && window.api.saveThemeDetails){
+    try{ window.api.saveThemeDetails(theme); }catch(e){}
+  }
+  applyTheme(theme);
+  document.getElementById('themeModal').style.display='none';
+}
+
+function resetTheme(){
+  localStorage.removeItem('eduPulseTheme');
+  const theme = defaultTheme;
+  localStorage.setItem('eduPulseTheme', JSON.stringify(theme));
+  if(window.api && window.api.saveThemeDetails){ try{ window.api.saveThemeDetails(theme); }catch(e){} }
+  applyTheme(theme);
+  document.getElementById('themeModal').style.display='none';
+  location.reload();
+}
+// ===== END THEME MANAGER =====
+
+function initPeriodFilter(){
+  const now = new Date();
+  const curMonth = now.toLocaleString('default', { month: 'long' });
+  const curYear = now.getFullYear();
+
+  // MONTH set
+  const mSel = document.getElementById('monthSelect');
+  if(mSel) mSel.value = curMonth;
+
+  // YEAR - DYNAMIC GENERATE
+  const ySel = document.getElementById('yearSelect');
+  if(ySel){
+    ySel.innerHTML = ''; // clear old hardcoded
+    const startYear = curYear - 100; // 10 saal pehle se
+    const endYear = curYear + 100;   // 10 saal aage tak
+    for(let y = startYear; y <= endYear; y++){
+      const opt = document.createElement('option');
+      opt.value = y.toString();
+      opt.textContent = y.toString();
+      ySel.appendChild(opt);
+    }
+    ySel.value = curYear.toString(); // by default current year
+  }
+}
+async function loadStats(){
+  try{
+    const month = document.getElementById('monthSelect')?.value;
+    const year = document.getElementById('yearSelect')?.value;
+    if(window.api && window.api.getDashboardStats){
+      const stats=await window.api.getDashboardStats({month, year});
+      document.getElementById('statStudents').innerText=stats.activeStudents||0;
+      document.getElementById('statReceivables').innerText=stats.receivables||0;
+      document.getElementById('statBalance').innerText=stats.balance||0;
+      document.getElementById('statSalaries').innerText=stats.salaries||0;
+      document.getElementById('statFeeReceived').innerText=stats.feeReceived||0;
+      document.getElementById('statExpenses').innerText=stats.expenses||0;
+      document.getElementById('statActiveStaff').innerText=stats.activeStaff||0;
+      document.getElementById('statProfitLoss').innerText=Math.abs(stats.financialAmount||0);
+      const labelEl = document.getElementById('labelProfitLoss');
+      if(labelEl && stats.financialStatus){ labelEl.innerText = stats.financialStatus; }
+    }
+  }catch(e){ console.error(e); }
+}
+function logout(){sessionStorage.clear(); window.location.href="login.html";}
+document.addEventListener('DOMContentLoaded',async()=>{
+  await loadAndApplyTheme();
+  initPeriodFilter();
+  try{
+    if(window.api && window.api.getAppDetails){
+      const d=await window.api.getAppDetails();
+      if(d && d.instituteName) document.getElementById('institute-name').innerText=d.instituteName;
+    }
+  }catch(e){}
+  const user=JSON.parse(sessionStorage.getItem('currentUser')||'{"username":"Admin"}');
+  document.getElementById('welcomeText').innerText=`Welcome, ${user.username}`;
+  document.getElementById('currentDate').innerText=new Date().toDateString();
   loadStats();
 });
-async function submitPasswordChange() {
-  const oldPass = document.getElementById('currentPass').value;
-  const newPass = document.getElementById('newPass').value;
-  const confirmPass = document.getElementById('confirmPass').value;
-  if(newPass!==confirmPass){ alert("New passwords do not match."); return; }
-  try {
-    const userStr = sessionStorage.getItem('currentUser');
-    const currentUser = JSON.parse(userStr);
-    const response = await window.authAPI.changePassword(oldPass, newPass, currentUser.username);
-    if(response && response.success){ alert("Password updated!"); document.getElementById('passwordModal').style.display='none'; }
-    else { alert("Error: " + (response.message || "Wrong current password.")); }
-  } catch(error){ alert("System error."); }
+async function submitPasswordChange(){
+  const oldPass=document.getElementById('currentPass').value;
+  const newPass=document.getElementById('newPass').value;
+  const confirmPass=document.getElementById('confirmPass').value;
+  if(newPass!==confirmPass){alert("Passwords do not match"); return;}
+  try{
+    const currentUser=JSON.parse(sessionStorage.getItem('currentUser'));
+    const response=await window.authAPI.changePassword(oldPass,newPass,currentUser.username);
+    if(response && response.success){alert("Password updated!"); document.getElementById('passwordModal').style.display='none';}
+    else{alert("Error: "+(response.message||"Wrong password"));}
+  }catch(e){alert("System error");}
 }
-
-// === CLOUD SYNC WITH STAFF = 0 ===
 async function manualPush(){
-  const details = await window.api.getAppDetails();
-  const code = details.schoolCode || 'SCHOOL';
-  if(!confirm(`Push ALL data for ${code} to online?\n\nTables: subjects, exams, settings, classes, students, users, QBank, papers\n`)) return;
-  const btn = document.getElementById('btnPush'); const status = document.getElementById('cloudStatus');
-  btn.disabled = true; btn.innerText = '⏳ Pushing...'; status.innerText = 'Pushing... please wait';
+  const details=await window.api.getAppDetails();
+  const code=details.schoolCode||'SCHOOL';
+  if(!confirm(`Push ALL data for ${code}?`)) return;
+  const btn=document.getElementById('btnPush'); const status=document.getElementById('cloudStatus');
+  btn.disabled=true; btn.innerText='⏳ Pushing...'; status.innerText='Pushing...';
   try{
-    const res = await window.api.pushAllMastersManual();
-    if(res.success){
-      const d = res.details || {};
-      // Force Staff to 0 for display
-      d.staff = 0;
-      const msg = `PUSH SUCCESS for ${res.school}\n\n`+
-        `Subjects: ${d.subjects||0}\n`+
-        `Exams: ${d.exams||0}\n`+
-        `Exam Settings: ${d.settings||0}\n`+
-        `Classes: ${d.classes||0}\n`+
-        `Students: ${d.students||0}\n`+
-        `Staff: 0\n`+
-        `Users: ${d.users||0}\n`+
-        `QBank: ${d.qbank||0}\n`+
-        `Exam Papers: ${d.papers||0}\n`+
-        `Paper Questions: ${d.paperQuestions||0}`;
-      status.innerText = `✅ Pushed: S:${d.students||0} St:0 QB:${d.qbank||0}`;
-      alert(msg);
-    } else { status.innerText = `❌ ${res.error}`; alert(`Push Failed: ${res.error}`); }
-  }catch(e){ status.innerText = '❌ Error'; alert(e.message); }
-  btn.disabled = false; btn.innerHTML = '<span>⬆️</span> Push to Online';
-  setTimeout(()=> status.innerText='', 6000);
+    const res=await window.api.pushAllMastersManual();
+    if(res.success){status.innerText=`✅ Pushed`; alert(`PUSH SUCCESS for ${res.school}`);}
+    else{status.innerText=`❌ ${res.error}`; alert(res.error);}
+  }catch(e){alert(e.message);}
+  btn.disabled=false; btn.innerText='⬆️ Push to Online'; setTimeout(()=>status.innerText='',4000);
 }
-
 async function manualWipe(){
-  const details = await window.api.getAppDetails();
-  const code = details.schoolCode || 'SCHOOL';
-  if(!confirm(`Delete ALL online data for ${code}?\nThis will wipe all tables for this school_code.`)) return;
-  if(!confirm(`Final confirmation: Delete?`)) return;
-  const btn = document.getElementById('btnWipe'); const status = document.getElementById('cloudStatus');
-  btn.disabled = true; btn.innerText = '⏳ Deleting...'; status.innerText = 'Deleting online data...';
+  const details=await window.api.getAppDetails();
+  const code=details.schoolCode||'SCHOOL';
+  if(!confirm(`Delete ALL online data for ${code}?`)) return;
+  if(!confirm(`Final confirm?`)) return;
+  const btn=document.getElementById('btnWipe'); const status=document.getElementById('cloudStatus');
+  btn.disabled=true; btn.innerText='⏳ Deleting...';
   try{
-    const res = await window.api.wipeAllOnlineManual();
-    if(res.success){
-      const d = res.deleted || {};
-      // Force Staff to 0 for display
-      if(d.staff !== undefined) d.staff = 0;
-      if(d.Staff !== undefined) d.Staff = 0;
-      const msg = `DELETE SUCCESS for ${res.school}\n\nDeleted tables:\n`+
-        Object.entries(d).map(([k,v])=> {
-          if(k.toLowerCase().includes('staff')) return `${k}: 0 rows`;
-          return `${k}: ${v} rows`;
-        }).join('\n');
-      status.innerText = `🗑️ Wiped ${res.school} (Staff: 0)`;
-      alert(msg);
-    } else { status.innerText = `❌ ${res.error}`; alert(`Delete Failed: ${res.error}`); }
-  }catch(e){ status.innerText = '❌ Error'; alert(e.message); }
-  btn.disabled = false; btn.innerHTML = '<span>🗑️</span> Delete Online Data';
-  setTimeout(()=> status.innerText='', 6000);
+    const res=await window.api.wipeAllOnlineManual();
+    if(res.success){status.innerText=`🗑️ Wiped`; alert(`DELETE SUCCESS for ${res.school}`);}
+    else{status.innerText=`❌ ${res.error}`;}
+  }catch(e){alert(e.message);}
+  btn.disabled=false; btn.innerText='🗑️ Delete Online Data';
 }
-
 </script>
 </body>
 </html>

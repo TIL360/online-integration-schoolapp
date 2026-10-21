@@ -6,48 +6,49 @@
     <title>Global Exam Configurations & Settings</title>
     <style>
         :root {
+            --p:#003049; --sidebar-bg:#003049; --bg:#f4f6f9; --p-border:#00304930;
             --bg-color: #f4f6f9; --container-bg: #ffffff; --primary: #003049; --primary-hover: #004b73;
             --accent-red: #d62828; --accent-red-hover: #b51d1d; --accent-green: #2ec4b6;
             --accent-green-hover: #259e92; --text-main: #2b2d42; --text-muted: #6c757d; --border-color: #dee2e6;
             --input-bg: #ffffff; --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
         }
-        body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background-color: var(--bg-color); margin: 0; padding: 30px 20px; color: var(--text-main); display: flex; flex-direction: column; align-items: center; }
+        body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background-color: var(--bg); margin: 0; padding: 30px 20px; color: var(--text-main); display: flex; flex-direction: column; align-items: center; }
         .container { width: 100%; max-width: 1400px; box-sizing: border-box; }
         .top-nav { width: 100%; display: flex; justify-content: flex-end; gap: 12px; margin-bottom: 20px; }
-        .nav-btn { display: inline-flex; align-items: center; justify-content: center; padding: 10px 20px; font-size: 14px; font-weight: 600; text-decoration: none; color: var(--primary); background: var(--container-bg); border: 1px solid var(--border-color); border-radius: 6px; box-shadow: var(--shadow-sm); transition: all 0.2s; cursor: pointer; }
-        .nav-btn:hover { color: white; background-color: var(--primary); border-color: var(--primary); }
-        h1.main-title { text-align: center; color: var(--primary); font-size: 26px; font-weight: 800; margin-bottom: 25px; }
-        .card { background: var(--container-bg); padding: 24px; border-radius: 12px; box-shadow: var(--shadow-sm); margin-bottom: 20px; border: 1px solid var(--border-color); }
-        h3 { font-size: 15px; font-weight: 700; margin: 0 0 15px 0; color: var(--primary); border-bottom: 1px solid var(--border-color); padding-bottom: 8px; text-transform: uppercase; }
+        .nav-btn { display: inline-flex; align-items: center; justify-content: center; padding: 10px 20px; font-size: 14px; font-weight: 700; text-decoration: none; color: var(--p); background: var(--container-bg); border: 2px solid var(--p-border); border-radius: 20px; box-shadow: var(--shadow-sm); transition: all 0.2s; cursor: pointer; }
+        .nav-btn:hover { color: white; background-color: var(--p); border-color: var(--p); }
+        h1.main-title { text-align: center; color: var(--p); font-size: 26px; font-weight: 900; margin-bottom: 25px; display:flex; align-items:center; justify-content:center; gap:10px; }
+        h1.main-title:before{content:''; width:6px; height:22px; background:var(--p); border-radius:4px; display:inline-block;}
+        .card { background: var(--container-bg); padding: 24px; border-radius: 16px; box-shadow: var(--shadow-sm); margin-bottom: 20px; border: 2px solid var(--p-border); }
+        h3 { font-size: 13px; font-weight: 800; margin: 0 0 15px 0; color: var(--p); border-bottom: 2px solid var(--p-border); padding-bottom: 8px; text-transform: uppercase; }
         .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
-        label { font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; }
-        input, select { padding: 10px 14px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 14px; background-color: var(--input-bg); color: var(--text-main); outline: none; box-sizing: border-box; width: 100%; }
-        .btn { padding: 11px 20px; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 14px; display: inline-flex; align-items: center; justify-content: center; height: 40px; }
-        .btn-success { background-color: var(--accent-green); } .btn-success:hover { background-color: var(--accent-green-hover); }
-        .btn-primary { background-color: var(--accent-red); } .btn-primary:hover { background-color: var(--accent-red-hover); }
-        .btn-view { background-color: var(--primary); } .btn-view:hover { background-color: var(--primary-hover); }
+        label { font-size: 11px; font-weight: 800; color: var(--p); text-transform: uppercase; }
+        input, select { padding: 10px 14px; border: 2px solid var(--p-border); border-radius: 20px; font-size: 14px; font-weight:600; background-color: var(--input-bg); color: var(--text-main); outline: none; box-sizing: border-box; width: 100%; }
+        input:focus, select:focus{ border-color:var(--p); box-shadow:0 0 0 4px var(--p-border); }
+        .btn { padding: 11px 20px; color: white; border: none; border-radius: 20px; cursor: pointer; font-weight: 800; font-size: 13px; display: inline-flex; align-items: center; justify-content: center; height: 40px; }
+        .btn-success { background-color: var(--p); } .btn-success:hover { filter:brightness(0.9); }
+        .btn-primary { background-color: var(--p); opacity:0.9; } .btn-primary:hover { opacity:1; }
+        .btn-view { background-color: var(--p); } .btn-view:hover { filter:brightness(0.9); }
         table { width: 100%; border-collapse: collapse; font-size: 14px; margin-top: 10px; }
-        th, td { border: 1px solid var(--border-color); padding: 10px; text-align: left; }
-        th { background: #f8f9fa; color: var(--text-muted); font-weight: 600; }
+        th, td { border: 1px solid var(--p-border); padding: 10px; text-align: left; }
+        th { background: var(--bg); color: var(--p); font-weight: 800; }
 
-        /* CUSTOM MODAL - FIXES FOCUS BUG */
-        #appModal { display: none; position: fixed; z-index: 99999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; }
+        #appModal { display: none; position: fixed; z-index: 99999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(15,23,42,0.55); backdrop-filter:blur(8px); align-items: center; justify-content: center; }
         #appModal.show { display: flex; }
-        .app-modal-box { background: white; padding: 25px 30px; border-radius: 12px; width: 90%; max-width: 420px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.3); animation: popIn 0.2s ease; }
+        .app-modal-box { background: white; padding: 25px 30px; border-radius: 16px; width: 90%; max-width: 420px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.3); animation: popIn 0.2s ease; border:2px solid var(--p-border); }
         @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         .app-modal-icon { font-size: 42px; margin-bottom: 10px; }
-        .app-modal-title { font-size: 18px; font-weight: 700; color: var(--primary); margin-bottom: 8px; }
+        .app-modal-title { font-size: 18px; font-weight: 800; color: var(--p); margin-bottom: 8px; }
         .app-modal-msg { font-size: 14px; color: var(--text-muted); line-height: 1.5; margin-bottom: 20px; }
         .app-modal-actions { display: flex; gap: 10px; justify-content: center; }
-        .btn-modal { min-width: 100px; height: 38px; border-radius: 6px; border: none; font-weight: 600; cursor: pointer; }
-        .btn-modal-confirm { background: var(--accent-red); color: white; }
-        .btn-modal-cancel { background: #e9ecef; color: #495057; }
-        .btn-modal-ok { background: var(--primary); color: white; min-width: 120px; }
+        .btn-modal { min-width: 100px; height: 38px; border-radius: 20px; border: none; font-weight: 700; cursor: pointer; }
+        .btn-modal-confirm { background: #d62828; color: white; }
+        .btn-modal-cancel { background: var(--bg); color: var(--p); border:2px solid var(--p-border); }
+        .btn-modal-ok { background: var(--p); color: white; min-width: 120px; }
 
-        /* TOAST */
-        #toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: #2b2d42; color: white; padding: 12px 22px; border-radius: 8px; font-size: 14px; font-weight: 600; z-index: 100000; opacity: 0; transition: all 0.3s ease; pointer-events: none; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        #toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--p); color: white; padding: 12px 22px; border-radius: 20px; font-size: 14px; font-weight: 700; z-index: 100000; opacity: 0; transition: all 0.3s ease; pointer-events: none; }
         #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
-        #toast.success { background: #2ec4b6; } #toast.error { background: #d62828; }
+        #toast.success { background: var(--p); } #toast.error { background: #d62828; }
     </style>
 </head>
 <body>
@@ -75,7 +76,7 @@
         <div class="card" style="margin-bottom: 0;">
             <h3>2. Global Grading Scale Configurations</h3>
             <p style="font-size: 13px; color: var(--text-muted); margin-top: 0; margin-bottom: 20px;">Define the score percentage bands that generate report card grade letters dynamically.</p>
-            <div style="display: flex; flex-direction: column; gap: 12px; background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 15px;">
+            <div style="display: flex; flex-direction: column; gap: 12px; background: var(--bg); padding: 15px; border-radius: 12px; border: 2px solid var(--p-border); margin-bottom: 15px;">
                 <div class="form-group" style="margin: 0;"><label>Grade Letter</label><input type="text" id="new_grade_name" placeholder="e.g., A+"></div>
                 <div class="form-group" style="margin: 0;"><label>Min Percentage (%)</label><input type="number" id="new_grade_min" placeholder="e.g., 90" min="0" max="100"></div>
                 <div class="form-group" style="margin: 0;"><label>Max Percentage (%)</label><input type="number" id="new_grade_max" placeholder="e.g., 100" min="0" max="100"></div>
@@ -86,7 +87,7 @@
         <div class="card" style="margin-bottom: 0;">
             <h3>3. Dynamic Subject Management</h3>
             <p style="font-size: 13px; color: var(--text-muted); margin-top: 0; margin-bottom: 20px;">Add or maintain active subject classification categories.</p>
-            <div style="display: flex; flex-direction: column; gap: 12px; background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 15px;">
+            <div style="display: flex; flex-direction: column; gap: 12px; background: var(--bg); padding: 15px; border-radius: 12px; border: 2px solid var(--p-border); margin-bottom: 15px;">
                 <div class="form-group" style="margin: 0;"><label>Subject Display Name</label><input type="text" id="sub_display_name" placeholder="e.g., Computer Science"></div>
                 <div class="form-group" style="margin: 0;"><label>Database Code Identifier</label><input type="text" id="sub_code_id" placeholder="e.g., computer_science"></div>
                 <button class="btn btn-success" onclick="createNewSubject()" style="height: 42px; width: 100%; margin-top: 5px;">Save Subject</button>
@@ -96,7 +97,6 @@
     </div>
 </div>
 
-<!-- CUSTOM MODAL SYSTEM -->
 <div id="appModal">
     <div class="app-modal-box">
         <div id="modalIcon" class="app-modal-icon">⚠️</div>
@@ -108,14 +108,35 @@
 <div id="toast"></div>
 
 <script>
-// ===== CUSTOM ALERT / CONFIRM - REPLACES NATIVE DIALOGS =====
+// ===== THEME MANAGER ONLY - NO OTHER LOGIC CHANGED =====
+const defaultTheme={primary:"#003049",sidebarBg:"#003049",bg:"#f4f6f9"};
+function applyTheme(t){
+  const theme={...defaultTheme,...(t||{})};
+  const r=document.documentElement;
+  r.style.setProperty('--p',theme.primary);
+  r.style.setProperty('--sidebar-bg',theme.sidebarBg);
+  r.style.setProperty('--bg',theme.bg);
+  r.style.setProperty('--p-border',theme.primary+'30');
+  r.style.setProperty('--primary',theme.primary);
+  r.style.setProperty('--bg-color',theme.bg);
+  document.body.style.background=theme.bg;
+}
+async function loadAndApplyTheme(){
+  try{
+    let saved=null;
+    if(window.api&&window.api.getThemeDetails){try{saved=await window.api.getThemeDetails();}catch(e){}}
+    if(!saved) saved=JSON.parse(localStorage.getItem('eduPulseTheme')||'null');
+    applyTheme(saved||defaultTheme);
+  }catch(e){applyTheme(defaultTheme);}
+}
+loadAndApplyTheme();
+
 function showToast(msg, type='info'){
     const t = document.getElementById('toast');
     t.textContent = msg;
     t.className = type; t.classList.add('show');
     setTimeout(()=> t.classList.remove('show'), 3000);
 }
-
 function showAlert(title, msg, icon='⚠️'){
     return new Promise(resolve => {
         document.getElementById('modalIcon').textContent = icon;
@@ -129,7 +150,6 @@ function showAlert(title, msg, icon='⚠️'){
         };
     });
 }
-
 function showConfirm(title, msg, icon='❓'){
     return new Promise(resolve => {
         document.getElementById('modalIcon').textContent = icon;
@@ -149,11 +169,9 @@ function showConfirm(title, msg, icon='❓'){
         };
     });
 }
-// Close modal on backdrop click
 document.getElementById('appModal').addEventListener('click', (e) => {
     if(e.target.id === 'appModal'){ e.target.classList.remove('show'); window.focus(); }
 });
-
 window.addEventListener('DOMContentLoaded', async () => {
     const res = await window.api.getDropdownData();
     const examSelect = document.getElementById('settingsExamSelect');
@@ -176,7 +194,6 @@ window.addEventListener('DOMContentLoaded', async () => {
         });
     }
 });
-
 async function saveExamCriteria() {
     const examId = document.getElementById('settingsExamSelect').value;
     if (!examId) { await showAlert("Required", "❌ Please pick a target exam profile first!", "⚠️"); return; }
@@ -191,7 +208,6 @@ async function saveExamCriteria() {
         showToast("✨ Criteria saved successfully!", "success");
     } catch (err) { await showAlert("Error", "❌ Save failed: " + err.message, "❌"); }
 }
-
 async function loadGradingRulesView() {
     const tbody = document.getElementById('gradingRulesTableBody'); if (!tbody) return;
     try {
@@ -203,7 +219,6 @@ async function loadGradingRulesView() {
             <td style="text-align: center;"><button class="btn btn-primary" style="height: 28px; padding: 0 12px; font-size: 11px; background-color:#721c24;" onclick="deleteGradingRule(${rule.id})">Remove</button></td></tr>`).join('');
     } catch (err) { tbody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: var(--accent-red);">Failed loading tiers.</td></tr>`; }
 }
-
 async function addNewGradingRule() {
     const name = document.getElementById('new_grade_name').value.trim();
     const minVal = parseFloat(document.getElementById('new_grade_min').value);
@@ -218,7 +233,6 @@ async function addNewGradingRule() {
         } else { await showAlert("Failed", "❌ Failed to add rule: " + (result.error || "Unknown"), "❌"); }
     } catch (err) { await showAlert("Error", "❌ Error: " + err.message, "❌"); }
 }
-
 async function deleteGradingRule(ruleId) {
     const ok = await showConfirm("Delete Grading?", "Permanently erase this grading configuration band row?", "🗑️");
     if (!ok) return;
@@ -227,7 +241,6 @@ async function deleteGradingRule(ruleId) {
         if (result && result.success) { loadGradingRulesView(); showToast("Removed!", "success"); }
     } catch (err) { await showAlert("Error", "❌ " + err.message, "❌"); }
 }
-
 async function loadSubjectsView() {
     const tbody = document.getElementById('subjectsTableBody'); if (!tbody) return;
     try {
@@ -236,10 +249,9 @@ async function loadSubjectsView() {
         tbody.innerHTML = subjects.map(sub => `
             <tr><td style="font-weight: bold; color: var(--primary);">${sub.subject_display_name}</td>
             <td style="font-family: monospace; color: var(--text-muted);">${sub.subject_code}</td>
-            <td style="text-align: center;"><button style="background: #721c24; color: white; border: none; padding: 4px 10px; border-radius: 4px; cursor: pointer;" onclick="deleteSubjectEntry(${sub.id})">Remove</button></td></tr>`).join('');
+            <td style="text-align: center;"><button style="background: #721c24; color: white; border: none; padding: 4px 10px; border-radius: 20px; cursor: pointer; font-weight:700;" onclick="deleteSubjectEntry(${sub.id})">Remove</button></td></tr>`).join('');
     } catch (err) { tbody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: red;">Failed to load.</td></tr>`; }
 }
-
 async function createNewSubject() {
     const displayName = document.getElementById('sub_display_name').value.trim();
     const codeId = document.getElementById('sub_code_id').value.trim();
@@ -252,7 +264,6 @@ async function createNewSubject() {
         } else { await showAlert("Duplicate", "❌ Code Error: The database identifier code must be completely unique!", "❌"); }
     } catch (err) { await showAlert("Error", "❌ Failed: " + err.message, "❌"); }
 }
-
 async function deleteSubjectEntry(id) {
     const ok = await showConfirm("Delete Subject?", "Are you sure you want to permanently delete this subject?", "🗑️");
     if (!ok) return;

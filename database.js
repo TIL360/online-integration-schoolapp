@@ -680,10 +680,10 @@ const updateSalaryStatus = (id, status, data) => {
 
 
 
-const getDashboardStats = () => {
+const getDashboardStats = (filters = {}) => {
   const now = new Date();
-  const month = now.toLocaleString('default', { month: 'long' });
-  const year = now.getFullYear().toString();
+  const month = filters.month || now.toLocaleString('default', { month: 'long' });
+  const year = filters.year || now.getFullYear().toString();
 
   // 1. Receivables: Total Fee + Arrears
   const receivablesResult = db.prepare(`
@@ -735,14 +735,16 @@ const getDashboardStats = () => {
 
   return { 
     activeStudents, 
-    activeStaff,       // Added
+    activeStaff,
     receivables, 
     balance, 
     salaries, 
     feeReceived, 
     expenses,
-    financialAmount,   // Added (Numeric profit/loss value)
-    financialStatus    // Added ('Profit' or 'Loss' string label)
+    financialAmount,
+    financialStatus,
+    selectedMonth: month,
+    selectedYear: year
   };
 };
 

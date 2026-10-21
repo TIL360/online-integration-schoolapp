@@ -6,31 +6,36 @@
     <title>Sheet Attendance Report Grid</title>
     <style>
         :root {
+            --p:#003049; --sidebar-bg:#003049; --bg:#f4f6f9; --p-border:#00304930;
             --bg-color: #f4f6f9; --container-bg: #ffffff; --primary: #003049;
             --accent-red: #d62828; --text-main: #2b2d42; --text-muted: #6c757d;
             --border-color: #333333; --border-light: #dee2e6; --school-red: #b01e1e;
             --shadow-md: 0 10px 25px rgba(0,0,0,0.08);
         }
-        body { font-family: 'Segoe UI', system-ui, sans-serif; background-color: var(--bg-color); margin: 0; padding: 30px 20px; color: var(--text-main); display: flex; flex-direction: column; align-items: center; }
-        .top-nav { width: 100%; max-width: 1140px; display: flex; gap: 12px; margin-bottom: 20px; }
-        .nav-btn { display: inline-flex; align-items: center; justify-content: center; padding: 10px 20px; font-size: 14px; font-weight: 600; text-decoration: none; color: var(--primary); background: var(--container-bg); border: 1px solid var(--border-light); border-radius: 6px; }
-        .container { width: 100%; max-width: 1100px; background: var(--container-bg); padding: 30px; border-radius: 12px; box-shadow: var(--shadow-md); }
-        h2 { margin-top: 0; color: var(--primary); }
-        .tabs { display: flex; background: #e9ecef; padding: 4px; border-radius: 8px; gap: 4px; margin-bottom: 25px; width: fit-content; }
-        .tab-btn { padding: 10px 24px; border: none; background: transparent; color: var(--text-muted); cursor: pointer; border-radius: 6px; font-weight: 600; }
-        .tab-btn.active { background: var(--container-bg); color: var(--primary); box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; align-items: end; background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 25px; border: 1px solid var(--border-light); }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background-color: var(--bg); margin: 0; padding: 30px 20px; color: var(--text-main); display: flex; flex-direction: column; align-items: center; }
+        .top-nav { width: 100%; max-width: 1140px; display: flex; gap: 12px; margin-bottom: 20px; flex-wrap:wrap; }
+        .nav-btn { display: inline-flex; align-items: center; justify-content: center; padding: 10px 20px; font-size: 13px; font-weight: 800; text-decoration: none; color: var(--p); background: var(--container-bg); border: 2px solid var(--p-border); border-radius: 20px; }
+        .nav-btn:hover{ background:var(--p); color:white; }
+        .container { width: 100%; max-width: 1100px; background: var(--container-bg); padding: 30px; border-radius: 16px; border:2px solid var(--p-border); box-shadow: var(--shadow-md); }
+        h2 { margin-top: 0; color: var(--p); font-weight:900; display:flex; align-items:center; gap:10px; }
+        h2:before{content:''; width:6px; height:20px; background:var(--p); border-radius:4px; display:inline-block;}
+        .tabs { display: flex; background: var(--bg); padding: 4px; border-radius: 20px; gap: 4px; margin-bottom: 25px; width: fit-content; border:2px solid var(--p-border); }
+        .tab-btn { padding: 10px 24px; border: none; background: transparent; color: var(--text-muted); cursor: pointer; border-radius: 20px; font-weight: 800; font-size:13px; }
+        .tab-btn.active { background: var(--p); color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; align-items: end; background: var(--bg); padding: 20px; border-radius: 12px; margin-bottom: 25px; border: 2px solid var(--p-border); }
         .control-group { display: flex; flex-direction: column; gap: 8px; }
-        .control-group label { font-size: 13px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; }
-        select, input[type="month"] { padding: 10px 14px; border: 1px solid var(--border-light); border-radius: 6px; font-size: 14px; width: 100%; }
-        .btn { padding: 11px 20px; background-color: var(--primary); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; height: 40px; }
-        .btn-pdf { background-color: var(--accent-red); }
-        .report-header-text { margin-bottom: 15px; font-weight: bold; font-size: 16px; color: #444; }
+        .control-group label { font-size: 11px; font-weight: 800; color: var(--p); text-transform: uppercase; }
+        select, input[type="month"] { padding: 10px 14px; border: 2px solid var(--p-border); border-radius: 20px; font-size: 14px; font-weight:600; width: 100%; outline:none; }
+        select:focus, input[type="month"]:focus{ border-color:var(--p); box-shadow:0 0 0 4px var(--p-border); }
+        .btn { padding: 11px 20px; background-color: var(--p); color: white; border: none; border-radius: 20px; cursor: pointer; font-weight: 800; height: 40px; font-size:13px; }
+        .btn:hover{ filter:brightness(0.9); }
+        .btn-pdf { background-color: var(--sidebar-bg); }
+        .report-header-text { margin-bottom: 15px; font-weight: 800; font-size: 14px; color: var(--p); }
         .table-wrapper { width: 100%; overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; background: white; min-width: 800px; }
         th, td { border: 1px solid var(--border-color); padding: 6px 5px; text-align: center; font-size: 13px; }
-        th { background-color: #f4f4f4; font-weight: bold; }
-        .name-col { text-align: left; padding-left: 8px; font-weight: 500; min-width: 140px; }
+        th { background-color: var(--bg); color:var(--p); font-weight: 800; }
+        .name-col { text-align: left; padding-left: 8px; font-weight: 600; min-width: 140px; }
         .status-P { color: #2e7d32; font-weight: bold; }
         .status-A { color: #c62828; font-weight: bold; background-color: #ffebee; }
         .status-L { color: #f57f17; font-weight: bold; background-color: #fff8e1; }
@@ -41,42 +46,12 @@
         @media print {
     body { background: white !important; padding: 0 !important; margin: 0 !important; display: block !important; }
     .top-nav, .tabs, .controls, .container > h2 { display: none !important; }
-    .container { box-shadow: none !important; padding: 0 !important; border-radius: 0 !important; max-width: 100% !important; width: 100% !important; }
-
-    .print-header {
-        display: flex !important;
-        align-items: center;
-        justify-content: center;
-        border-bottom: 2.5px solid #000;
-        padding-bottom: 8px;
-        margin-bottom: 10px;
-        -webkit-print-color-adjust: exact; print-color-adjust: exact;
-    }
+    .container { box-shadow: none !important; padding: 0 !important; border-radius: 0 !important; max-width: 100% !important; width: 100% !important; border:none !important; }
+    .print-header { display: flex !important; align-items: center; justify-content: center; border-bottom: 2.5px solid #000; padding-bottom: 8px; margin-bottom: 10px; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     .print-header h1 { color: var(--school-red); font-size: 24px; text-transform: uppercase; display: flex; align-items: center; margin: 0; font-weight: 800; }
-
-    /* FIX: Watermark on BODY so it shows on page 1 + 2 */
-    body::before {
-        content: "";
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 500px;
-        height: 500px;
-        background-image: url('../images/logo.png');
-        background-repeat: no-repeat;
-        background-position: center;
-        background-size: contain;
-        opacity: 0.08;
-        z-index: 9999;
-        pointer-events: none;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-    }
-
+    body::before { content: ""; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 500px; height: 500px; background-image: url('../images/logo.png'); background-repeat: no-repeat; background-position: center; background-size: contain; opacity: 0.08; z-index: 9999; pointer-events: none; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     #printArea { position: relative; }
-    #printArea::before { content: none !important; } /* purana wala band */
-
+    #printArea::before { content: none !important; }
     .table-wrapper { overflow: visible !important; }
     table { min-width: 100% !important; width: 100% !important; page-break-inside: auto; }
     tr { page-break-inside: avoid; }
@@ -115,6 +90,29 @@
     </div>
 </div>
 <script>
+// ===== THEME MANAGER ONLY - NO OTHER LOGIC DELETED =====
+const defaultTheme={primary:"#003049",sidebarBg:"#003049",bg:"#f4f6f9"};
+function applyTheme(t){
+  const theme={...defaultTheme,...(t||{})};
+  const r=document.documentElement;
+  r.style.setProperty('--p',theme.primary);
+  r.style.setProperty('--sidebar-bg',theme.sidebarBg);
+  r.style.setProperty('--bg',theme.bg);
+  r.style.setProperty('--p-border',theme.primary+'30');
+  r.style.setProperty('--primary',theme.primary);
+  r.style.setProperty('--bg-color',theme.bg);
+  document.body.style.background=theme.bg;
+}
+async function loadAndApplyTheme(){
+  try{
+    let saved=null;
+    if(window.api&&window.api.getThemeDetails){try{saved=await window.api.getThemeDetails();}catch(e){}}
+    if(!saved) saved=JSON.parse(localStorage.getItem('eduPulseTheme')||'null');
+    applyTheme(saved||defaultTheme);
+  }catch(e){applyTheme(defaultTheme);}
+}
+loadAndApplyTheme();
+
 let currentTab = 'student';
 const now = new Date();
 document.getElementById('report-month').value = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
@@ -142,6 +140,7 @@ function switchTab(tabName) {
     currentTab = tabName;
     document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
     if(event && event.target) event.target.classList.add('active');
+    else document.querySelectorAll('.tab-btn').forEach(b=>{ if(b.textContent.toLowerCase().includes(tabName)) b.classList.add('active'); });
     document.getElementById('class-select-container').style.display = tabName === 'staff' ? 'none' : 'block';
     document.getElementById('tbody-rows').innerHTML = '';
     document.getElementById('thead-row').innerHTML = '<th colspan="33" style="padding: 20px; color: #888;">Please reload sheet records.</th>';

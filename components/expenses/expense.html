@@ -3,54 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <title>Expense Management</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-    :root { --school-red: #b01e1e; }
-    body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #f4f7f6; padding: 20px; color: #333; }
-   .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 20px; }
-   .form-group { margin-bottom: 15px; }
-    label { display: block; margin-bottom: 5px; font-weight: bold; }
-    input, select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
-    button { background-color: #5d4037; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; }
-    table { width: 100%; border-collapse: collapse; margin-top: 15px; background: white; }
-    th, td { text-align: left; padding: 12px; border-bottom: 1px solid #eee; }
-    th { background-color: #f8f9fa; }
-   .small-logo { height: 50px; margin-right: 12px; }
-    #reportModal, #confirmModal { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); }
-   .modal-content { background: white; margin: 5% auto; padding: 30px; border-radius: 12px; width: 90%; max-width: 800px; max-height: 85vh; overflow-y: auto; position: relative; }
-   .confirm-box { background: white; margin: 15% auto; padding: 25px; border-radius: 10px; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
-   .btn-edit { background:#3498db; color:white; padding:5px 10px; border-radius:4px; margin-right:5px; }
-   .btn-delete { background:#e74c3c; color:white; padding:5px 10px; border-radius:4px; }
-   .btn-cancel { background:#95a5a6; }
-    #reportData { position: relative; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    #reportData::before { content: ""; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 450px; height: 450px; background-image: url('../../images/logo.png'); background-repeat: no-repeat; background-position: center; background-size: contain; opacity: 0.08; z-index: 0; pointer-events: none; }
-    #reportData * { position: relative; z-index: 1; }
-   .school-header-pdf { text-align: center; margin-bottom: 15px; border-bottom: 2px solid #000; padding-bottom: 8px; }
-   .school-header-pdf h1 { margin: 0; color: var(--school-red); font-size: 26px; text-transform: uppercase; display: flex; align-items: center; justify-content: center; }
-   .refresh-btn { background: white; color: black; border: 1px solid #ddd; padding: 8px 15px; border-radius: 5px; cursor: pointer; }
-   @media print {
-    body { background: white!important; margin: 0!important; padding: 0!important; }
-   .refresh-btn,.card { display: none!important; }
-    #reportModal { display: block!important; position: static!important; width: 100%!important; height: auto!important; background: white!important; }
-   .modal-content { box-shadow: none!important; margin: 0!important; padding: 10mm!important; width: 100%!important; max-width: 100%!important; max-height: none!important; overflow: visible!important; border: none!important; border-radius: 0!important; }
-    #reportData { width: 100%!important; }
-   .no-print { display: none!important; }
-    @page { size: A4; margin: 10mm; }
-}
-</style>
+    :root{
+      --p:#0f766e; --sidebar-bg:#0f766e; --bg:#f0fdfa; --p-border:#0f766e30;
+      --card:#ffffff; --text:#0f172a; --white:#ffffff; --danger:#e11d48;
+    }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); padding: 20px; color: var(--text); margin:0; }
+    /* Fee List jaisa Header */
+    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background:var(--white); padding:14px 18px; border-radius:10px; border:2px solid var(--p-border); box-shadow:0 4px 15px rgba(0,0,0,0.05); }
+    .header h2{ margin:0; color:var(--p); font-weight:800; display:flex; align-items:center; gap:8px; font-size:16px; }
+    .header h2:before{content:''; width:4px; height:18px; background:var(--p); border-radius:4px; display:inline-block;}
+    
+    .card { background: var(--card); padding: 20px; border-radius: 10px; border:2px solid var(--p-border); box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 18px; }
+    .card h2{ color:var(--p); font-weight:800; display:flex; align-items:center; gap:8px; margin:0 0 12px 0; font-size:15px; }
+    .card h2:before{content:''; width:4px; height:18px; background:var(--p); border-radius:4px; display:inline-block;}
+    label { display:block; margin-bottom:5px; font-weight:800; font-size:11px; color:var(--p); text-transform:uppercase; }
+    input, select { width:100%; padding:11px 12px; border:2px solid var(--p-border); border-radius:20px; box-sizing:border-box; outline:none; font-size:13px; background:#fcfdff; font-weight:600; }
+    input:focus, select:focus{ border-color:var(--p); background:white; box-shadow:0 0 0 4px var(--p-border); }
+    button { background:var(--p); color:white; border:none; padding:10px 20px; border-radius:20px; cursor:pointer; font-weight:800; font-size:12.5px; }
+    
+    /* Fee List jaisa Table Container */
+    .table-container { background: var(--white); border-radius: 10px; border:2px solid var(--p-border); box-shadow: 0 4px 15px rgba(0,0,0,0.05); overflow-x: auto; margin-top:15px; }
+    .table-container table{ margin-top:0; border:none; border-radius:0; }
+    table { width:100%; border-collapse:collapse; margin-top:15px; background:var(--card); border-radius:12px; overflow:hidden; border:2px solid var(--p-border); }
+    th, td { text-align:left; padding:12px; border-bottom:1px solid #f1f5f9; }
+    th { background:var(--sidebar-bg); color:#e2e8f0; font-weight:700; font-size:10.5px; text-transform:uppercase; }
+    td{ font-size:12.8px; }
+    tr:hover td{ background: var(--bg); }
+
+    .small-logo{ height:40px; margin-right:10px; }
+    #reportModal, #confirmModal{ display:none; position:fixed; z-index:9999; left:0; top:0; width:100%; height:100%; background:rgba(15,23,42,0.55); backdrop-filter:blur(8px); }
+    .modal-content{ background:var(--card); margin:5% auto; padding:22px; border-radius:16px; border:2px solid var(--p-border); width:90%; max-width:800px; max-height:85vh; overflow-y:auto; }
+    .confirm-box{ background:white; margin:15% auto; padding:25px; border-radius:16px; border:2px solid var(--p-border); width:90%; max-width:400px; text-align:center; }
+    .btn-edit{ background:var(--bg); color:var(--p); border:2px solid var(--p-border); padding:6px 12px; border-radius:20px; margin-right:5px; font-weight:700; font-size:12px; cursor:pointer; }
+    .btn-delete{ background:#fff1f2; color:#e11d48; border:2px solid #fecdd3; padding:6px 12px; border-radius:20px; font-weight:700; font-size:12px; cursor:pointer; }
+    .btn-cancel{ background:var(--white); color:#334155; border:2px solid #ddd; padding:10px 20px; border-radius:20px; font-weight:700; }
+    .refresh-btn{ background:var(--white); color:var(--p); border:2px solid var(--p-border); padding:8px 15px; border-radius:20px; cursor:pointer; font-weight:700; }
+    .filter-container { background: #fff; padding: 15px; border-radius: 10px; border:2px solid var(--p-border); display: flex; gap: 15px; align-items: flex-end; margin-bottom: 20px; flex-wrap:wrap; box-shadow:0 4px 15px rgba(0,0,0,0.05); }
+    .school-header-pdf{ text-align:center; margin-bottom:15px; border-bottom:2px solid var(--p); padding-bottom:8px; }
+    .school-header-pdf h1{ margin:0; color:var(--p); font-size:22px; text-transform:uppercase; display:flex; align-items:center; justify-content:center; font-weight:800; }
+    #reportData{ position:relative; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    #reportData::before{ content:""; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:450px; height:450px; background-image:url('../../images/logo.png'); background-repeat:no-repeat; background-position:center; background-size:contain; opacity:0.08; z-index:0; pointer-events:none; }
+    #reportData *{ position:relative; z-index:1; }
+    @media print { .no-print, .refresh-btn, .card, .header, .filter-container{display:none!important;} #reportModal{display:block!important; position:static!important; background:white!important;} .modal-content{box-shadow:none!important; margin:0!important; padding:10mm!important; width:100%!important; max-width:100%!important; border:none!important;} }
+    </style>
 </head>
 <body>
-
-    <button class="refresh-btn" onclick="window.location.href='../dashboard.html'">Dashboard</button>
+    <div class="header">
+        <div><h2>Expense Management</h2><p class="dynamic-institute-details" style="margin:5px 0 0 0; color:var(--p); font-weight:700; font-size:12px;"></p></div>
+        <button class="refresh-btn" onclick="window.location.href='../dashboard.html'">Dashboard</button>
+    </div>
 
     <div class="card">
         <h2>+ Add New Expense</h2>
-        <div id="successMessage" style="display: none; color: #2ecc71; font-weight: bold; margin-bottom: 15px; text-align: center;">✓ Expense Saved Successfully!</div>
+        <div id="successMessage" style="display:none; color:var(--p); font-weight:800; margin-bottom:15px; text-align:center;">✓ Expense Saved Successfully!</div>
         <form id="expenseForm">
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
                 <div class="form-group"><label>Expense Detail</label><input type="text" id="expenseName" required autocomplete="off" placeholder="e.g. Electricity Bill"></div>
                 <div class="form-group"><label>Expense Date</label><input type="date" id="expenseDate" required></div>
             </div>
-            <div class="form-group"><label>Amount</label><input type="number" id="expenseAmount" required autocomplete="off" placeholder="0.00"></div>
+            <div class="form-group" style="margin-top:15px;"><label>Amount</label><input type="number" id="expenseAmount" required autocomplete="off" placeholder="0.00"></div>
             <div style="display:flex; gap:10px;">
                 <button type="submit" style="flex:1;" id="submitBtn">Save Expense</button>
                 <button type="button" id="cancelBtn" class="btn-cancel" style="display:none;" onclick="cancelEdit()">Cancel</button>
@@ -58,194 +71,71 @@
         </form>
     </div>
 
+    <div class="filter-container">
+        <div style="flex:1;"><label>Select Month</label><select id="filterMonth"></select></div>
+        <div style="flex:1;"><label>Select Year</label><select id="filterYear"></select></div>
+        <button onclick="openReport()" style="height:42px;">Get Report</button>
+    </div>
+
     <div class="card">
-        <h2>📊 Expense Report</h2>
-        <div style="display: flex; gap: 10px; align-items: flex-end;">
-            <div style="flex: 1;"><label>Select Month</label><select id="filterMonth"></select></div>
-            <div style="flex: 1;"><label>Select Year</label><select id="filterYear"></select></div>
-            <button onclick="openReport()" style="background:#2c3e50; height: 40px;">Get Report</button>
+        <h2>Recent Expenses</h2>
+        <div class="table-container">
+            <table><thead><tr><th>Description</th><th>Date</th><th>Period</th><th style="text-align:right;">Amount</th><th style="text-align:center;">Action</th></tr></thead><tbody id="expenseTableBody"></tbody></table>
         </div>
     </div>
 
-<div class="card">
-    <h2>Recent Expenses</h2>
-    <table>
-        <thead><tr><th>Description</th><th>Date</th><th>Period</th><th style="text-align:right;">Amount</th><th style="text-align:center;">Action</th></tr></thead>
-        <tbody id="expenseTableBody"></tbody>
-    </table>
-</div>
-
-    <div id="confirmModal">
-        <div class="confirm-box">
-            <div style="font-size:40px;">⚠️</div>
-            <h3 style="margin:10px 0;">Are you sure?</h3>
-            <p id="confirmText" style="color:#666;">Are you sure to delete this expense?</p>
-            <div style="display:flex; gap:10px; justify-content:center; margin-top:20px;">
-                <button onclick="confirmYes()" style="background:#e74c3c; min-width:80px;">Yes, Delete</button>
-                <button onclick="confirmNo()" style="background:#95a5a6; min-width:80px;">Cancel</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="reportModal">
-        <div class="modal-content">
-            <div class="no-print" style="display:flex; justify-content: space-between; margin-bottom:20px;">
-                <h2>Expense Summary</h2>
-                <div><button onclick="window.print()" style="background:#2ecc71; margin-right:10px;">🖨️ Print / Save PDF</button><button onclick="closeModal()" style="background:#e74c3c;">Close</button></div>
-            </div>
-            <div id="reportData">
-                <div class="school-header-pdf">
-                    <h1 class="dynamic-institute-title"><img src="../../images/logo.png" class="small-logo">Loading...</h1>
-                    <p class="dynamic-institute-details" style="font-size:12px; font-weight:bold;"></p>
-                    <p class="dynamic-institute-email" style="font-size:11px;"></p>
-                </div>
-                <h1 style="text-align:center;">Monthly Expense Statement</h1>
-                <p id="reportPeriod" style="text-align:center; font-weight:bold;"></p>
-                <table><thead><tr><th>Description</th><th>Date</th><th style="text-align:right;">Amount</th></tr></thead><tbody id="modalTableBody"></tbody></table>
-                <div style="margin-top:20px; text-align:right; border-top:2px solid #333; padding-top:10px;"><h3 id="modalTotalAmount"></h3></div>
-            </div>
-        </div>
-    </div>
-
+    <div id="confirmModal"><div class="confirm-box"><div style="font-size:40px;">⚠️</div><h3 style="margin:10px 0; color:var(--p);">Are you sure?</h3><p id="confirmText" style="color:#666; font-size:13px;">Are you sure to delete this expense?</p><div style="display:flex; gap:10px; justify-content:center; margin-top:20px;"><button onclick="confirmYes()" style="background:#e11d48; min-width:80px;">Yes, Delete</button><button onclick="confirmNo()" style="background:white; color:#334155; border:2px solid #ddd; min-width:80px;">Cancel</button></div></div></div>
+    <div id="reportModal"><div class="modal-content"><div class="no-print" style="display:flex; justify-content:space-between; margin-bottom:20px;"><h2>Expense Summary</h2><div><button onclick="window.print()" style="background:var(--p); margin-right:10px;">🖨️ Print / Save PDF</button><button onclick="closeModal()" style="background:#e11d48;">Close</button></div></div><div id="reportData"><div class="school-header-pdf"><h1 class="dynamic-institute-title"><img src="../../images/logo.png" class="small-logo">Loading...</h1><p class="dynamic-institute-details" style="font-size:12px; font-weight:bold;"></p><p class="dynamic-institute-email" style="font-size:11px;"></p></div><h1 style="text-align:center; font-size:18px; font-weight:800;">Monthly Expense Statement</h1><p id="reportPeriod" style="text-align:center; font-weight:bold; font-size:13px;"></p><table><thead><tr><th>Description</th><th>Date</th><th style="text-align:right;">Amount</th></tr></thead><tbody id="modalTableBody"></tbody></table><div style="margin-top:20px; text-align:right; border-top:2px solid var(--p); padding-top:10px;"><h3 id="modalTotalAmount"></h3></div></div></div></div>
 <script>
-    let editingId = null;
-    let pendingDeleteId = null;
-
+const defaultTheme={primary:"#0f766e",sidebarBg:"#0f766e",bg:"#f0fdfa"};
+function applyTheme(t){
+  const theme={...defaultTheme,...(t||{})};
+  const r=document.documentElement;
+  r.style.setProperty('--p',theme.primary);
+  r.style.setProperty('--sidebar-bg',theme.sidebarBg);
+  r.style.setProperty('--bg',theme.bg);
+  r.style.setProperty('--p-border',theme.primary+'30');
+  document.body.style.background=theme.bg;
+}
+async function loadAndApplyTheme(){
+  try{
+    let saved=null;
+    if(window.api&&window.api.getThemeDetails){try{saved=await window.api.getThemeDetails();}catch(e){}}
+    if(!saved) saved=JSON.parse(localStorage.getItem('eduPulseTheme')||'null');
+    if(!saved) saved=JSON.parse(localStorage.getItem('theme')||'null');
+    applyTheme(saved||defaultTheme);
+  }catch(e){applyTheme(defaultTheme);}
+}
+let editingId=null; let pendingDeleteId=null;
 async function applyCentralAppDetails(){
     try{
-        if(window.api && window.api.getAppDetails){
+        if(window.api&&window.api.getAppDetails){
             const d=await window.api.getAppDetails();
+            if(d.theme) applyTheme(d.theme);
             document.querySelectorAll('.dynamic-institute-title').forEach(el=>el.innerHTML=`<img src="../../images/logo.png" class="small-logo">${d.instituteName}`);
-            document.querySelectorAll('.dynamic-institute-details').forEach(el=>el.innerText=`Address: ${d.address || 'Islamabad'} || Contact: ${d.contactNumber || ''}`);
-            document.querySelectorAll('.dynamic-institute-email').forEach(el=>el.innerText=`E-mail: ${d.email || ''}`);
+            document.querySelectorAll('.dynamic-institute-details').forEach(el=>el.innerText=`Address: ${d.address||'Islamabad'} || Contact: ${d.contactNumber||''}`);
+            document.querySelectorAll('.dynamic-institute-email').forEach(el=>el.innerText=`E-mail: ${d.email||''}`);
         }
     }catch(e){}
 }
 document.addEventListener('DOMContentLoaded', async () => {
+    await loadAndApplyTheme();
     await applyCentralAppDetails();
-    // Set default date to today
-    const today = new Date().toISOString().split('T')[0];
-    document.getElementById('expenseDate').value = today;
-    await populateFilters();
-    await loadExpenses();
+    const today=new Date().toISOString().split('T')[0];
+    document.getElementById('expenseDate').value=today;
+    await populateFilters(); await loadExpenses();
 });
-
-async function populateFilters() {
-    const filters = await window.api.getExpenseFilters();
-    document.getElementById('filterMonth').innerHTML = '<option value="">Select Month</option>' + filters.months.map(m => `<option value="${m.exp_month}">${m.exp_month}</option>`).join('');
-    document.getElementById('filterYear').innerHTML = '<option value="">Select Year</option>' + filters.years.map(y => `<option value="${y.exp_year}">${y.exp_year}</option>`).join('');
-}
-
-async function loadExpenses() {
-    const rows = await window.api.getExpenses({ month: '', year: '' });
-    document.getElementById('expenseTableBody').innerHTML = rows.map(item =>
-    `<tr>
-        <td>${item.expence}</td>
-        <td>${item.created_at || item.exp_date || ''}</td>
-        <td>${item.exp_month} ${item.exp_year}</td>
-        <td style="text-align:right;">${parseFloat(item.exp_amount).toLocaleString()}</td>
-        <td style="text-align:center;">
-            <button class="btn-edit" onclick="startEdit(${item.id}, '${String(item.expence).replace(/'/g, "\\'")}', '${item.exp_amount}', '${item.created_at || item.exp_date || ''}')">✏️ Edit</button>
-            <button class="btn-delete" onclick="removeExpense(${item.id})">🗑️ Delete</button>
-        </td>
-    </tr>`).join('') || '<tr><td colspan="5" style="text-align:center;">No data</td></tr>';
-}
-
-document.getElementById('expenseForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const expense = document.getElementById('expenseName').value.trim();
-    const amount = document.getElementById('expenseAmount').value;
-    const expDate = document.getElementById('expenseDate').value; // NEW: date field
-    if(!expDate){ alert("Please select expense date!"); return; }
-
-    let result;
-    const isEditing = editingId!== null;
-    const oldId = editingId;
-    if(isEditing){
-        result = await window.api.updateExpense({ id: oldId, expense, amount, date: expDate, exp_date: expDate });
-    }
-    else {
-        result = await window.api.addExpense({ expense, amount, date: expDate, exp_date: expDate });
-    }
-    if (result && result.success) {
-        document.getElementById('successMessage').innerText = isEditing? '✓ Updated!' : '✓ Expense Saved Successfully!';
-        document.getElementById('successMessage').style.display='block';
-        cancelEdit();
-        setTimeout(()=>document.getElementById('successMessage').style.display='none',3000);
-        await populateFilters(); await loadExpenses();
-        setTimeout(()=>{ document.getElementById('expenseName').focus(); }, 100);
-    } else { alert("Failed: " + (result?.error || "Unknown error")); }
-});
-
-function startEdit(id, name, amount, dateStr){
-    editingId = id;
-    document.getElementById('expenseName').value = name;
-    document.getElementById('expenseAmount').value = amount;
-    // Parse date - handle YYYY-MM-DD or DD-MM-YYYY or with time
-    let parsedDate = '';
-    if(dateStr){
-        // If contains T or space, take first part
-        let d = dateStr.split(' ')[0].split('T')[0];
-        // If DD-MM-YYYY convert to YYYY-MM-DD for input
-        if(d.includes('-')){
-            const parts = d.split('-');
-            if(parts[0].length===4){ parsedDate = d; }
-            else if(parts[2].length===4){ parsedDate = `${parts[2]}-${parts[1]}-${parts[0]}`; }
-            else { parsedDate = d; }
-        } else if(d.includes('/')){
-            const parts = d.split('/');
-            if(parts[2]) parsedDate = `${parts[2]}-${parts[1].padStart(2,'0')}-${parts[0].padStart(2,'0')}`;
-        } else { parsedDate = d; }
-    }
-    if(!parsedDate) parsedDate = new Date().toISOString().split('T')[0];
-    document.getElementById('expenseDate').value = parsedDate;
-    document.getElementById('submitBtn').innerText = 'Update Expense';
-    document.getElementById('cancelBtn').style.display = 'inline-block';
-    document.getElementById('expenseName').focus();
-}
-function cancelEdit(){
-    editingId = null;
-    document.getElementById('expenseForm').reset();
-    const today = new Date().toISOString().split('T')[0];
-    document.getElementById('expenseDate').value = today;
-    document.getElementById('submitBtn').innerText = 'Save Expense';
-    document.getElementById('cancelBtn').style.display = 'none';
-}
-
-function removeExpense(id){
-    pendingDeleteId = id;
-    document.getElementById('confirmModal').style.display = 'block';
-}
-function confirmNo(){
-    pendingDeleteId = null;
-    document.getElementById('confirmModal').style.display = 'none';
-    document.getElementById('expenseName').focus();
-}
-async function confirmYes(){
-    const id = pendingDeleteId;
-    document.getElementById('confirmModal').style.display = 'none';
-    pendingDeleteId = null;
-    if(editingId === id) cancelEdit();
-    const res = await window.api.deleteExpense(id);
-    if(res && res.success){
-        await loadExpenses();
-        window.focus();
-        setTimeout(()=>{ document.getElementById('expenseName').focus(); }, 50);
-    } else { alert("Delete failed: " + (res?.error || "")); }
-}
-
-async function openReport() {
-    const month = document.getElementById('filterMonth').value;
-    const year = document.getElementById('filterYear').value;
-    if (!month ||!year) { alert("Select Month & Year!"); return; }
-    const rows = await window.api.getExpenses({ month, year });
-    let total = 0;
-    document.getElementById('reportPeriod').innerText = `Period: ${month} ${year}`;
-    document.getElementById('modalTableBody').innerHTML = rows.map(item => { const amt = parseFloat(item.exp_amount||0); total+=amt; return `<tr><td>${item.expence}</td><td>${item.created_at || item.exp_date || ''}</td><td style="text-align:right;">${amt.toLocaleString()}</td></tr>`; }).join('');
-    document.getElementById('modalTotalAmount').innerText = `Total: ${total.toLocaleString()}`;
-    document.getElementById('reportModal').style.display = "block";
-}
-function closeModal() { document.getElementById('reportModal').style.display = "none"; }
+window.addEventListener('focus', loadAndApplyTheme);
+async function populateFilters(){const f=await window.api.getExpenseFilters();document.getElementById('filterMonth').innerHTML='<option value="">Select Month</option>'+f.months.map(m=>`<option value="${m.exp_month}">${m.exp_month}</option>`).join('');document.getElementById('filterYear').innerHTML='<option value="">Select Year</option>'+f.years.map(y=>`<option value="${y.exp_year}">${y.exp_year}</option>`).join('');}
+async function loadExpenses(){const rows=await window.api.getExpenses({month:'',year:''});document.getElementById('expenseTableBody').innerHTML=rows.map(item=>`<tr><td>${item.expence}</td><td>${item.created_at||item.exp_date||''}</td><td>${item.exp_month} ${item.exp_year}</td><td style="text-align:right;">${parseFloat(item.exp_amount).toLocaleString()}</td><td style="text-align:center;"><button class="btn-edit" onclick="startEdit(${item.id}, '${String(item.expence).replace(/'/g,"\\'")}', '${item.exp_amount}', '${item.created_at||item.exp_date||''}')">✏️ Edit</button><button class="btn-delete" onclick="removeExpense(${item.id})">🗑️ Delete</button></td></tr>`).join('')||'<tr><td colspan="5" style="text-align:center;">No data</td></tr>';}
+document.getElementById('expenseForm').addEventListener('submit', async (e)=>{e.preventDefault();const expense=document.getElementById('expenseName').value.trim();const amount=document.getElementById('expenseAmount').value;const expDate=document.getElementById('expenseDate').value;if(!expDate){alert("Please select expense date!");return;}let result;const isEditing=editingId!==null;const oldId=editingId;if(isEditing){result=await window.api.updateExpense({id:oldId,expense,amount,date:expDate,exp_date:expDate});}else{result=await window.api.addExpense({expense,amount,date:expDate,exp_date:expDate});}if(result&&result.success){document.getElementById('successMessage').innerText=isEditing?'✓ Updated!':'✓ Expense Saved Successfully!';document.getElementById('successMessage').style.display='block';cancelEdit();setTimeout(()=>document.getElementById('successMessage').style.display='none',3000);await populateFilters();await loadExpenses();}else{alert("Failed: "+(result?.error||"Unknown error"));}});
+function startEdit(id,name,amount,dateStr){editingId=id;document.getElementById('expenseName').value=name;document.getElementById('expenseAmount').value=amount;let pd='';if(dateStr){let d=dateStr.split(' ')[0].split('T')[0];if(d.includes('-')){const p=d.split('-');if(p[0].length===4){pd=d;}else if(p[2].length===4){pd=`${p[2]}-${p[1]}-${p[0]}`;}else{pd=d;}}else if(d.includes('/')){const p=d.split('/');if(p[2]) pd=`${p[2]}-${p[1].padStart(2,'0')}-${p[0].padStart(2,'0')}`;}else{pd=d;}}if(!pd) pd=new Date().toISOString().split('T')[0];document.getElementById('expenseDate').value=pd;document.getElementById('submitBtn').innerText='Update Expense';document.getElementById('cancelBtn').style.display='inline-block';document.getElementById('expenseName').focus();}
+function cancelEdit(){editingId=null;document.getElementById('expenseForm').reset();const today=new Date().toISOString().split('T')[0];document.getElementById('expenseDate').value=today;document.getElementById('submitBtn').innerText='Save Expense';document.getElementById('cancelBtn').style.display='none';}
+function removeExpense(id){pendingDeleteId=id;document.getElementById('confirmModal').style.display='block';}
+function confirmNo(){pendingDeleteId=null;document.getElementById('confirmModal').style.display='none';}
+async function confirmYes(){const id=pendingDeleteId;document.getElementById('confirmModal').style.display='none';pendingDeleteId=null;if(editingId===id) cancelEdit();const res=await window.api.deleteExpense(id);if(res&&res.success){await loadExpenses();}else{alert("Delete failed: "+(res?.error||""));}}
+async function openReport(){const month=document.getElementById('filterMonth').value;const year=document.getElementById('filterYear').value;if(!month||!year){alert("Select Month & Year!");return;}const rows=await window.api.getExpenses({month,year});let total=0;document.getElementById('reportPeriod').innerText=`Period: ${month} ${year}`;document.getElementById('modalTableBody').innerHTML=rows.map(item=>{const amt=parseFloat(item.exp_amount||0);total+=amt;return `<tr><td>${item.expence}</td><td>${item.created_at||item.exp_date||''}</td><td style="text-align:right;">${amt.toLocaleString()}</td></tr>`;}).join('');document.getElementById('modalTotalAmount').innerText=`Total: ${total.toLocaleString()}`;document.getElementById('reportModal').style.display="block";}
+function closeModal(){document.getElementById('reportModal').style.display="none";}
 </script>
 </body>
 </html>

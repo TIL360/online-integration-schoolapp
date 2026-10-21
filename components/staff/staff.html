@@ -5,62 +5,68 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Staff Management</title>
     <style>
-        :root { --primary: #2c3e50; --accent: #3498db; --bg: #f4f7f6; --white: #ffffff; --success: #27ae60; --danger: #e74c3c; }
+        :root { 
+          --p:#2c3e50; --sidebar-bg:#2c3e50; --bg:#f4f7f6; --p-border:#2c3e5030;
+          --primary: #2c3e50; --accent: #3498db; --bg: #f4f7f6; --white: #ffffff; --success: #27ae60; --danger: #e74c3c; 
+        }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 20px; color: #333; }
-       .back-link { text-decoration: none; color: var(--accent); font-weight: bold; margin-bottom: 15px; display: inline-block; }
-       .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
-        h2 { color: var(--primary); margin: 0; }
+       .back-link { text-decoration: none; color: var(--p); font-weight: 800; margin-bottom: 15px; display: inline-block; }
+       .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; background:white; padding:14px 18px; border-radius:12px; border:2px solid var(--p-border); flex-wrap:wrap; gap:10px; }
+        h2 { color: var(--p); margin: 0; font-weight:900; display:flex; align-items:center; gap:8px; }
+        h2:before{content:''; width:5px; height:18px; background:var(--p); border-radius:4px; display:inline-block;}
        .staff-grid { display: grid; grid-template-columns: 350px 1fr; gap: 20px; }
-       .card { background: var(--white); padding: 20px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+       .card { background: var(--white); padding: 20px; border-radius: 12px; border:2px solid var(--p-border); box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
        .form-group { margin-bottom: 15px; }
-       .form-group label { display: block; font-size: 12px; font-weight: bold; color: #666; margin-bottom: 5px; text-transform: uppercase; }
-       .form-group input,.form-group select,.form-group textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
-       .btn-save { width: 100%; background: var(--success); color: white; border: none; padding: 12px; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 10px; }
-       .btn-save:hover { background: #219150; }
-        table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; }
-        th { background: var(--primary); color: white; padding: 12px; text-align: left; font-size: 0.8rem; text-transform: uppercase; }
-        td { padding: 12px; border-bottom: 1px solid #eee; font-size: 0.9rem; }
-       .status-pill { padding: 3px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; }
+       .form-group label { display: block; font-size: 11px; font-weight: 800; color: var(--p); margin-bottom: 5px; text-transform: uppercase; }
+       .form-group input,.form-group select,.form-group textarea { width: 100%; padding: 10px; border: 2px solid var(--p-border); border-radius: 20px; box-sizing: border-box; font-weight:600; outline:none; }
+       .form-group input:focus,.form-group select:focus,.form-group textarea:focus{ border-color:var(--p); box-shadow:0 0 0 4px var(--p-border); }
+       .btn-save { width: 100%; background: var(--p); color: white; border: none; padding: 12px; border-radius: 20px; cursor: pointer; font-weight: 800; margin-top: 10px; }
+       .btn-save:hover { filter:brightness(0.9); }
+        table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; }
+        th { background: var(--p); color: white; padding: 12px; text-align: left; font-size: 11px; text-transform: uppercase; font-weight:800; }
+        td { padding: 12px; border-bottom: 1px solid var(--p-border); font-size: 0.9rem; }
+       .status-pill { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 800; }
        .active { background: #d4edda; color: #155724; }
        .inactive { background: #f8d7da; color: #721c24; }
-       .btn-action { border: none; padding: 5px 8px; border-radius: 4px; cursor: pointer; margin-right: 3px; }
-       .edit { background: #3498db; color: white; }
-       .delete { background: var(--danger); color: white; }
-       .photo-box { display:flex; flex-direction:column; align-items:center; margin-bottom:15px; border:2px dashed #ddd; padding:15px; border-radius:8px; background:#fafafa; }
-       .photo-preview { width:100px; height:100px; border-radius:50%; object-fit:cover; border:3px solid var(--primary); background:#eee; margin-bottom:10px; }
+       .btn-action { border: none; padding: 6px 12px; border-radius: 20px; cursor: pointer; margin-right: 3px; font-weight:700; font-size:11px; }
+       .edit { background: var(--bg); color: var(--p); border:2px solid var(--p-border); }
+       .delete { background: #fff1f2; color: var(--danger); border:2px solid #ffe4e6; }
+       .photo-box { display:flex; flex-direction:column; align-items:center; margin-bottom:15px; border:2px dashed var(--p-border); padding:15px; border-radius:12px; background:var(--bg); }
+       .photo-preview { width:100px; height:100px; border-radius:50%; object-fit:cover; border:3px solid var(--p); background:#eee; margin-bottom:10px; }
        .photo-box input { font-size:12px; }
-       .table-photo { width:40px; height:40px; border-radius:50%; object-fit:cover; border:2px solid #ddd; vertical-align:middle; margin-right:8px; }
-        /* CUSTOM MODALS - FIXES INPUT LOCK */
-       .custom-modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:10000; align-items:center; justify-content:center; }
+       .table-photo { width:40px; height:40px; border-radius:50%; object-fit:cover; border:2px solid var(--p-border); vertical-align:middle; margin-right:8px; }
+       .custom-modal { display:none; position:fixed; inset:0; background:rgba(15,23,42,0.55); backdrop-filter:blur(8px); z-index:10000; align-items:center; justify-content:center; }
        .custom-modal.show { display:flex; }
-       .custom-box { background:white; width:380px; border-radius:10px; overflow:hidden; box-shadow:0 15px 40px rgba(0,0,0,0.3); }
-       .custom-head { padding:12px 16px; font-weight:700; border-bottom:1px solid #eee; display:flex; justify-content:space-between; }
+       .custom-box { background:white; width:380px; border-radius:16px; overflow:hidden; box-shadow:0 15px 40px rgba(0,0,0,0.3); border:2px solid var(--p-border); }
+       .custom-head { padding:12px 16px; font-weight:800; border-bottom:2px solid var(--p-border); display:flex; justify-content:space-between; color:var(--p); }
        .custom-body { padding:20px 16px; font-size:14px; line-height:1.6; }
-       .custom-foot { padding:10px 16px; background:#f8f9ff; display:flex; justify-content:flex-end; gap:10px; }
-       .custom-foot button { padding:6px 14px; border-radius:6px; border:1px solid #ddd; cursor:pointer; font-weight:600; }
+       .custom-foot { padding:10px 16px; background:var(--bg); display:flex; justify-content:flex-end; gap:10px; }
+       .custom-foot button { padding:8px 16px; border-radius:20px; border:2px solid #ddd; cursor:pointer; font-weight:700; }
        .btn-del { background:var(--danger)!important; color:white!important; border-color:var(--danger)!important; }
-       .btn-ok { background:var(--primary)!important; color:white!important; border-color:var(--primary)!important; }
+       .btn-ok { background:var(--p)!important; color:white!important; border-color:var(--p)!important; }
+       .btn-apply{ border-radius:20px!important; }
+       @media(max-width:900px){ .staff-grid{ grid-template-columns:1fr; } }
     </style>
 </head>
 <body>
     <div class="header">
     <h2>Staff Management</h2>
-    <div>
-        <button class="btn-apply" onclick="window.location.href='staff-card.html'" style="background: #020e7c; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; margin-right: 10px;">Staff Card</button>
-        <button class="btn-apply" onclick="window.location.href='../dashboard.html'" style="background: #020e7c; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; margin-right: 10px;">Dashboard</button>
-        <button class="btn-apply" onclick="window.location.href='salary.html'" style="background: #d8da7a; color: rgb(5, 5, 5); border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; margin-right: 10px;">💵 Salary</button>
-        <button onclick="openSalaryModal()" style="background: #e67e22; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; margin-right: 10px;">💰 Initiate Salary</button>
-        <span id="staffStats" style="font-weight: bold; color: var(--primary);">Total Staff: <span id="countText">0</span></span>
+    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+        <button class="btn-apply" onclick="window.location.href='staff-card.html'" style="background: var(--p); color: white; border: none; padding: 8px 15px; border-radius: 20px; cursor: pointer; font-weight: 800;">Staff Card</button>
+        <button class="btn-apply" onclick="window.location.href='../dashboard.html'" style="background: white; color: var(--p); border: 2px solid var(--p-border); padding: 8px 15px; border-radius: 20px; cursor: pointer; font-weight: 800;">Dashboard</button>
+        <button class="btn-apply" onclick="window.location.href='salary.html'" style="background: var(--p); color: white; border: none; padding: 8px 15px; border-radius: 20px; cursor: pointer; font-weight: 800;">💵 Salary</button>
+        <button onclick="openSalaryModal()" style="background: #e67e22; color: white; border: none; padding: 8px 15px; border-radius: 20px; cursor: pointer; font-weight: 800;">💰 Initiate Salary</button>
+        <span id="staffStats" style="font-weight: 800; color: var(--p);">Total Staff: <span id="countText">0</span></span>
     </div>
 </div>
 
     <div class="staff-grid">
         <div class="card">
-            <h3 style="margin-top:0">Add New Staff</h3>
+            <h3 style="margin-top:0; color:var(--p); font-weight:900;">Add New Staff</h3>
             <div class="photo-box">
                 <img id="staffPhotoPreview" class="photo-preview" src="../../images/logo.png" />
                 <input type="file" id="staffPhoto" accept="image/*" onchange="previewPhoto(event)">
-                <small style="color:#888; margin-top:5px;">Click to upload staff picture</small>
+                <small style="color:var(--p); margin-top:5px; font-weight:700;">Click to upload staff picture</small>
             </div>
             <div class="form-group"><label>Full Name</label><input type="text" id="staffName" placeholder="Enter full name"></div>
             <div class="form-group"><label>CNIC / ID Number</label><input type="text" id="staffCnic" placeholder="xxxxx-xxxxxxx-x"></div>
@@ -74,7 +80,7 @@
                 <div class="form-group" style="flex:1"><label>Basic Salary</label><input type="number" id="staffSalary" placeholder="0"></div>
                 <div class="form-group" style="flex:1"><label>Allowances</label><input type="number" id="staffAllowance" placeholder="0"></div>
             </div>
-            <div class="row"><div class="col-12"><label for="staffDocumentsHeld" style="display:block; font-size:12px; font-weight:bold; color:#666; margin-bottom:5px;">DOCUMENTS Deposited </label><textarea id="staffDocumentsHeld" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:5px;" placeholder="e.g., Original Matric Degree, B.Ed Certificate" rows="2"></textarea></div></div>
+            <div class="row"><div class="col-12"><label for="staffDocumentsHeld" style="display:block; font-size:11px; font-weight:800; color:var(--p); margin-bottom:5px;">DOCUMENTS Deposited </label><textarea id="staffDocumentsHeld" style="width:100%; padding:10px; border:2px solid var(--p-border); border-radius:12px; font-weight:600;" placeholder="e.g., Original Matric Degree, B.Ed Certificate" rows="2"></textarea></div></div>
             <button class="btn-save" onclick="saveStaff()">Add Staff Member</button>
         </div>
         <div class="card" style="overflow-x: auto; padding: 0;">
@@ -82,24 +88,43 @@
         </div>
     </div>
 
-<div id="salaryModal" style="display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;">
-    <div class="card" style="width: 300px;"><h3>Initiate Salary</h3><div class="form-group"><label>Month</label><select id="salMonth" style="width: 100%;"><option value="January">January</option><option value="February">February</option><option value="March">March</option><option value="April">April</option><option value="May">May</option><option value="June">June</option><option value="July">July</option><option value="August">August</option><option value="September">September</option><option value="October">October</option><option value="November">November</option><option value="December">December</option></select></div><div class="form-group"><label>Year</label><input type="number" id="salYear" value="2026"></div><div style="display: flex; gap: 10px;"><button onclick="processSalary()" class="btn-save">Generate</button><button onclick="closeSalaryModal()" style="background:#95a5a6;" class="btn-save">Cancel</button></div></div>
+<div id="salaryModal" style="display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15,23,42,0.55); backdrop-filter:blur(8px); z-index: 1000; justify-content: center; align-items: center;">
+    <div class="card" style="width: 300px;"><h3 style="color:var(--p); font-weight:900;">Initiate Salary</h3><div class="form-group"><label>Month</label><select id="salMonth" style="width: 100%;"><option value="January">January</option><option value="February">February</option><option value="March">March</option><option value="April">April</option><option value="May">May</option><option value="June">June</option><option value="July">July</option><option value="August">August</option><option value="September">September</option><option value="October">October</option><option value="November">November</option><option value="December">December</option></select></div><div class="form-group"><label>Year</label><input type="number" id="salYear" value="2026"></div><div style="display: flex; gap: 10px;"><button onclick="processSalary()" class="btn-save">Generate</button><button onclick="closeSalaryModal()" style="background:#95a5a6;" class="btn-save">Cancel</button></div></div>
 </div>
 
-<!-- ALERT MODAL -->
 <div id="alertModal" class="custom-modal"><div class="custom-box"><div class="custom-head">Staff Management <span style="cursor:pointer" onclick="closeAlert()">×</span></div><div class="custom-body" id="alertMsg">Message</div><div class="custom-foot"><button class="btn-ok" onclick="closeAlert()">OK</button></div></div></div>
-
-<!-- DELETE MODAL -->
 <div id="deleteModal" class="custom-modal"><div class="custom-box"><div class="custom-head">Delete Staff <span style="cursor:pointer" onclick="closeDelete()">×</span></div><div class="custom-body">Are you sure you want to remove this staff permanently?</div><div class="custom-foot"><button class="btn-del" onclick="confirmDelete()">Delete</button><button onclick="closeDelete()">Cancel</button></div></div></div>
 
 <script>
+// ===== THEME MANAGER ONLY - NO OTHER LOGIC DELETED =====
+const defaultTheme={primary:"#2c3e50",sidebarBg:"#2c3e50",bg:"#f4f7f6"};
+function applyTheme(t){
+  const theme={...defaultTheme,...(t||{})};
+  const r=document.documentElement;
+  r.style.setProperty('--p',theme.primary);
+  r.style.setProperty('--sidebar-bg',theme.sidebarBg);
+  r.style.setProperty('--bg',theme.bg);
+  r.style.setProperty('--p-border',theme.primary+'30');
+  r.style.setProperty('--primary',theme.primary);
+  document.body.style.background=theme.bg;
+}
+async function loadAndApplyTheme(){
+  try{
+    let saved=null;
+    if(window.api&&window.api.getThemeDetails){try{saved=await window.api.getThemeDetails();}catch(e){}}
+    if(!saved) saved=JSON.parse(localStorage.getItem('eduPulseTheme')||'null');
+    applyTheme(saved||defaultTheme);
+  }catch(e){applyTheme(defaultTheme);}
+}
+loadAndApplyTheme();
+
     let editMode = false;
     let currentEditId = null;
     let currentPhotoBase64 = "";
     let pendingDeleteId = null;
     let isSaving = false;
     const FALLBACK = '../../images/logo.png';
-    let staffMap = {}; // <-- FIX: use ID map instead of JSON in onclick
+    let staffMap = {};
 
     function showAlert(msg){
       document.getElementById('alertMsg').innerText = msg;
@@ -153,16 +178,15 @@
     async function loadStaff() {
         try {
             const staff = await window.api.getStaff();
-            staffMap = {}; // reset map
+            staffMap = {};
             const tableBody = document.getElementById('staffTableBody');
             tableBody.innerHTML = '';
             staff.forEach(s => {
-                staffMap[s.id] = s; // store for edit
+                staffMap[s.id] = s;
                 let photo = s.photoDisplay || s.photo || FALLBACK;
                 if(!photo.startsWith('data:') &&!photo.startsWith('../../') &&!photo.startsWith('file:')){
                   photo = s.photoDisplay && s.photoDisplay.startsWith('data:')? s.photoDisplay : FALLBACK;
                 }
-
                 tableBody.innerHTML += `
                     <tr>
                         <td><img src="${photo}" class="table-photo" onerror="this.src='${FALLBACK}'"><strong>${s.name}</strong><br><small style="margin-left:48px;">${s.designation || ''}</small></td>
@@ -205,11 +229,10 @@ function startEditById(id){
 }
 
 async function saveStaff() {
-    if(isSaving) return; // <-- FIX: prevent double click
+    if(isSaving) return;
     const docField = document.getElementById('staffDocumentsHeld');
     const nameEl = document.getElementById('staffName');
     const cnicEl = document.getElementById('staffCnic');
-    
     const data = {
         name: nameEl.value.trim(),
         cnic: cnicEl.value.trim(),
@@ -223,13 +246,11 @@ async function saveStaff() {
         photo: currentPhotoBase64
     };
     if (!data.name ||!data.cnic) { showAlert("Validation Error: Please fill in the Full Name and CNIC"); return; }
-    
     isSaving = true;
     const btn = document.querySelector('.btn-save');
     const oldText = btn.innerText;
     btn.innerText = "Saving...";
     btn.disabled = true;
-
     try {
         if (editMode) {
             if (!currentEditId) { showAlert("Error: Missing target ID"); return; }

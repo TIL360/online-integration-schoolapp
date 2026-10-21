@@ -4,28 +4,34 @@
     <meta charset="UTF-8">
     <title>Class Wise Result Report</title>
     <style>
-        :root { --primary-blue: #2e08b6; }
-        body { font-family: 'Segoe UI', sans-serif; background: #e0e0e0; margin: 0; padding: 20px; }
-       .filter-card { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; }
+        :root { 
+          --p:#2e08b6; --sidebar-bg:#2e08b6; --bg:#e0e0e0; --p-border:#2e08b630;
+          --primary-blue: #2e08b6; 
+        }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 20px; }
+       .filter-card { background: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; border:2px solid var(--p-border); box-shadow: 0 2px 10px rgba(0,0,0,0.1); display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; }
        .filter-group { flex: 1; min-width: 180px; }
-        label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 13px; }
-        select { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
-       .btn { padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; color: white; font-size:13px; }
-       .btn-print { background: var(--primary-blue); }
-       .btn-edit-row { background: #ff9800; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 10px; font-weight: bold; }
-       .report-paper { background: white; width: 297mm; min-height: 210mm; padding: 10mm; margin: auto; box-shadow: 0 0 20px rgba(0,0,0,0.2); box-sizing: border-box; }
-       .header-title { text-align: center; font-size: 24px; font-weight: bold; text-decoration: underline; margin-bottom: 15px; }
-       .info-section { margin-bottom: 10px; line-height: 1.4; font-weight: bold; }
+        label { display: block; font-weight: 800; margin-bottom: 5px; font-size: 11px; color:var(--p); text-transform:uppercase; }
+        select { width: 100%; padding: 8px 12px; border: 2px solid var(--p-border); border-radius: 20px; font-weight:600; outline:none; }
+        select:focus{ border-color:var(--p); box-shadow:0 0 0 4px var(--p-border); }
+       .btn { padding: 10px 15px; border: none; border-radius: 20px; cursor: pointer; font-weight: 800; color: white; font-size:12px; display:inline-flex; align-items:center; gap:6px; }
+       .btn-print { background: var(--p); }
+       .btn-edit-row { background: #ff9800; color: white; border: none; padding: 4px 10px; border-radius: 20px; cursor: pointer; font-size: 10px; font-weight: 800; }
+       .report-paper { background: white; width: 297mm; min-height: 210mm; padding: 10mm; margin: auto; border-radius:12px; border:2px solid var(--p-border); box-shadow: 0 0 20px rgba(0,0,0,0.2); box-sizing: border-box; }
+       .header-title { text-align: center; font-size: 24px; font-weight: 900; color:var(--p); text-decoration: underline; margin-bottom: 15px; display:flex; align-items:center; justify-content:center; gap:10px; }
+       .header-title:before{content:''; width:6px; height:20px; background:var(--p); border-radius:4px; display:inline-block;}
+       .info-section { margin-bottom: 10px; line-height: 1.4; font-weight: 800; color:var(--p); }
         table { width: 100%; border-collapse: collapse; font-size: 11px; text-align: center; }
         th, td { border: 1px solid #000; padding: 4px 2px; min-width: 65px; }
-        th { background: #f2f2f2; }
+        th { background: var(--bg); color:var(--p); font-weight:800; }
        .name-col { width: 160px; text-align: left; padding-left: 5px; }
-       .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; }
-       .modal-content { background: white; padding: 20px; border-radius: 10px; width: 550px; }
+       .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15,23,42,0.6); backdrop-filter:blur(8px); z-index: 1000; justify-content: center; align-items: center; }
+       .modal-content { background: white; padding: 20px; border-radius: 16px; width: 550px; border:2px solid var(--p-border); }
        .modal-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 15px; }
-       .modal-input-group input { width: 100%; padding: 6px; border: 1px solid #ccc; border-radius: 4px; }
+       .modal-input-group input { width: 100%; padding: 8px; border: 2px solid var(--p-border); border-radius: 20px; font-weight:600; }
+       .modal-input-group label{ font-size:10px; }
         @page { size: landscape; margin: 10mm; }
-        @media print {.filter-card,.btn-print-hide { display: none!important; } }
+        @media print {.filter-card,.btn-print-hide { display: none!important; } .report-paper{ border:none; box-shadow:none; } }
     </style>
 </head>
 <body>
@@ -34,30 +40,51 @@
   <div class="filter-group"><label>Select Class</label><select id="selectClass"><option value="">-- Choose Class --</option></select></div>
   <button id="btnPush" class="btn" style="background:#28a745;">⬆️ Push Results to Cloud</button>
   <button id="btnPull" class="btn" style="background:#ff9800;">🔄 Pull Teacher Marks</button>
-  <button id="btnProgressAll" class="btn" style="background:#6f42c1;">📄 Progress Report All</button>
+  <button id="btnProgressAll" class="btn" style="background:var(--p);">📄 Progress Report All</button>
   <button class="btn btn-print" onclick="window.print()">Print Report</button>
-  <button class="btn btn-print" onclick="window.location.href='./result_entry.html'">Back</button>
+  <button class="btn btn-print" style="background:var(--sidebar-bg);" onclick="window.location.href='./result_entry.html'">Back</button>
 </div>
 <div class="report-paper">
     <div class="header-title">Class Wise Result - <span id="displayExam">...</span></div>
     <div class="info-section">Class Name: <span id="displayClass">...</span><br>Section: <span id="displaySection">A</span></div>
     <table><thead><tr id="mainHeaderRow"></tr><tr id="totalMarksRow"></tr></thead><tbody id="resultBody"></tbody></table>
-    <div style="margin-top: 20px; display: flex; justify-content: space-between; font-weight: bold; font-size: 12px;"><div id="printDate"></div><div>Page 1 of 1</div></div>
+    <div style="margin-top: 20px; display: flex; justify-content: space-between; font-weight: 800; font-size: 12px; color:var(--p);"><div id="printDate"></div><div>Page 1 of 1</div></div>
 </div>
 <div class="modal-overlay" id="editModal">
     <div class="modal-content">
-        <h3 id="modalStudentName" style="margin-top:0; color:var(--primary-blue); border-bottom: 2px solid #eee; padding-bottom:10px;">Update Marks</h3>
+        <h3 id="modalStudentName" style="margin-top:0; color:var(--p); border-bottom: 2px solid var(--p-border); padding-bottom:10px; font-weight:900;">Update Marks</h3>
         <div class="modal-grid" id="modalInputContainer"></div>
-        <div style="margin-top: 20px; text-align: right; border-top: 1px solid #eee; padding-top: 15px;">
-            <button class="btn" onclick="closeModal()" style="background:#666; margin-right:8px;">Cancel</button>
-            <button class="btn" onclick="saveModalMarks()" style="background:#28a745;">Save Marks</button>
+        <div style="margin-top: 20px; text-align: right; border-top: 2px solid var(--p-border); padding-top: 15px; display:flex; justify-content:flex-end; gap:8px;">
+            <button class="btn" onclick="closeModal()" style="background:#eee; color:#333;">Cancel</button>
+            <button class="btn" onclick="saveModalMarks()" style="background:var(--p);">Save Marks</button>
         </div>
     </div>
 </div>
 <script>
+// ===== THEME MANAGER ONLY - NO OTHER LOGIC DELETED =====
+const defaultTheme={primary:"#2e08b6",sidebarBg:"#2e08b6",bg:"#e0e0e0"};
+function applyTheme(t){
+  const theme={...defaultTheme,...(t||{})};
+  const r=document.documentElement;
+  r.style.setProperty('--p',theme.primary);
+  r.style.setProperty('--sidebar-bg',theme.sidebarBg);
+  r.style.setProperty('--bg',theme.bg);
+  r.style.setProperty('--p-border',theme.primary+'30');
+  r.style.setProperty('--primary-blue',theme.primary);
+  document.body.style.background=theme.bg;
+}
+async function loadAndApplyTheme(){
+  try{
+    let saved=null;
+    if(window.api&&window.api.getThemeDetails){try{saved=await window.api.getThemeDetails();}catch(e){}}
+    if(!saved) saved=JSON.parse(localStorage.getItem('eduPulseTheme')||'null');
+    applyTheme(saved||defaultTheme);
+  }catch(e){applyTheme(defaultTheme);}
+}
+loadAndApplyTheme();
+
 let currentData = [], activeStudentIndex = null, cachedGradingRules = [], subjectsList = [], masterActiveSubjectCodes = [], currentCriteria = null;
 
-// ✅ FINAL CORRECT FUNCTION - Offline wala
 function getNormalizedKey(code){
     return String(code).toLowerCase().trim().replace(/[^a-z0-9]+/g,'_');
 }
@@ -122,7 +149,7 @@ function renderTable() {
         let resultStatus = pct < currentCriteria.overall_pass_percentage? 'Fail' : failedCount > currentCriteria.max_failed_subjects_allowed? 'Fail' : failedCount>0? 'Supply' : 'Pass';
         const color = resultStatus==='Fail'?'red':resultStatus==='Supply'?'#d97706':'green';
         const tr=document.createElement('tr');
-        tr.innerHTML=`<td>${row.registration_no||'-'}</td><td class="name-col"><a href="#" onclick="openSingleReport('${row.student_id}')" style="color: blue; cursor: pointer; text-decoration: none;">${row.student_name}</a></td>${activeSubs.map(sub => `<td>${row[sub.obt]??0}</td>`).join('')}<td style="font-weight:bold">${dynamicObt}</td><td>${dynamicTotal}</td><td>${pct.toFixed(0)}%</td><td style="font-weight:bold; color:var(--primary-blue);">${grade}</td><td>${row.position||'-'}</td><td style="font-weight:bold; color:${color}">${resultStatus}</td><td class="btn-print-hide"><button class="btn-edit-row" onclick="openModal(${index})">Edit</button><button onclick="sendWhatsApp(${index})" style="background:#25D366; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-size:10px; font-weight:bold; margin-left:5px;">WhatsApp</button></td>`;
+        tr.innerHTML=`<td>${row.registration_no||'-'}</td><td class="name-col"><a href="#" onclick="openSingleReport('${row.student_id}')" style="color: var(--p); cursor: pointer; text-decoration: none; font-weight:800;">${row.student_name}</a></td>${activeSubs.map(sub => `<td>${row[sub.obt]??0}</td>`).join('')}<td style="font-weight:bold">${dynamicObt}</td><td>${dynamicTotal}</td><td>${pct.toFixed(0)}%</td><td style="font-weight:bold; color:var(--p);">${grade}</td><td>${row.position||'-'}</td><td style="font-weight:bold; color:${color}">${resultStatus}</td><td class="btn-print-hide"><button class="btn-edit-row" onclick="openModal(${index})">Edit</button><button onclick="sendWhatsApp(${index})" style="background:#25D366; color:white; border:none; padding:4px 10px; border-radius:20px; cursor:pointer; font-size:10px; font-weight:800; margin-left:5px;">WhatsApp</button></td>`;
         body.appendChild(tr);
     });
 }

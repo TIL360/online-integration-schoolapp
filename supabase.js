@@ -459,16 +459,15 @@ async function pushFeeNotificationsOnline(db) {
   console.log(`\n--- PUSHING ONLY CURRENT MONTH FEE FOR ${SCHOOL_CODE} ---`);
   try {
     const now = new Date();
-    const currentMonthName = now.toLocaleString('en-US', { month: 'long' }); // October
-    const currentMonthShort = now.toLocaleString('en-US', { month: 'short' }); // Oct
-    const currentYear = now.getFullYear().toString(); // 2026
-    const currentMonthNum = (now.getMonth() + 1).toString(); // 10
+    const currentMonthName = now.toLocaleString('en-US', { month: 'long' });
+    const currentMonthShort = now.toLocaleString('en-US', { month: 'short' });
+    const currentYear = now.getFullYear().toString();
+    const currentMonthNum = (now.getMonth() + 1).toString();
 
     console.log(`Current: ${currentMonthName} ${currentYear}`);
 
-    // Detect fee table
     const allTables = db.prepare("SELECT name FROM sqlite_master WHERE type='table'").all().map(t => t.name);
-    const candidates = ['fee_records', 'fees', 'fee_invoices', 'invoices', 'student_fees', 'fee'];
+    const candidates = ['fee_records', 'fees', 'fee_invoices', 'invoices', 'student_fees', 'fee', 'fee_tbl'];
     let feeTable = candidates.find(c => allTables.includes(c));
     if (!feeTable) {
       for (let t of allTables) {
@@ -482,7 +481,6 @@ async function pushFeeNotificationsOnline(db) {
 
     const rows = db.prepare(`SELECT * FROM ${feeTable}`).all();
     
-    // === FILTER: ONLY CURRENT MONTH ===
     const currentRows = rows.filter(r => {
       const m = String(r.invoice_month || r.month || '').toLowerCase();
       const y = String(r.invoice_year || r.year || '').toLowerCase();
@@ -493,17 +491,15 @@ async function pushFeeNotificationsOnline(db) {
 
     console.log(`Total offline: ${rows.length} | Current month filtered: ${currentRows.length} for ${currentMonthName} ${currentYear}`);
 
-    // === STEP 1: DELETE ALL OLD FEE NOTIFICATIONS FOR THIS SCHOOL (Burden khatam) ===
     const { error: delErr, data: delData } = await supabase.from('notifications').delete().eq('school_code', SCHOOL_CODE).eq('type', 'fee').select();
     if (delErr) console.log("Delete error:", delErr.message);
-    else console.log(`🗑️ DELETED ${delData?.length || 0} old fee notifications for ${SCHOOL_CODE} - DB Cleaned`);
+    else console.log(`🗑️ DELETED ${delData?.length || 0} old fee notifications`);
 
     if (currentRows.length === 0) {
-      console.log(`No fee for current month, online fee table now empty (burden 0)`);
+      console.log(`No fee for current month, online fee table now empty`);
       return true;
     }
 
-    // === STEP 2: INSERT ONLY CURRENT MONTH ===
     const payload = currentRows.map(r => {
       const total = parseFloat(r.total_fee || 0) + parseFloat(r.arrears || 0);
       const collection = parseFloat(r.collection || 0);
@@ -516,10 +512,19 @@ async function pushFeeNotificationsOnline(db) {
       
       const title = status === 'PAID' ? `[FEE] ${currentMonthName} ${currentYear} - Inv #${invNo} - PAID ✅` : `[FEE] ${currentMonthName} ${currentYear} - Inv #${invNo} - DUE Rs.${balance}`;
       
+      // === FIXED BREAKDOWN START ===
       let breakdown = '';
-      if (r.monthly_fee > 0) breakdown += `Tuition: Rs. ${r.monthly_fee}\n`;
-      if (r.exam_fee > 0) breakdown += `Exam: Rs. ${r.exam_fee}\n`;
-      if (r.misc_fee > 0) breakdown += `Misc: Rs. ${r.misc_fee}\n`;
+      if (parseFloat(r.monthly_fee) > 0) breakdown += `Tuition: Rs. ${r.monthly_fee}\n`;
+      if (parseFloat(r.adm_fee) > 0) breakdown += `Admission: Rs. ${r.adm_fee}\n`;
+      if (parseFloat(r.exam_fee) > 0) breakdown += `Exam: Rs. ${r.exam_fee}\n`;
+      if (parseFloat(r.lab_fee) > 0) breakdown += `Lab: Rs. ${r.lab_fee}\n`;
+      if (parseFloat(r.reg_fee) > 0) breakdown += `Reg: Rs. ${r.reg_fee}\n`;
+      if (parseFloat(r.annual_fund) > 0) breakdown += `Annual Fund: Rs. ${r.annual_fund}\n`;
+      if (parseFloat(r.stationary_fund) > 0) breakdown += `Stationary: Rs. ${r.stationary_fund}\n`;
+      if (parseFloat(r.bus_charges) > 0) breakdown += `Bus: Rs. ${r.bus_charges}\n`;
+      if (parseFloat(r.security) > 0) breakdown += `Security: Rs. ${r.security}\n`;
+      if (parseFloat(r.misc_fee) > 0) breakdown += `Misc: Rs. ${r.misc_fee}\n`;
+      // === FIXED BREAKDOWN END ===
 
       const message = `Fee for ${sName} (${regNo})\nMonth: ${currentMonthName} ${currentYear}\nInv: #${invNo}\n${breakdown}Total: Rs.${total}\nPaid: Rs.${collection}\nBalance: Rs.${balance}\nStatus: ${status}`;
 
@@ -545,7 +550,7 @@ async function pushFeeNotificationsOnline(db) {
       }
     }
 
-    console.log(`✅ PUSHED ONLY ${payload.length} records for ${currentMonthName} ${currentYear} | Online burden minimal`);
+    console.log(`✅ PUSHED ONLY ${payload.length} records for ${currentMonthName} ${currentYear}`);
     return true;
 
   } catch (e) {
